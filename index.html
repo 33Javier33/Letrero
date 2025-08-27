@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letrero de Poker Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a202c;
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 25px rgba(245, 208, 125, 0.5); }
+            50% { box-shadow: 0 0 45px rgba(245, 208, 125, 0.8); }
+            100% { box-shadow: 0 0 25px rgba(245, 208, 125, 0.5); }
+        }
+
+        .poker-sign {
+            font-family: 'Cinzel', serif;
+            background: #0f172a;
+            border: 4px solid #b99d6b;
+            position: relative;
+            animation: pulse-gold 3s infinite ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .pay-table tr {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .pay-table tr::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            animation: shimmer 5s infinite linear;
+            animation-delay: calc(var(--delay) * 1s);
+        }
+
+        .pay-table tr:hover {
+            background-color: #b99d6b;
+            color: #0f172a;
+            transform: scale(1.05);
+        }
+        
+        .rules {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        #config-panel {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        @keyframes breathing-glow {
+            0% { box-shadow: 0 0 5px #b99d6b, 0 0 10px #b99d6b, 0 0 15px #f5d07d; }
+            50% { box-shadow: 0 0 10px #b99d6b, 0 0 20px #b99d6b, 0 0 30px #f5d07d; }
+            100% { box-shadow: 0 0 5px #b99d6b, 0 0 10px #b99d6b, 0 0 15px #f5d07d; }
+        }
+
+        #min-max-box {
+            border: 2px solid #b99d6b;
+            border-radius: 0.5rem;
+            animation: breathing-glow 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="poker-sign text-white rounded-2xl max-w-md w-full mx-auto p-4">
+        <div class="flex items-start space-x-4">
+            
+            <!-- INICIO: Espacio para el logo (ahora es el botón de configuración) -->
+            <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 border-2 border-dashed border-gray-600 rounded-md flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80">
+                <!-- Coloca tu etiqueta <img src="..." class="w-full h-full object-cover rounded-md"> aquí -->
+                <span class="text-xs text-gray-500 text-center">Logo<br/>(Config)</span>
+            </div>
+            <!-- FIN: Espacio para el logo -->
+
+            <!-- Contenedor principal del título -->
+            <div class="flex-grow">
+                <div class="pt-2 text-center">
+                    <h1 id="game-title" class="text-4xl md:text-5xl font-bold text-yellow-300 tracking-wider" style="text-shadow: 2px 2px 4px #000;"></h1>
+                    <p id="time-subtitle" class="mt-2 text-yellow-400 text-sm h-5"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido restante del letrero -->
+        <div class="px-2 pt-4">
+            <h2 class="text-2xl text-center font-bold text-yellow-300 mb-4">Tabla de Pago</h2>
+            <table class="w-full text-lg pay-table">
+                <tbody id="pay-table-body" class="divide-y divide-yellow-700/50"></tbody>
+            </table>
+        </div>
+
+        <div class="mx-2 mt-4" id="min-max-box">
+            <div class="bg-gray-900/50 p-3 flex justify-between items-center text-lg">
+                <div>
+                    <span class="text-gray-400">MÍNIMO:</span>
+                    <span id="min-bet" class="font-bold text-green-400"></span>
+                </div>
+                <div>
+                    <span class="text-gray-400">MÁXIMO:</span>
+                    <span class="font-bold text-red-400">$100.000</span>
+                </div>
+            </div>
+        </div>
+        <p id="min-change-info" class="text-center text-yellow-400 text-xs mt-2 px-2 h-4"></p>
+        
+        <div class="p-4 text-center">
+            <p class="text-xl font-medium text-yellow-200 mb-4">Solo jugadores sentados</p>
+            <div class="rules bg-red-600 text-white font-bold text-xl p-3 rounded-lg shadow-lg">
+                NO OCUPAR EL TELÉFONO EN LA MESA
+            </div>
+        </div>
+        
+        <!-- INICIO: Firma -->
+        <div class="text-center mt-4">
+            <p class="text-xs text-gray-500 italic">CarlosPN Interactive®</p>
+        </div>
+        <!-- FIN: Firma -->
+    </div>
+
+    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-800 text-white p-8 rounded-lg shadow-2xl w-full max-w-sm relative">
+            <button id="close-config-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            <h3 class="text-2xl font-bold mb-6 text-center text-yellow-300">Configuración</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="game-name-select" class="block text-sm font-medium text-gray-300">Juego Actual:</label>
+                    <select id="game-name-select" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Hora de cambio de mínimo:</label>
+                    <div class="flex items-center space-x-2 mt-1">
+                        <select id="change-hour" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
+                        <span class="text-gray-400">:</span>
+                        <select id="change-minute" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
+                    </div>
+                </div>
+                <div>
+                    <label for="base-min-bet" class="block text-sm font-medium text-gray-300">Mínimo base ($):</label>
+                    <input type="number" id="base-min-bet" value="3000" step="100" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                <div>
+                    <label for="new-min-bet" class="block text-sm font-medium text-gray-300">Nuevo mínimo ($):</label>
+                    <input type="number" id="new-min-bet" value="5000" step="100" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+            </div>
+            <button id="save-config-btn" class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
+                Guardar Cambios
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const payTables = {
+                "Draw Poker": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 3" }, { hand: "Trío", payout: "1 : 2" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ],
+                "Caribbean Poker Plus": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 4" }, { hand: "Trío", payout: "1 : 3" }, { hand: "Dos Pares", payout: "1 : 2" }, { hand: "Un Par", payout: "1 : 1" } ],
+                "Hold'em Texas Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]
+            };
+            const gameTitleEl = document.getElementById('game-title');
+            const minBetEl = document.getElementById('min-bet');
+            const timeSubtitleEl = document.getElementById('time-subtitle');
+            const minChangeInfoEl = document.getElementById('min-change-info');
+            const payTableBodyEl = document.getElementById('pay-table-body');
+            const configPanel = document.getElementById('config-panel');
+            const openConfigBtn = document.getElementById('open-config-btn');
+            const closeConfigBtn = document.getElementById('close-config-btn');
+            const saveConfigBtn = document.getElementById('save-config-btn');
+            const gameNameSelect = document.getElementById('game-name-select');
+            const changeHourSelect = document.getElementById('change-hour');
+            const changeMinuteSelect = document.getElementById('change-minute');
+            const baseMinBetInput = document.getElementById('base-min-bet');
+            const newMinBetInput = document.getElementById('new-min-bet');
+            let config = { gameName: "Draw Poker", changeTime: '22:00', baseMin: 3000, newMin: 5000 };
+            const currencyFormatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+
+            function renderPayTable(gameName) {
+                const tableData = payTables[gameName];
+                payTableBodyEl.innerHTML = '';
+                if (tableData) {
+                    tableData.forEach((item, index) => {
+                        const row = `
+                            <tr style="--delay: ${index * 0.2};">
+                                <td class="p-3 font-semibold">${item.hand}</td>
+                                <td class="p-3 text-right font-bold">${item.payout}</td>
+                            </tr>
+                        `;
+                        payTableBodyEl.innerHTML += row;
+                    });
+                }
+            }
+            function populateFormSelects() {
+                Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); });
+                for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); }
+                ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); });
+            }
+            function loadConfig() {
+                const savedConfig = localStorage.getItem('pokerConfigV6');
+                if (savedConfig) { config = JSON.parse(savedConfig); }
+                gameNameSelect.value = config.gameName;
+                const [hour, minute] = config.changeTime.split(':');
+                changeHourSelect.value = hour;
+                changeMinuteSelect.value = minute;
+                baseMinBetInput.value = config.baseMin;
+                newMinBetInput.value = config.newMin;
+            }
+            function saveConfig() {
+                config.gameName = gameNameSelect.value;
+                config.changeTime = `${changeHourSelect.value}:${changeMinuteSelect.value}`;
+                config.baseMin = parseInt(baseMinBetInput.value, 10);
+                config.newMin = parseInt(newMinBetInput.value, 10);
+                localStorage.setItem('pokerConfigV6', JSON.stringify(config));
+                alert('Configuración guardada!');
+                closePanel();
+                checkTime();
+            }
+            function openPanel() { configPanel.classList.remove('hidden'); configPanel.classList.add('flex'); }
+            function closePanel() { configPanel.classList.add('hidden'); configPanel.classList.remove('flex'); }
+            function checkTime() {
+                const now = new Date();
+                const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
+                const targetTime = new Date();
+                targetTime.setHours(targetHour, targetMinute, 0, 0);
+                const isAfterChangeTime = now >= targetTime;
+                updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin);
+                if (isAfterChangeTime) {
+                    timeSubtitleEl.textContent = '';
+                    minChangeInfoEl.textContent = 'Mínimos actualizados.';
+                } else {
+                    timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
+                    minChangeInfoEl.textContent = '';
+                }
+            }
+            function updateDisplay(minAmount) {
+                gameTitleEl.textContent = config.gameName;
+                minBetEl.textContent = currencyFormatter.format(minAmount);
+                renderPayTable(config.gameName);
+                if (minAmount >= config.newMin) {
+                    minBetEl.classList.remove('text-green-400');
+                    minBetEl.classList.add('text-orange-400');
+                } else {
+                    minBetEl.classList.remove('text-orange-400');
+                    minBetEl.classList.add('text-green-400');
+                }
+            }
+            openConfigBtn.addEventListener('click', openPanel);
+            closeConfigBtn.addEventListener('click', closePanel);
+            saveConfigBtn.addEventListener('click', saveConfig);
+            configPanel.addEventListener('click', (e) => { if (e.target === configPanel) closePanel(); });
+            populateFormSelects();
+            loadConfig();
+            checkTime();
+            setInterval(checkTime, 30000);
+        });
+    </script>
+</body>
+</html>
+
