@@ -88,13 +88,10 @@
     <div class="poker-sign text-white rounded-2xl max-w-md w-full mx-auto p-4">
         <div class="flex items-start space-x-4">
             
-            <!-- INICIO: Espacio para el logo (botón de configuración) -->
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 border-2 border-dashed border-gray-600 rounded-md flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80">
                 <img src="img/dreams.jpg" alt="Logo del Casino" class="w-full h-full object-cover rounded-md">
             </div>
-            <!-- FIN: Espacio para el logo -->
 
-            <!-- Contenedor principal del título -->
             <div class="flex-grow">
                 <div class="pt-2 text-center">
                     <h1 id="game-title" class="text-4xl md:text-5xl font-bold text-yellow-300 tracking-wider" style="text-shadow: 2px 2px 4px #000;"></h1>
@@ -103,7 +100,6 @@
             </div>
         </div>
 
-        <!-- Contenido restante del letrero -->
         <div class="px-2 pt-4">
             <h2 class="text-2xl text-center font-bold text-yellow-300 mb-4">Tabla de Pago</h2>
             <table class="w-full text-lg pay-table">
@@ -132,11 +128,9 @@
             </div>
         </div>
         
-        <!-- INICIO: Firma -->
         <div class="text-center mt-4">
             <p class="text-xs text-gray-500 italic">CarlosPN Interactive®</p>
         </div>
-        <!-- FIN: Firma -->
     </div>
 
     <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
@@ -171,7 +165,6 @@
                         <span id="fullscreen-btn-text">Pantalla Completa</span>
                     </button>
                 </div>
-                <!-- INICIO: Botón para Mantener Pantalla Encendida -->
                 <div>
                     <label class="block text-sm font-medium text-gray-300">Mantener Pantalla Encendida:</label>
                     <button id="wake-lock-btn" class="mt-1 w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
@@ -179,7 +172,6 @@
                         <span id="wake-lock-status-text">Desactivado</span>
                     </button>
                 </div>
-                <!-- FIN: Botón para Mantener Pantalla Encendida -->
             </div>
             <button id="save-config-btn" class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
                 Guardar Cambios
@@ -192,80 +184,23 @@
             // --- LÓGICA DE PANTALLA COMPLETA ---
             const fullscreenBtnConfig = document.getElementById('fullscreen-btn-config');
             const fullscreenBtnText = document.getElementById('fullscreen-btn-text');
-
-            function toggleFullScreen() {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => console.error(`Error al activar pantalla completa: ${err.message}`));
-                } else if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-
-            function updateFullscreenButtonText() {
-                fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir de Pantalla Completa' : 'Activar Pantalla Completa';
-            }
+            function toggleFullScreen() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => console.error(`Error: ${err.message}`)); } else if (document.exitFullscreen) { document.exitFullscreen(); } }
+            function updateFullscreenButtonText() { fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir de Pantalla Completa' : 'Activar Pantalla Completa'; }
             fullscreenBtnConfig.addEventListener('click', toggleFullScreen);
             document.addEventListener('fullscreenchange', updateFullscreenButtonText);
 
-            // --- INICIO: LÓGICA PARA MANTENER PANTALLA ENCENDIDA (WAKE LOCK) ---
+            // --- LÓGICA PARA MANTENER PANTALLA ENCENDIDA (WAKE LOCK) ---
             let wakeLock = null;
             let isWakeLockEnabledByUser = false; 
             const wakeLockBtn = document.getElementById('wake-lock-btn');
             const wakeLockStatusText = document.getElementById('wake-lock-status-text');
-
-            const acquireWakeLock = async () => {
-                if ('wakeLock' in navigator && isWakeLockEnabledByUser) {
-                    try {
-                        wakeLock = await navigator.wakeLock.request('screen');
-                        wakeLockStatusText.textContent = 'Activado';
-                        wakeLockBtn.classList.replace('bg-gray-700', 'bg-green-600');
-                        wakeLockBtn.classList.replace('hover:bg-gray-600', 'hover:bg-green-700');
-                        console.log('Wake Lock está activo.');
-                        wakeLock.addEventListener('release', () => {
-                            console.log('Wake Lock fue liberado por el sistema.');
-                        });
-                    } catch (err) {
-                        console.error(`No se pudo activar el Wake Lock: ${err.name}, ${err.message}`);
-                    }
-                }
-            };
-
-            const releaseWakeLock = async () => {
-                if (wakeLock !== null) {
-                    await wakeLock.release();
-                    wakeLock = null;
-                    wakeLockStatusText.textContent = 'Desactivado';
-                    wakeLockBtn.classList.replace('bg-green-600', 'bg-gray-700');
-                    wakeLockBtn.classList.replace('hover:bg-green-700', 'hover:bg-gray-600');
-                    console.log('Wake Lock liberado.');
-                }
-            };
+            const acquireWakeLock = async () => { if ('wakeLock' in navigator && isWakeLockEnabledByUser) { try { wakeLock = await navigator.wakeLock.request('screen'); wakeLockStatusText.textContent = 'Activado'; wakeLockBtn.classList.replace('bg-gray-700', 'bg-green-600'); wakeLockBtn.classList.replace('hover:bg-gray-600', 'hover:bg-green-700'); wakeLock.addEventListener('release', () => {}); } catch (err) { console.error(`${err.name}, ${err.message}`); } } };
+            const releaseWakeLock = async () => { if (wakeLock !== null) { await wakeLock.release(); wakeLock = null; wakeLockStatusText.textContent = 'Desactivado'; wakeLockBtn.classList.replace('bg-green-600', 'bg-gray-700'); wakeLockBtn.classList.replace('hover:bg-green-700', 'hover:bg-gray-600'); } };
+            wakeLockBtn.addEventListener('click', async () => { isWakeLockEnabledByUser = !isWakeLockEnabledByUser; if (isWakeLockEnabledByUser) { await acquireWakeLock(); } else { await releaseWakeLock(); } });
+            document.addEventListener('visibilitychange', () => { if (wakeLock !== null && document.visibilityState === 'visible') { acquireWakeLock(); } });
+            if (!('wakeLock' in navigator)) { wakeLockBtn.disabled = true; wakeLockStatusText.textContent = 'No Soportado'; wakeLockBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
             
-            wakeLockBtn.addEventListener('click', async () => {
-                isWakeLockEnabledByUser = !isWakeLockEnabledByUser;
-                if (isWakeLockEnabledByUser) {
-                    await acquireWakeLock();
-                } else {
-                    await releaseWakeLock();
-                }
-            });
-            
-            // Si el usuario activó la función y cambia de pestaña, se reactiva al volver.
-            document.addEventListener('visibilitychange', () => {
-                if (wakeLock !== null && document.visibilityState === 'visible') {
-                    acquireWakeLock();
-                }
-            });
-            
-            // Deshabilitar el botón si la API no es compatible.
-            if (!('wakeLock' in navigator)) {
-                wakeLockBtn.disabled = true;
-                wakeLockStatusText.textContent = 'No Soportado';
-                wakeLockBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-            // --- FIN: LÓGICA DE WAKE LOCK ---
-
-            // --- Lógica original del letrero ---
+            // --- Lógica principal del letrero ---
             const payTables = { "Draw Poker": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 3" }, { hand: "Trío", payout: "1 : 2" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ], "Caribbean Poker Plus": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 4" }, { hand: "Trío", payout: "1 : 3" }, { hand: "Dos Pares", payout: "1 : 2" }, { hand: "Un Par", payout: "1 : 1" } ], "Hold'em Texas Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ] };
             const gameTitleEl = document.getElementById('game-title');
             const minBetEl = document.getElementById('min-bet');
@@ -290,7 +225,34 @@
             function saveConfig() { config.gameName = gameNameSelect.value; config.changeTime = `${changeHourSelect.value}:${changeMinuteSelect.value}`; config.baseMin = parseInt(baseMinBetInput.value, 10); config.newMin = parseInt(newMinBetInput.value, 10); localStorage.setItem('pokerConfigV6', JSON.stringify(config)); closePanel(); checkTime(); }
             function openPanel() { configPanel.classList.remove('hidden'); configPanel.classList.add('flex'); }
             function closePanel() { configPanel.classList.add('hidden'); configPanel.classList.remove('flex'); }
-            function checkTime() { const now = new Date(); const [targetHour, targetMinute] = config.changeTime.split(':').map(Number); const targetTime = new Date(); targetTime.setHours(targetHour, targetMinute, 0, 0); const isAfterChangeTime = now >= targetTime; updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin); if (isAfterChangeTime) { timeSubtitleEl.textContent = ''; minChangeInfoEl.textContent = 'Mínimos actualizados.'; } else { timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`; minChangeInfoEl.textContent = ''; } }
+            
+            function checkTime() {
+                const now = new Date();
+                const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
+                
+                const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                const targetMinutes = targetHour * 60 + targetMinute;
+                const minutesUntilChange = targetMinutes - nowMinutes;
+                
+                const isAfterChangeTime = nowMinutes >= targetMinutes;
+
+                updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin);
+
+                if (isAfterChangeTime) {
+                    timeSubtitleEl.textContent = 'Mínimos actualizados.';
+                    minChangeInfoEl.textContent = '';
+                    minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                } else if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
+                    timeSubtitleEl.textContent = `El mínimo cambiará a las ${config.changeTime}`;
+                    minChangeInfoEl.textContent = `¡CAMBIO EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
+                    minChangeInfoEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
+                } else {
+                    timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
+                    minChangeInfoEl.textContent = '';
+                    minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                }
+            }
+
             function updateDisplay(minAmount) { gameTitleEl.textContent = config.gameName; minBetEl.textContent = currencyFormatter.format(minAmount); renderPayTable(config.gameName); if (minAmount >= config.newMin) { minBetEl.classList.remove('text-green-400'); minBetEl.classList.add('text-orange-400'); } else { minBetEl.classList.remove('text-orange-400'); minBetEl.classList.add('text-green-400'); } }
             
             openConfigBtn.addEventListener('click', openPanel);
@@ -301,7 +263,7 @@
             populateFormSelects();
             loadConfig();
             checkTime();
-            setInterval(checkTime, 30000);
+            setInterval(checkTime, 10000); // Actualiza cada 10 segundos
         });
     </script>
 </body>
