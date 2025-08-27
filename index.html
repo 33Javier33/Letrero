@@ -164,7 +164,6 @@
                     <label for="new-min-bet" class="block text-sm font-medium text-gray-300">Nuevo mínimo ($):</label>
                     <input type="number" id="new-min-bet" value="5000" step="100" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
                 </div>
-                 <!-- INICIO: Botón de Pantalla Completa en Configuración -->
                 <div>
                     <label class="block text-sm font-medium text-gray-300">Modo de visualización:</label>
                     <button id="fullscreen-btn-config" class="mt-1 w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
@@ -172,7 +171,15 @@
                         <span id="fullscreen-btn-text">Pantalla Completa</span>
                     </button>
                 </div>
-                 <!-- FIN: Botón de Pantalla Completa en Configuración -->
+                <!-- INICIO: Botón para Mantener Pantalla Encendida -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Mantener Pantalla Encendida:</label>
+                    <button id="wake-lock-btn" class="mt-1 w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"></path><path d="M12 9v4l2 1"></path></svg>
+                        <span id="wake-lock-status-text">Desactivado</span>
+                    </button>
+                </div>
+                <!-- FIN: Botón para Mantener Pantalla Encendida -->
             </div>
             <button id="save-config-btn" class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
                 Guardar Cambios
@@ -182,40 +189,84 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- INICIO: LÓGICA DE PANTALLA COMPLETA ---
+            // --- LÓGICA DE PANTALLA COMPLETA ---
             const fullscreenBtnConfig = document.getElementById('fullscreen-btn-config');
             const fullscreenBtnText = document.getElementById('fullscreen-btn-text');
 
             function toggleFullScreen() {
                 if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        // En una app real, se usaría un modal en lugar de alert.
-                        console.error(`Error al activar pantalla completa: ${err.message}`);
-                    });
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    }
+                    document.documentElement.requestFullscreen().catch(err => console.error(`Error al activar pantalla completa: ${err.message}`));
+                } else if (document.exitFullscreen) {
+                    document.exitFullscreen();
                 }
             }
 
             function updateFullscreenButtonText() {
-                if (document.fullscreenElement) {
-                    fullscreenBtnText.textContent = 'Salir de Pantalla Completa';
-                } else {
-                    fullscreenBtnText.textContent = 'Activar Pantalla Completa';
-                }
+                fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir de Pantalla Completa' : 'Activar Pantalla Completa';
             }
-
             fullscreenBtnConfig.addEventListener('click', toggleFullScreen);
             document.addEventListener('fullscreenchange', updateFullscreenButtonText);
-            // --- FIN: LÓGICA DE PANTALLA COMPLETA ---
 
-            const payTables = {
-                "Draw Poker": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 3" }, { hand: "Trío", payout: "1 : 2" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ],
-                "Caribbean Poker Plus": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 4" }, { hand: "Trío", payout: "1 : 3" }, { hand: "Dos Pares", payout: "1 : 2" }, { hand: "Un Par", payout: "1 : 1" } ],
-                "Hold'em Texas Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]
+            // --- INICIO: LÓGICA PARA MANTENER PANTALLA ENCENDIDA (WAKE LOCK) ---
+            let wakeLock = null;
+            let isWakeLockEnabledByUser = false; 
+            const wakeLockBtn = document.getElementById('wake-lock-btn');
+            const wakeLockStatusText = document.getElementById('wake-lock-status-text');
+
+            const acquireWakeLock = async () => {
+                if ('wakeLock' in navigator && isWakeLockEnabledByUser) {
+                    try {
+                        wakeLock = await navigator.wakeLock.request('screen');
+                        wakeLockStatusText.textContent = 'Activado';
+                        wakeLockBtn.classList.replace('bg-gray-700', 'bg-green-600');
+                        wakeLockBtn.classList.replace('hover:bg-gray-600', 'hover:bg-green-700');
+                        console.log('Wake Lock está activo.');
+                        wakeLock.addEventListener('release', () => {
+                            console.log('Wake Lock fue liberado por el sistema.');
+                        });
+                    } catch (err) {
+                        console.error(`No se pudo activar el Wake Lock: ${err.name}, ${err.message}`);
+                    }
+                }
             };
+
+            const releaseWakeLock = async () => {
+                if (wakeLock !== null) {
+                    await wakeLock.release();
+                    wakeLock = null;
+                    wakeLockStatusText.textContent = 'Desactivado';
+                    wakeLockBtn.classList.replace('bg-green-600', 'bg-gray-700');
+                    wakeLockBtn.classList.replace('hover:bg-green-700', 'hover:bg-gray-600');
+                    console.log('Wake Lock liberado.');
+                }
+            };
+            
+            wakeLockBtn.addEventListener('click', async () => {
+                isWakeLockEnabledByUser = !isWakeLockEnabledByUser;
+                if (isWakeLockEnabledByUser) {
+                    await acquireWakeLock();
+                } else {
+                    await releaseWakeLock();
+                }
+            });
+            
+            // Si el usuario activó la función y cambia de pestaña, se reactiva al volver.
+            document.addEventListener('visibilitychange', () => {
+                if (wakeLock !== null && document.visibilityState === 'visible') {
+                    acquireWakeLock();
+                }
+            });
+            
+            // Deshabilitar el botón si la API no es compatible.
+            if (!('wakeLock' in navigator)) {
+                wakeLockBtn.disabled = true;
+                wakeLockStatusText.textContent = 'No Soportado';
+                wakeLockBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            // --- FIN: LÓGICA DE WAKE LOCK ---
+
+            // --- Lógica original del letrero ---
+            const payTables = { "Draw Poker": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 3" }, { hand: "Trío", payout: "1 : 2" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ], "Caribbean Poker Plus": [ { hand: "Escalera REAL", payout: "1 : 100" }, { hand: "Escalera Color", payout: "1 : 50" }, { hand: "Poker", payout: "1 : 20" }, { hand: "Full", payout: "1 : 7" }, { hand: "Color", payout: "1 : 5" }, { hand: "Escalera", payout: "1 : 4" }, { hand: "Trío", payout: "1 : 3" }, { hand: "Dos Pares", payout: "1 : 2" }, { hand: "Un Par", payout: "1 : 1" } ], "Hold'em Texas Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ] };
             const gameTitleEl = document.getElementById('game-title');
             const minBetEl = document.getElementById('min-bet');
             const timeSubtitleEl = document.getElementById('time-subtitle');
@@ -233,78 +284,20 @@
             let config = { gameName: "Draw Poker", changeTime: '22:00', baseMin: 3000, newMin: 5000 };
             const currencyFormatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
 
-            function renderPayTable(gameName) {
-                const tableData = payTables[gameName];
-                payTableBodyEl.innerHTML = '';
-                if (tableData) {
-                    tableData.forEach((item, index) => {
-                        const row = `
-                            <tr style="--delay: ${index * 0.2};">
-                                <td class="p-3 font-semibold">${item.hand}</td>
-                                <td class="p-3 text-right font-bold">${item.payout}</td>
-                            </tr>
-                        `;
-                        payTableBodyEl.innerHTML += row;
-                    });
-                }
-            }
-            function populateFormSelects() {
-                Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); });
-                for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); }
-                ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); });
-            }
-            function loadConfig() {
-                const savedConfig = localStorage.getItem('pokerConfigV6');
-                if (savedConfig) { config = JSON.parse(savedConfig); }
-                gameNameSelect.value = config.gameName;
-                const [hour, minute] = config.changeTime.split(':');
-                changeHourSelect.value = hour;
-                changeMinuteSelect.value = minute;
-                baseMinBetInput.value = config.baseMin;
-                newMinBetInput.value = config.newMin;
-            }
-            function saveConfig() {
-                config.gameName = gameNameSelect.value;
-                config.changeTime = `${changeHourSelect.value}:${changeMinuteSelect.value}`;
-                config.baseMin = parseInt(baseMinBetInput.value, 10);
-                config.newMin = parseInt(newMinBetInput.value, 10);
-                localStorage.setItem('pokerConfigV6', JSON.stringify(config));
-                closePanel();
-                checkTime();
-            }
+            function renderPayTable(gameName) { const tableData = payTables[gameName]; payTableBodyEl.innerHTML = ''; if (tableData) { tableData.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="p-3 font-semibold">${item.hand}</td><td class="p-3 text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } }
+            function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
+            function loadConfig() { const savedConfig = localStorage.getItem('pokerConfigV6'); if (savedConfig) { config = JSON.parse(savedConfig); } gameNameSelect.value = config.gameName; const [hour, minute] = config.changeTime.split(':'); changeHourSelect.value = hour; changeMinuteSelect.value = minute; baseMinBetInput.value = config.baseMin; newMinBetInput.value = config.newMin; }
+            function saveConfig() { config.gameName = gameNameSelect.value; config.changeTime = `${changeHourSelect.value}:${changeMinuteSelect.value}`; config.baseMin = parseInt(baseMinBetInput.value, 10); config.newMin = parseInt(newMinBetInput.value, 10); localStorage.setItem('pokerConfigV6', JSON.stringify(config)); closePanel(); checkTime(); }
             function openPanel() { configPanel.classList.remove('hidden'); configPanel.classList.add('flex'); }
             function closePanel() { configPanel.classList.add('hidden'); configPanel.classList.remove('flex'); }
-            function checkTime() {
-                const now = new Date();
-                const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
-                const targetTime = new Date();
-                targetTime.setHours(targetHour, targetMinute, 0, 0);
-                const isAfterChangeTime = now >= targetTime;
-                updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin);
-                if (isAfterChangeTime) {
-                    timeSubtitleEl.textContent = '';
-                    minChangeInfoEl.textContent = 'Mínimos actualizados.';
-                } else {
-                    timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
-                    minChangeInfoEl.textContent = '';
-                }
-            }
-            function updateDisplay(minAmount) {
-                gameTitleEl.textContent = config.gameName;
-                minBetEl.textContent = currencyFormatter.format(minAmount);
-                renderPayTable(config.gameName);
-                if (minAmount >= config.newMin) {
-                    minBetEl.classList.remove('text-green-400');
-                    minBetEl.classList.add('text-orange-400');
-                } else {
-                    minBetEl.classList.remove('text-orange-400');
-                    minBetEl.classList.add('text-green-400');
-                }
-            }
+            function checkTime() { const now = new Date(); const [targetHour, targetMinute] = config.changeTime.split(':').map(Number); const targetTime = new Date(); targetTime.setHours(targetHour, targetMinute, 0, 0); const isAfterChangeTime = now >= targetTime; updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin); if (isAfterChangeTime) { timeSubtitleEl.textContent = ''; minChangeInfoEl.textContent = 'Mínimos actualizados.'; } else { timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`; minChangeInfoEl.textContent = ''; } }
+            function updateDisplay(minAmount) { gameTitleEl.textContent = config.gameName; minBetEl.textContent = currencyFormatter.format(minAmount); renderPayTable(config.gameName); if (minAmount >= config.newMin) { minBetEl.classList.remove('text-green-400'); minBetEl.classList.add('text-orange-400'); } else { minBetEl.classList.remove('text-orange-400'); minBetEl.classList.add('text-green-400'); } }
+            
             openConfigBtn.addEventListener('click', openPanel);
             closeConfigBtn.addEventListener('click', closePanel);
             saveConfigBtn.addEventListener('click', saveConfig);
             configPanel.addEventListener('click', (e) => { if (e.target === configPanel) closePanel(); });
+            
             populateFormSelects();
             loadConfig();
             checkTime();
