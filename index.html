@@ -218,7 +218,6 @@
             const newMinBetInput = document.getElementById('new-min-bet');
             let config = { gameName: "Draw Poker", changeTime: '22:00', baseMin: 3000, newMin: 5000 };
             const currencyFormatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
-            let messageClearTimeout = null;
 
             function renderPayTable(gameName) { const tableData = payTables[gameName]; payTableBodyEl.innerHTML = ''; if (tableData) { tableData.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="p-3 font-semibold">${item.hand}</td><td class="p-3 text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } }
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
@@ -228,35 +227,47 @@
             function closePanel() { configPanel.classList.add('hidden'); configPanel.classList.remove('flex'); }
             
             function checkTime() {
-                clearTimeout(messageClearTimeout);
                 const now = new Date();
                 const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
                 
                 const nowMinutes = now.getHours() * 60 + now.getMinutes();
                 const targetMinutes = targetHour * 60 + targetMinute;
-                const minutesUntilChange = targetMinutes - nowMinutes;
-                
-                const isAfterChangeTime = nowMinutes >= targetMinutes;
 
-                updateDisplay(isAfterChangeTime ? config.newMin : config.baseMin);
+                // Lógica robusta que maneja el cambio de día (medianoche)
+                // Asume que si la diferencia es de más de 12 horas, es porque el día ya cambió.
+                const isNewMinimumActive = (nowMinutes >= targetMinutes) || ((targetMinutes - nowMinutes) > 12 * 60);
 
-                if (isAfterChangeTime) {
-                    // Muestra el mensaje de actualización y lo borra después de 5 minutos
-                    timeSubtitleEl.textContent = 'Mínimos actualizados.';
-                    messageClearTimeout = setTimeout(() => {
-                        timeSubtitleEl.textContent = '';
-                    }, 300000); // 5 minutos en milisegundos
+                updateDisplay(isNewMinimumActive ? config.newMin : config.baseMin);
 
+                // Lógica para mostrar los mensajes de estado
+                if (isNewMinimumActive) {
+                    // Calcula cuántos minutos han pasado desde el último cambio
+                    let minutesPassed = nowMinutes - targetMinutes;
+                    if (minutesPassed < 0) {
+                        minutesPassed += 24 * 60; // Suma un día en minutos si ya pasó la medianoche
+                    }
+
+                    if (minutesPassed < 5) { // Muestra el mensaje solo por 5 minutos
+                        timeSubtitleEl.textContent = 'Mínimos actualizados.';
+                    } else {
+                        timeSubtitleEl.textContent = ''; // Borra el mensaje después de 5 minutos
+                    }
                     minChangeInfoEl.textContent = '';
                     minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
-                } else if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
-                    timeSubtitleEl.textContent = `El mínimo cambiará a las ${config.changeTime}`;
-                    minChangeInfoEl.textContent = `¡CAMBIO EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
-                    minChangeInfoEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
+
                 } else {
-                    timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
-                    minChangeInfoEl.textContent = '';
-                    minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                    // Si el mínimo nuevo no está activo, calcula el tiempo que falta
+                    const minutesUntilChange = targetMinutes - nowMinutes;
+                    
+                    if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
+                        timeSubtitleEl.textContent = `El mínimo cambiará a las ${config.changeTime}`;
+                        minChangeInfoEl.textContent = `¡CAMBIO EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
+                        minChangeInfoEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
+                    } else {
+                        timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
+                        minChangeInfoEl.textContent = '';
+                        minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                    }
                 }
             }
 
