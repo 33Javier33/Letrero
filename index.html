@@ -106,6 +106,14 @@
             border-radius: 0.5rem;
             animation: breathing-glow 2.5s infinite ease-in-out;
         }
+
+        .value-display {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .value-display.updating {
+            opacity: 0;
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -126,6 +134,7 @@
         <div class="px-2 pt-4 flex-grow overflow-y-auto">
             <h2 class="text-center font-bold text-yellow-300 mb-4" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
             <div class="max-w-3xl mx-auto">
+                <div id="side-bet-info" class="text-center text-yellow-200 mb-4 hidden value-display" style="font-size: var(--font-size-xl);"></div>
                 <table class="w-full pay-table" style="font-size: var(--font-size-table);">
                     <tbody id="pay-table-body" class="divide-y divide-yellow-700/50"></tbody>
                 </table>
@@ -135,21 +144,20 @@
         <div class="mt-4 flex-shrink-0">
             <div class="mx-2" id="min-max-box">
                 <div class="bg-gray-900/50 p-3 flex items-center" style="font-size: var(--font-size-minmax);">
-                    <!-- CAMBIO: Se añadió w-1/2 y text-center a cada div para un centrado perfecto -->
                     <div class="w-1/2 text-center">
                         <span class="text-gray-400">MÍNIMO:</span>
-                        <span id="min-bet" class="font-bold text-green-400"></span>
+                        <span id="min-bet" class="font-bold text-green-400 value-display"></span>
                     </div>
                     <div class="w-1/2 text-center">
                         <span class="text-gray-400">MÁXIMO:</span>
-                        <span class="font-bold text-red-400">$100.000</span>
+                        <span id="max-bet" class="font-bold text-red-400 value-display"></span>
                     </div>
                 </div>
             </div>
             <p id="min-change-info" class="text-center text-yellow-400 mt-2 px-2 h-4" style="font-size: var(--font-size-xs);"></p>
             
             <div class="p-4 text-center">
-                <p class="font-medium text-yellow-200 mb-4" style="font-size: var(--font-size-xl);">Solo jugadores sentados</p>
+                <p id="countdown-location" class="h-8 flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
                 <div class="rules-container bg-red-600 text-white font-bold p-3 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
                     <span id="rules-text"></span>
                 </div>
@@ -161,7 +169,7 @@
         </div>
     </div>
 
-    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-gray-800 text-white p-8 rounded-lg shadow-2xl w-full max-w-sm relative">
             <button id="close-config-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
             <h3 class="text-2xl font-bold mb-6 text-center text-yellow-300">Configuración</h3>
@@ -170,25 +178,61 @@
                     <label for="game-name-select" class="block text-sm font-medium text-gray-300">Juego Actual:</label>
                     <select id="game-name-select" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300">Hora de cambio de mínimo:</label>
-                    <div class="flex items-center space-x-2 mt-1">
-                        <select id="change-hour" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
-                        <span class="text-gray-400">:</span>
-                        <select id="change-minute" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
+
+                <div id="side-bet-config-container" class="space-y-4 hidden border-t border-b border-gray-700 py-4">
+                    <h4 class="text-sm font-medium text-gray-300 text-center">Valor Par Perfecto</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="side-bet-base-min" class="block text-sm font-medium text-gray-300">Mín Base ($):</label>
+                            <input type="text" inputmode="numeric" id="side-bet-base-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="side-bet-base-max" class="block text-sm font-medium text-gray-300">Máx Base ($):</label>
+                            <input type="text" inputmode="numeric" id="side-bet-base-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="side-bet-new-min" class="block text-sm font-medium text-gray-300">Mín Nuevo ($):</label>
+                            <input type="text" inputmode="numeric" id="side-bet-new-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="side-bet-new-max" class="block text-sm font-medium text-gray-300">Máx Nuevo ($):</label>
+                            <input type="text" inputmode="numeric" id="side-bet-new-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 pt-4 space-y-4">
+                     <h4 class="text-sm font-medium text-gray-300 text-center">Apuesta de Mesa</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="base-min-bet" class="block text-sm font-medium text-gray-300">Mín Base ($):</label>
+                            <input type="text" inputmode="numeric" id="base-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                         <div>
+                            <label for="base-max-bet" class="block text-sm font-medium text-gray-300">Máx Base ($):</label>
+                            <input type="text" inputmode="numeric" id="base-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="new-min-bet" class="block text-sm font-medium text-gray-300">Mín Nuevo ($):</label>
+                            <input type="text" inputmode="numeric" id="new-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="new-max-bet" class="block text-sm font-medium text-gray-300">Máx Nuevo ($):</label>
+                            <input type="text" inputmode="numeric" id="new-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Hora de Cambio:</label>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <select id="change-hour" class="block w-full bg-gray-700 border-gray-600 rounded-md p-2"></select>
+                            <span class="text-gray-400">:</span>
+                            <select id="change-minute" class="block w-full bg-gray-700 border-gray-600 rounded-md p-2"></select>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <label for="base-min-bet" class="block text-sm font-medium text-gray-300">Mínimo base ($):</label>
-                    <input type="number" id="base-min-bet" value="3000" step="100" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
-                </div>
-                <div>
-                    <label for="new-min-bet" class="block text-sm font-medium text-gray-300">Nuevo mínimo ($):</label>
-                    <input type="number" id="new-min-bet" value="5000" step="100" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
-                </div>
-                <div>
                     <label for="rules-input" class="block text-sm font-medium text-gray-300">Frases del carrusel (una por línea):</label>
-                    <textarea id="rules-input" rows="5" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></textarea>
+                    <textarea id="rules-input" rows="3" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300">Modo de visualización:</label>
@@ -224,29 +268,27 @@
             let isWakeLockEnabledByUser = false; 
             const wakeLockBtn = document.getElementById('wake-lock-btn');
             const wakeLockStatusText = document.getElementById('wake-lock-status-text');
-            const acquireWakeLock = async () => { if ('wakeLock' in navigator && isWakeLockEnabledByUser) { try { wakeLock = await navigator.wakeLock.request('screen'); wakeLockStatusText.textContent = 'Activado'; wakeLockBtn.classList.replace('bg-gray-700', 'bg-green-600'); wakeLockBtn.classList.replace('hover:bg-gray-600', 'hover:bg-green-700'); wakeLock.addEventListener('release', () => {}); } catch (err) { console.error(`${err.name}, ${err.message}`); } } };
+            const acquireWakeLock = async () => { if ('wakeLock' in navigator && isWakeLockEnabledByUser) { try { wakeLock = await navigator.wakeLock.request('screen'); wakeLockStatusText.textContent = 'Activado'; wakeLockBtn.classList.replace('bg-gray-700', 'bg-green-600'); wakeLockBtn.classList.replace('hover:bg-gray-600', 'hover:bg-green-700'); } catch (err) { console.error(`${err.name}, ${err.message}`); } } };
             const releaseWakeLock = async () => { if (wakeLock !== null) { await wakeLock.release(); wakeLock = null; wakeLockStatusText.textContent = 'Desactivado'; wakeLockBtn.classList.replace('bg-green-600', 'bg-gray-700'); wakeLockBtn.classList.replace('hover:bg-green-700', 'hover:bg-gray-600'); } };
             wakeLockBtn.addEventListener('click', async () => { isWakeLockEnabledByUser = !isWakeLockEnabledByUser; if (isWakeLockEnabledByUser) { await acquireWakeLock(); } else { await releaseWakeLock(); } });
-            document.addEventListener('visibilitychange', () => { if (wakeLock !== null && document.visibilityState === 'visible') { acquireWakeLock(); } });
+            document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { acquireWakeLock(); } });
             if (!('wakeLock' in navigator)) { wakeLockBtn.disabled = true; wakeLockStatusText.textContent = 'No Soportado'; wakeLockBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
-            
+
             const payTables = { 
-                "Draw Poker": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "3 : 1" }, { hand: "Trío", payout: "2 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ], 
-                "Caribbean Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "4 : 1" }, { hand: "Trío", payout: "3 : 1" }, { hand: "Dos Pares", payout: "2 : 1" },{ hand: "Un Par", payout: "1 : 1" } ], 
-                "Hold'em Texas Poker Plus": [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ],
-                "Black Jack Par Perfecto": [
-                    { hand: "Par Perfecto", payout: "25 veces la Apuesta" },
-                    { hand: "Par Color", payout: "15 veces la Apuesta" },
-                    { hand: "Par Mezclado", payout: "5 veces la Apuesta" }
-                ]
+                "Draw Poker": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "3 : 1" }, { hand: "Trío", payout: "2 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]}, 
+                "Caribbean Poker Plus": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "4 : 1" }, { hand: "Trío", payout: "3 : 1" }, { hand: "Dos Pares", payout: "2 : 1" },{ hand: "Un Par", payout: "1 : 1" } ]}, 
+                "Hold'em Texas Poker Plus": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]},
+                "Black Jack Par Perfecto": { hasSideBet: true, pays: [ { hand: "Par Perfecto", payout: "25 veces la Apuesta" }, { hand: "Par Color", payout: "15 veces la Apuesta" }, { hand: "Par Mezclado", payout: "5 veces la Apuesta" } ]}
             };
             
             const mainSignEl = document.getElementById('main-sign');
             const gameTitleEl = document.getElementById('game-title');
             const minBetEl = document.getElementById('min-bet');
+            const maxBetEl = document.getElementById('max-bet');
             const timeSubtitleEl = document.getElementById('time-subtitle');
             const minChangeInfoEl = document.getElementById('min-change-info');
             const payTableBodyEl = document.getElementById('pay-table-body');
+            const countdownLocationEl = document.getElementById('countdown-location');
             const configPanel = document.getElementById('config-panel');
             const openConfigBtn = document.getElementById('open-config-btn');
             const closeConfigBtn = document.getElementById('close-config-btn');
@@ -255,94 +297,159 @@
             const changeHourSelect = document.getElementById('change-hour');
             const changeMinuteSelect = document.getElementById('change-minute');
             const baseMinBetInput = document.getElementById('base-min-bet');
+            const baseMaxBetInput = document.getElementById('base-max-bet');
             const newMinBetInput = document.getElementById('new-min-bet');
+            const newMaxBetInput = document.getElementById('new-max-bet');
             const rulesInput = document.getElementById('rules-input');
             const rulesTextEl = document.getElementById('rules-text');
+            const sideBetInfoEl = document.getElementById('side-bet-info');
+            const sideBetConfigContainer = document.getElementById('side-bet-config-container');
+            const sideBetBaseMinInput = document.getElementById('side-bet-base-min');
+            const sideBetBaseMaxInput = document.getElementById('side-bet-base-max');
+            const sideBetNewMinInput = document.getElementById('side-bet-new-min');
+            const sideBetNewMaxInput = document.getElementById('side-bet-new-max');
 
-            let config = { 
+            let config;
+            const defaultConfig = { 
                 gameName: "Draw Poker", 
                 changeTime: '22:00', 
                 baseMin: 3000, 
                 newMin: 5000,
-                rules: [ "NO OCUPAR EL TELÉFONO EN LA MESA", "EL JUEGO ES PERSONAL", "PROHIBIDO COMENTAR EL JUEGO", "NO SE PUEDE ENTREGAR DINERO O FICHAS EN LA MESA A OTRO JUGADOR" ]
+                baseMax: 100000,
+                newMax: 100000,
+                rules: [ "NO OCUPAR EL TELÉFONO EN LA MESA", "EL JUEGO ES PERSONAL", "SOLO JUGADORES SENTADOS" ],
+                gameSettings: {
+                    "Black Jack Par Perfecto": { 
+                        baseMinBet: 500, baseMaxBet: 2000,
+                        newMinBet: 500, newMaxBet: 4000
+                    }
+                }
             };
-            const currencyFormatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
 
-            function updateMarquee() {
-                if (config.rules && config.rules.length > 0) {
-                    const separator = " ••• ";
-                    const fullText = config.rules.join(separator) + separator;
-                    rulesTextEl.textContent = fullText.repeat(2); 
-                } else {
-                    rulesTextEl.textContent = "";
+            const currencyFormatter = new Intl.NumberFormat('es-CL');
+            const formatForDisplay = (num) => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(num);
+            const formatForInput = (num) => currencyFormatter.format(num);
+            const unformatFromInput = (str) => parseInt(str.replace(/\./g, ''), 10) || 0;
+
+
+            function updateValueWithAnimation(element, newValue, isHTML = false) {
+                const comparison = isHTML ? element.innerHTML : element.textContent;
+                if (comparison !== newValue) {
+                    element.classList.add('updating');
+                    setTimeout(() => {
+                        if (isHTML) {
+                            element.innerHTML = newValue;
+                        } else {
+                            element.textContent = newValue;
+                        }
+                        element.classList.remove('updating');
+                    }, 300); 
                 }
             }
 
-            function renderPayTable(gameName) { const tableData = payTables[gameName]; payTableBodyEl.innerHTML = ''; if (tableData) { tableData.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="p-3 font-semibold">${item.hand}</td><td class="p-3 text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } }
+            function updateMarquee() { if (config.rules && config.rules.length > 0) { const separator = " ••• "; const fullText = config.rules.join(separator) + separator; rulesTextEl.textContent = fullText.repeat(2); } else { rulesTextEl.textContent = ""; } }
+            
+            function renderPayTable(gameName, isNewActive) { 
+                const gameData = payTables[gameName];
+                const gameSettings = config.gameSettings[gameName];
+                
+                if (gameData.hasSideBet && gameSettings) {
+                    const min = isNewActive ? gameSettings.newMinBet : gameSettings.baseMinBet;
+                    const max = isNewActive ? gameSettings.newMaxBet : gameSettings.baseMaxBet;
+                    const newSideBetText = `Valor Par Perfecto: <span class="font-bold">${formatForDisplay(min)}</span> / <span class="font-bold">${formatForDisplay(max)}</span>`;
+                    updateValueWithAnimation(sideBetInfoEl, newSideBetText, true);
+                    sideBetInfoEl.classList.remove('hidden');
+                } else {
+                    sideBetInfoEl.classList.add('hidden');
+                }
+                
+                payTableBodyEl.innerHTML = ''; 
+                if (gameData && gameData.pays) { gameData.pays.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="p-3 font-semibold">${item.hand}</td><td class="p-3 text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } 
+            }
+
+            function updateSideBetConfigUI() {
+                const selectedGame = gameNameSelect.value;
+                if (payTables[selectedGame] && payTables[selectedGame].hasSideBet) {
+                    const settings = config.gameSettings[selectedGame] || defaultConfig.gameSettings[selectedGame];
+                    sideBetBaseMinInput.value = formatForInput(settings.baseMinBet);
+                    sideBetBaseMaxInput.value = formatForInput(settings.baseMaxBet);
+                    sideBetNewMinInput.value = formatForInput(settings.newMinBet);
+                    sideBetNewMaxInput.value = formatForInput(settings.newMaxBet);
+                    sideBetConfigContainer.classList.remove('hidden');
+                } else {
+                    sideBetConfigContainer.classList.add('hidden');
+                }
+            }
+            
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV6'); 
-                if (savedConfig) { 
-                    const loadedConf = JSON.parse(savedConfig);
-                    config = {...config, ...loadedConf};
-                } 
+                const savedConfig = localStorage.getItem('pokerConfigV19'); 
+                config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
+                
+                Object.keys(payTables).forEach(gameName => {
+                    if (payTables[gameName].hasSideBet && !config.gameSettings[gameName]) {
+                        config.gameSettings[gameName] = defaultConfig.gameSettings[gameName];
+                    }
+                });
+
                 gameNameSelect.value = config.gameName; 
                 const [hour, minute] = config.changeTime.split(':'); 
                 changeHourSelect.value = hour; 
                 changeMinuteSelect.value = minute; 
-                baseMinBetInput.value = config.baseMin; 
-                newMinBetInput.value = config.newMin;
+                baseMinBetInput.value = formatForInput(config.baseMin); 
+                newMinBetInput.value = formatForInput(config.newMin);
+                baseMaxBetInput.value = formatForInput(config.baseMax);
+                newMaxBetInput.value = formatForInput(config.newMax);
                 rulesInput.value = config.rules.join('\n');
+                updateSideBetConfigUI();
             }
             
             function saveConfig() { 
                 config.gameName = gameNameSelect.value; 
                 config.changeTime = `${changeHourSelect.value}:${changeMinuteSelect.value}`; 
-                config.baseMin = parseInt(baseMinBetInput.value, 10); 
-                config.newMin = parseInt(newMinBetInput.value, 10);
+                config.baseMin = unformatFromInput(baseMinBetInput.value); 
+                config.newMin = unformatFromInput(newMinBetInput.value);
+                config.baseMax = unformatFromInput(baseMaxBetInput.value);
+                config.newMax = unformatFromInput(newMaxBetInput.value);
                 config.rules = rulesInput.value.split('\n').filter(rule => rule.trim() !== '');
-                localStorage.setItem('pokerConfigV6', JSON.stringify(config)); 
+
+                const selectedGame = config.gameName;
+                if (payTables[selectedGame] && payTables[selectedGame].hasSideBet) {
+                    config.gameSettings[selectedGame] = {
+                        baseMinBet: unformatFromInput(sideBetBaseMinInput.value),
+                        baseMaxBet: unformatFromInput(sideBetBaseMaxInput.value),
+                        newMinBet: unformatFromInput(sideBetNewMinInput.value),
+                        newMaxBet: unformatFromInput(sideBetNewMaxInput.value),
+                    };
+                }
+
+                localStorage.setItem('pokerConfigV19', JSON.stringify(config)); 
                 closePanel(); 
-                checkTime(); 
+                checkTime();
                 updateMarquee(); 
             }
 
             function openPanel() { configPanel.classList.remove('hidden'); configPanel.classList.add('flex'); }
             function closePanel() { configPanel.classList.add('hidden'); configPanel.classList.remove('flex'); }
-            
-            function checkTime() {
+
+            function isNewMinimumActive() {
                 const now = new Date();
                 const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
                 const nowMinutes = now.getHours() * 60 + now.getMinutes();
                 const targetMinutes = targetHour * 60 + targetMinute;
-                const isNewMinimumActive = (nowMinutes >= targetMinutes) || ((targetMinutes - nowMinutes) > 12 * 60);
-                updateDisplay(isNewMinimumActive ? config.newMin : config.baseMin);
-                
-                if (isNewMinimumActive) {
-                    let minutesPassed = nowMinutes - targetMinutes;
-                    if (minutesPassed < 0) minutesPassed += 24 * 60; 
-                    timeSubtitleEl.textContent = (minutesPassed < 5) ? 'Mínimos actualizados.' : '';
-                    minChangeInfoEl.textContent = '';
-                    minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
-                } else {
-                    const minutesUntilChange = targetMinutes - nowMinutes;
-                    if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
-                        timeSubtitleEl.textContent = `El mínimo cambiará a las ${config.changeTime}`;
-                        minChangeInfoEl.textContent = `¡CAMBIO EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
-                        minChangeInfoEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
-                    } else {
-                        timeSubtitleEl.textContent = `Estos mínimos son hasta las ${config.changeTime}`;
-                        minChangeInfoEl.textContent = '';
-                        minChangeInfoEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
-                    }
-                }
+                return (nowMinutes >= targetMinutes) || ((targetMinutes - nowMinutes) > 12 * 60);
             }
+            
+            function updateDisplay(isNewActive) {
+                const minAmount = isNewActive ? config.newMin : config.baseMin;
+                const maxAmount = isNewActive ? config.newMax : config.baseMax;
 
-            function updateDisplay(minAmount) { 
-                gameTitleEl.textContent = config.gameName; 
-                minBetEl.textContent = currencyFormatter.format(minAmount); 
-                renderPayTable(config.gameName); 
+                updateValueWithAnimation(gameTitleEl, config.gameName);
+                updateValueWithAnimation(minBetEl, formatForDisplay(minAmount));
+                updateValueWithAnimation(maxBetEl, formatForDisplay(maxAmount));
+                
+                renderPayTable(config.gameName, isNewActive); 
 
                 if (config.gameName === "Black Jack Par Perfecto") {
                     mainSignEl.classList.remove('theme-poker');
@@ -352,18 +459,75 @@
                     mainSignEl.classList.add('theme-poker');
                 }
 
-                if (minAmount >= config.newMin) { 
-                    minBetEl.classList.remove('text-green-400'); 
-                    minBetEl.classList.add('text-orange-400'); 
+                if (isNewActive) { 
+                    minBetEl.classList.remove('text-green-400'); minBetEl.classList.add('text-orange-400'); 
                 } else { 
-                    minBetEl.classList.remove('text-orange-400'); 
-                    minBetEl.classList.add('text-green-400'); 
+                    minBetEl.classList.remove('text-orange-400'); minBetEl.classList.add('text-green-400'); 
                 } 
             }
+            
+            function checkTime() {
+                const newMinActive = isNewMinimumActive();
+                updateDisplay(newMinActive);
+                
+                const now = new Date();
+                const [targetHour, targetMinute] = config.changeTime.split(':').map(Number);
+                const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                const targetMinutes = targetHour * 60 + targetMinute;
+                
+                if (newMinActive) {
+                    let minutesPassed = nowMinutes - targetMinutes;
+                    if (minutesPassed < 0) minutesPassed += 24 * 60; 
+                    timeSubtitleEl.textContent = (minutesPassed < 1) ? 'Mínimos actualizados.' : '';
+                    minChangeInfoEl.textContent = '';
+                    countdownLocationEl.textContent = '';
+                    countdownLocationEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                } else {
+                    const minutesUntilChange = targetMinutes - nowMinutes;
+                    timeSubtitleEl.textContent = ''; 
+                    if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
+                        // CAMBIO: Se añade el nuevo valor a la cuenta regresiva.
+                        countdownLocationEl.textContent = `¡CAMBIO A ${formatForDisplay(config.newMin)} EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
+                        countdownLocationEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
+                        minChangeInfoEl.textContent = ''; // Limpiamos el otro mensaje para no ser redundante.
+                    } else {
+                        countdownLocationEl.textContent = '';
+                        countdownLocationEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
+                        // CAMBIO: Se añade el nuevo valor al mensaje informativo.
+                        minChangeInfoEl.textContent = `Estos mínimos son hasta las ${config.changeTime}, luego suben a ${formatForDisplay(config.newMin)}`;
+                    }
+                }
+            }
+
+            function handleNumberInputFormatting(event) {
+                const input = event.target;
+                const cursorPosition = input.selectionStart;
+                const originalLength = input.value.length;
+                const rawValue = input.value.replace(/[^0-9]/g, '');
+
+                if (rawValue === '') {
+                    input.value = '';
+                    return;
+                }
+
+                const formattedValue = formatForInput(parseInt(rawValue, 10));
+
+                if (input.value !== formattedValue) {
+                    input.value = formattedValue;
+                    const newLength = formattedValue.length;
+                    const newCursorPosition = cursorPosition + (newLength - originalLength);
+                    input.setSelectionRange(newCursorPosition, newCursorPosition);
+                }
+            }
+            
+            document.querySelectorAll('#config-panel input[inputmode="numeric"]').forEach(input => {
+                input.addEventListener('input', handleNumberInputFormatting);
+            });
             
             openConfigBtn.addEventListener('click', openPanel);
             closeConfigBtn.addEventListener('click', closePanel);
             saveConfigBtn.addEventListener('click', saveConfig);
+            gameNameSelect.addEventListener('change', updateSideBetConfigUI);
             configPanel.addEventListener('click', (e) => { if (e.target === configPanel) closePanel(); });
             
             populateFormSelects();
