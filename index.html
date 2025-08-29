@@ -12,13 +12,17 @@
         :root {
             /* Tipografía Fluida */
             --font-size-xs: clamp(0.65rem, 0.5rem + 0.5vw, 0.75rem);
+            --font-size-warning: clamp(1rem, 0.8rem + 1.5vw, 1.75rem);
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
             --font-size-base: clamp(1rem, 0.8rem + 1vw, 1.25rem);
             --font-size-xl: clamp(1.1rem, 0.8rem + 1.2vw, 1.5rem);
+            /* CAMBIO: Se revierte el tamaño de la tabla a su valor original */
             --font-size-table: clamp(1.2rem, 0.8rem + 2.5vw, 2.25rem);
-            --font-size-minmax: clamp(1.4rem, 1rem + 2vw, 2.25rem);
-            --font-size-2xl: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-            --font-size-5xl: clamp(2rem, 1rem + 5vw, 4rem);
+            --font-size-table-blackjack: clamp(1.8rem, 1rem + 4vw, 3.5rem);
+            --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
+            /* CAMBIO: Se aumenta el tamaño de los títulos de sección (Tabla de Pago, etc.) */
+            --font-size-2xl: clamp(2rem, 1.5rem + 3vw, 3rem);
+            --font-size-5xl: clamp(2.5rem, 1rem + 8vw, 6rem);
         }
 
         body {
@@ -94,6 +98,11 @@
         }
 
         .pay-table tr:hover { background-color: #b99d6b; color: #0f172a; transform: scale(1.05); }
+
+        .pay-table-blackjack {
+            font-size: var(--font-size-table-blackjack) !important;
+        }
+
         #config-panel { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
 
         @keyframes breathing-glow {
@@ -134,8 +143,9 @@
         <div class="px-2 pt-4 flex-grow overflow-y-auto">
             <h2 class="text-center font-bold text-yellow-300 mb-4" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
             <div class="max-w-3xl mx-auto">
-                <div id="side-bet-info" class="text-center text-yellow-200 mb-4 hidden value-display" style="font-size: var(--font-size-xl);"></div>
-                <table class="w-full pay-table" style="font-size: var(--font-size-table);">
+                <!-- CAMBIO: Se aplica el tamaño de título de sección a este elemento -->
+                <div id="side-bet-info" class="text-center text-yellow-200 mb-4 hidden value-display font-bold" style="font-size: var(--font-size-2xl);"></div>
+                <table id="pay-table" class="w-full pay-table" style="font-size: var(--font-size-table);">
                     <tbody id="pay-table-body" class="divide-y divide-yellow-700/50"></tbody>
                 </table>
             </div>
@@ -154,7 +164,7 @@
                     </div>
                 </div>
             </div>
-            <p id="min-change-info" class="text-center text-yellow-400 mt-2 px-2 h-4" style="font-size: var(--font-size-xs);"></p>
+            <p id="min-change-info" class="text-center text-yellow-400 mt-2 px-2 h-8 flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
             
             <div class="p-4 text-center">
                 <p id="countdown-location" class="h-8 flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
@@ -287,6 +297,7 @@
             const maxBetEl = document.getElementById('max-bet');
             const timeSubtitleEl = document.getElementById('time-subtitle');
             const minChangeInfoEl = document.getElementById('min-change-info');
+            const payTableEl = document.getElementById('pay-table');
             const payTableBodyEl = document.getElementById('pay-table-body');
             const countdownLocationEl = document.getElementById('countdown-location');
             const configPanel = document.getElementById('config-panel');
@@ -356,7 +367,7 @@
                 if (gameData.hasSideBet && gameSettings) {
                     const min = isNewActive ? gameSettings.newMinBet : gameSettings.baseMinBet;
                     const max = isNewActive ? gameSettings.newMaxBet : gameSettings.baseMaxBet;
-                    const newSideBetText = `Valor Par Perfecto: <span class="font-bold">${formatForDisplay(min)}</span> / <span class="font-bold">${formatForDisplay(max)}</span>`;
+                    const newSideBetText = `Valor Par Perfecto: <br><span class="font-normal">${formatForDisplay(min)}</span> / <span class="font-normal">${formatForDisplay(max)}</span>`;
                     updateValueWithAnimation(sideBetInfoEl, newSideBetText, true);
                     sideBetInfoEl.classList.remove('hidden');
                 } else {
@@ -384,7 +395,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV19'); 
+                const savedConfig = localStorage.getItem('pokerConfigV24'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -424,7 +435,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV19', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV24', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
@@ -454,9 +465,11 @@
                 if (config.gameName === "Black Jack Par Perfecto") {
                     mainSignEl.classList.remove('theme-poker');
                     mainSignEl.classList.add('theme-blackjack');
+                    payTableEl.classList.add('pay-table-blackjack');
                 } else {
                     mainSignEl.classList.remove('theme-blackjack');
                     mainSignEl.classList.add('theme-poker');
+                    payTableEl.classList.remove('pay-table-blackjack');
                 }
 
                 if (isNewActive) { 
@@ -486,14 +499,12 @@
                     const minutesUntilChange = targetMinutes - nowMinutes;
                     timeSubtitleEl.textContent = ''; 
                     if (minutesUntilChange > 0 && minutesUntilChange <= 5) {
-                        // CAMBIO: Se añade el nuevo valor a la cuenta regresiva.
                         countdownLocationEl.textContent = `¡CAMBIO A ${formatForDisplay(config.newMin)} EN ${minutesUntilChange} MINUTO${minutesUntilChange === 1 ? '' : 'S'}!`;
                         countdownLocationEl.classList.add('text-orange-400', 'font-bold', 'animate-pulse');
-                        minChangeInfoEl.textContent = ''; // Limpiamos el otro mensaje para no ser redundante.
+                        minChangeInfoEl.textContent = ''; 
                     } else {
                         countdownLocationEl.textContent = '';
                         countdownLocationEl.classList.remove('text-orange-400', 'font-bold', 'animate-pulse');
-                        // CAMBIO: Se añade el nuevo valor al mensaje informativo.
                         minChangeInfoEl.textContent = `Estos mínimos son hasta las ${config.changeTime}, luego suben a ${formatForDisplay(config.newMin)}`;
                     }
                 }
