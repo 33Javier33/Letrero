@@ -16,12 +16,12 @@
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
             --font-size-base: clamp(1rem, 0.8rem + 1vw, 1.25rem);
             --font-size-xl: clamp(1.1rem, 0.8rem + 1.2vw, 1.5rem);
-            --font-size-table: clamp(1.1rem, 0.8rem + 1.5vw, 2rem);
-            --font-size-table-blackjack: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
+            --font-size-table: clamp(1rem, 0.8rem + 1.2vw, 1.75rem);
+            --font-size-table-blackjack: clamp(1.25rem, 1rem + 2vw, 2.25rem);
             --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
-            /* CAMBIO: Se reduce el tamaño del título "Tabla de Pago" a la mitad */
             --font-size-2xl: clamp(1.25rem, 1rem + 1.5vw, 2rem);
             --font-size-5xl: clamp(2.5rem, 1rem + 5vw, 4.5rem);
+            --font-size-5xl-compact: clamp(2rem, 1rem + 3.5vw, 3.5rem);
         }
 
         body {
@@ -149,7 +149,7 @@
             </div>
         </div>
 
-        <div class="mt-4 flex-shrink-0">
+        <div class="mt-2 flex-shrink-0">
             <div class="mx-2" id="min-max-box">
                 <div class="bg-gray-900/50 p-3 flex items-center" style="font-size: var(--font-size-minmax);">
                     <div class="w-1/2 text-center">
@@ -162,16 +162,16 @@
                     </div>
                 </div>
             </div>
-            <p id="min-change-info" class="text-center text-yellow-400 mt-2 px-2 h-8 flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
+            <p id="min-change-info" class="text-center text-yellow-400 mt-1 px-2 h-8 flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
             
-            <div class="p-4 text-center">
+            <div class="p-2 text-center">
                 <p id="countdown-location" class="h-8 flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
                 <div class="rules-container bg-red-600 text-white font-bold p-3 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
                     <span id="rules-text"></span>
                 </div>
             </div>
             
-            <div class="text-center mt-4">
+            <div class="text-center mt-2">
                 <p class="text-gray-500 italic" style="font-size: var(--font-size-xs);">CarlosPN Interactive®</p>
             </div>
         </div>
@@ -393,7 +393,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV28'); 
+                const savedConfig = localStorage.getItem('pokerConfigV32'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -433,7 +433,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV28', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV32', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
@@ -453,6 +453,13 @@
             function updateDisplay(isNewActive) {
                 const minAmount = isNewActive ? config.newMin : config.baseMin;
                 const maxAmount = isNewActive ? config.newMax : config.baseMax;
+                
+                // CAMBIO: Se aplica el tamaño compacto a los dos juegos con nombres largos.
+                if (config.gameName === "Hold'em Texas Poker Plus" || config.gameName === "Caribbean Poker Plus") {
+                    gameTitleEl.style.fontSize = 'var(--font-size-5xl-compact)';
+                } else {
+                    gameTitleEl.style.fontSize = 'var(--font-size-5xl)';
+                }
 
                 updateValueWithAnimation(gameTitleEl, config.gameName);
                 updateValueWithAnimation(minBetEl, formatForDisplay(minAmount));
