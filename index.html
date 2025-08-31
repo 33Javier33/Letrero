@@ -126,8 +126,8 @@
 </head>
 <body>
 
-    <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 md:p-8 w-screen h-screen flex flex-col">
-        <div class="flex items-start space-x-4">
+    <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 w-screen h-screen flex flex-col">
+        <div class="flex items-start space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-md cursor-pointer transition-opacity hover:opacity-80">
                 <img src="img/dreams.jpg" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
@@ -139,19 +139,21 @@
             </div>
         </div>
         
-        <div class="px-2 pt-4 flex-grow overflow-y-auto">
-            <h2 class="text-center font-bold text-yellow-300 mb-4" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
-            <div class="max-w-3xl mx-auto">
-                <div id="side-bet-info" class="text-center text-yellow-200 mb-4 hidden value-display font-bold" style="font-size: var(--font-size-2xl);"></div>
+        <!-- CAMBIO: Se elimina el overflow-y-auto y se ajusta el padding para dar más espacio. -->
+        <div class="px-2 pt-2 flex-grow overflow-y-hidden flex flex-col justify-center">
+            <h2 class="text-center font-bold text-yellow-300 mb-2" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
+            <div class="max-w-3xl mx-auto w-full">
+                <div id="side-bet-info" class="text-center text-yellow-200 mb-2 hidden value-display font-bold" style="font-size: var(--font-size-2xl);"></div>
                 <table id="pay-table" class="w-full pay-table" style="font-size: var(--font-size-table);">
                     <tbody id="pay-table-body" class="divide-y divide-yellow-700/50"></tbody>
                 </table>
             </div>
         </div>
 
-        <div class="mt-2 flex-shrink-0">
+        <!-- CAMBIO: Se compacta todo este bloque inferior para que ocupe menos espacio vertical. -->
+        <div class="mt-auto flex-shrink-0 pt-2">
             <div class="mx-2" id="min-max-box">
-                <div class="bg-gray-900/50 p-3 flex items-center" style="font-size: var(--font-size-minmax);">
+                <div class="bg-gray-900/50 p-2 flex items-center" style="font-size: var(--font-size-minmax);">
                     <div class="w-1/2 text-center">
                         <span class="text-gray-400">MÍNIMO:</span>
                         <span id="min-bet" class="font-bold text-green-400 value-display"></span>
@@ -162,16 +164,16 @@
                     </div>
                 </div>
             </div>
-            <p id="min-change-info" class="text-center text-yellow-400 mt-1 px-2 h-8 flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
+            <p id="min-change-info" class="text-center text-yellow-400 px-2 h-auto flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
             
-            <div class="p-2 text-center">
-                <p id="countdown-location" class="h-8 flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
-                <div class="rules-container bg-red-600 text-white font-bold p-3 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
+            <div class="text-center">
+                <p id="countdown-location" class="h-auto flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
+                <div class="rules-container bg-red-600 text-white font-bold p-2 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
                     <span id="rules-text"></span>
                 </div>
             </div>
             
-            <div class="text-center mt-2">
+            <div class="text-center mt-1">
                 <p class="text-gray-500 italic" style="font-size: var(--font-size-xs);">CarlosPN Interactive®</p>
             </div>
         </div>
@@ -393,7 +395,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV32'); 
+                const savedConfig = localStorage.getItem('pokerConfigV33'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -433,7 +435,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV32', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV33', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
@@ -454,7 +456,6 @@
                 const minAmount = isNewActive ? config.newMin : config.baseMin;
                 const maxAmount = isNewActive ? config.newMax : config.baseMax;
                 
-                // CAMBIO: Se aplica el tamaño compacto a los dos juegos con nombres largos.
                 if (config.gameName === "Hold'em Texas Poker Plus" || config.gameName === "Caribbean Poker Plus") {
                     gameTitleEl.style.fontSize = 'var(--font-size-5xl-compact)';
                 } else {
