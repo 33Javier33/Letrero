@@ -16,11 +16,12 @@
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
             --font-size-base: clamp(1rem, 0.8rem + 1vw, 1.25rem);
             --font-size-xl: clamp(1.1rem, 0.8rem + 1.2vw, 1.5rem);
-            --font-size-table: clamp(1.2rem, 0.8rem + 2.5vw, 2.25rem);
-            --font-size-table-blackjack: clamp(1.8rem, 1rem + 4vw, 3.5rem);
+            --font-size-table: clamp(1.1rem, 0.8rem + 1.5vw, 2rem);
+            --font-size-table-blackjack: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
             --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
-            --font-size-2xl: clamp(2rem, 1.5rem + 3vw, 3rem);
-            --font-size-5xl: clamp(2.5rem, 1rem + 8vw, 6rem);
+            /* CAMBIO: Se reduce el tamaño del título "Tabla de Pago" a la mitad */
+            --font-size-2xl: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+            --font-size-5xl: clamp(2.5rem, 1rem + 5vw, 4.5rem);
         }
 
         body {
@@ -127,9 +128,8 @@
 
     <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 md:p-8 w-screen h-screen flex flex-col">
         <div class="flex items-start space-x-4">
-            <!-- CAMBIO: Se quitaron las clases de borde del div contenedor -->
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-md cursor-pointer transition-opacity hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                <img src="img/dreams.jpg" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
             <div class="flex-grow">
                 <div class="pt-2 text-center">
@@ -245,7 +245,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-300">Modo de visualización:</label>
                     <button id="fullscreen-btn-config" class="mt-1 w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 a 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                         <span id="fullscreen-btn-text">Pantalla Completa</span>
                     </button>
                 </div>
@@ -393,7 +393,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV25'); 
+                const savedConfig = localStorage.getItem('pokerConfigV28'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -433,7 +433,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV25', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV28', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
