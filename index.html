@@ -16,12 +16,16 @@
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
             --font-size-base: clamp(1rem, 0.8rem + 1vw, 1.25rem);
             --font-size-xl: clamp(1.1rem, 0.8rem + 1.2vw, 1.5rem);
-            --font-size-table: clamp(1rem, 0.8rem + 1.2vw, 1.75rem);
-            --font-size-table-blackjack: clamp(1.25rem, 1rem + 2vw, 2.25rem);
+            --font-size-table: clamp(1.5rem, 1rem + 3vw, 3.25rem);
+            --font-size-table-blackjack: clamp(1.8rem, 1.2rem + 2.5vw, 3rem);
             --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
-            --font-size-2xl: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-            --font-size-5xl: clamp(2.5rem, 1rem + 5vw, 4.5rem);
-            --font-size-5xl-compact: clamp(2rem, 1rem + 3.5vw, 3.5rem);
+            --font-size-2xl: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
+
+            /* CAMBIO: Se agranda el título principal para nombres cortos */
+            --font-size-5xl: clamp(3.2rem, 1.5rem + 7vw, 6.5rem);
+            
+            /* CAMBIO: Se ajusta el título compacto para nombres largos, manteniendo la responsividad */
+            --font-size-5xl-compact: clamp(2.4rem, 1.2rem + 5vw, 5rem);
         }
 
         body {
@@ -101,6 +105,11 @@
         .pay-table-blackjack {
             font-size: var(--font-size-table-blackjack) !important;
         }
+        
+        .pay-table-blackjack td {
+            padding-top: 1.2rem;
+            padding-bottom: 1.2rem;
+        }
 
         #config-panel { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
 
@@ -129,7 +138,7 @@
     <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 w-screen h-screen flex flex-col">
         <div class="flex items-start space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-md cursor-pointer transition-opacity hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                <img src="img/dreams1.pgn" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
             <div class="flex-grow">
                 <div class="pt-2 text-center">
@@ -139,7 +148,6 @@
             </div>
         </div>
         
-        <!-- CAMBIO: Se elimina el overflow-y-auto y se ajusta el padding para dar más espacio. -->
         <div class="px-2 pt-2 flex-grow overflow-y-hidden flex flex-col justify-center">
             <h2 class="text-center font-bold text-yellow-300 mb-2" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
             <div class="max-w-3xl mx-auto w-full">
@@ -150,7 +158,6 @@
             </div>
         </div>
 
-        <!-- CAMBIO: Se compacta todo este bloque inferior para que ocupe menos espacio vertical. -->
         <div class="mt-auto flex-shrink-0 pt-2">
             <div class="mx-2" id="min-max-box">
                 <div class="bg-gray-900/50 p-2 flex items-center" style="font-size: var(--font-size-minmax);">
@@ -375,7 +382,7 @@
                 }
                 
                 payTableBodyEl.innerHTML = ''; 
-                if (gameData && gameData.pays) { gameData.pays.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="p-3 font-semibold">${item.hand}</td><td class="p-3 text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } 
+                if (gameData && gameData.pays) { gameData.pays.forEach((item, index) => { const row = `<tr style="--delay: ${index * 0.2};"><td class="font-semibold">${item.hand}</td><td class="text-right font-bold">${item.payout}</td></tr>`; payTableBodyEl.innerHTML += row; }); } 
             }
 
             function updateSideBetConfigUI() {
@@ -395,7 +402,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV33'); 
+                const savedConfig = localStorage.getItem('pokerConfigV36'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -435,7 +442,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV33', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV36', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
