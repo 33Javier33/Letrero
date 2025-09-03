@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Letrero Interactivo</title>
-    <!-- CAMBIO: Se mantiene el script de Tailwind. Los navegadores modernos lo almacenarán en caché después de la primera carga,
-         permitiendo que funcione sin conexión en visitas posteriores. Para una solución 100% offline desde el primer momento,
-         este script debería ser reemplazado por un archivo CSS generado previamente. -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* CAMBIO: Se eliminan las importaciones de Google Fonts y se añaden fuentes de respaldo genéricas. */
         :root {
+            /* Tipografía Fluida */
             --font-size-xs: clamp(0.65rem, 0.5rem + 0.5vw, 0.75rem);
             --font-size-warning: clamp(1rem, 0.8rem + 1.5vw, 1.75rem);
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
@@ -134,9 +134,7 @@
     <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 w-screen h-screen flex flex-col">
         <div class="flex items-start space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-md cursor-pointer transition-opacity hover:opacity-80">
-                <!-- CAMBIO: Se añade un fallback SVG integrado para que funcione sin conexión si la imagen no se encuentra. -->
-                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" 
-                     onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYjk5ZDZiIiBmb250LXNpemU9IjQwIiBmb250LWZhbWlseT0iQ2luemVsIj5Mb2dvPC90ZXh0Pjwvc3ZnPg==';">
+                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
             <div class="flex-grow">
                 <div class="pt-2 text-center">
@@ -293,7 +291,8 @@
                 "Draw Poker": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "3 : 1" }, { hand: "Trío", payout: "2 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]}, 
                 "Caribbean Poker Plus": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "50 : 1" }, { hand: "Poker", payout: "20 : 1" }, { hand: "Full", payout: "7 : 1" }, { hand: "Color", payout: "5 : 1" }, { hand: "Escalera", payout: "4 : 1" }, { hand: "Trío", payout: "3 : 1" }, { hand: "Dos Pares", payout: "2 : 1" },{ hand: "Un Par", payout: "1 : 1" } ]}, 
                 "Hold'em Texas Poker Plus": { hasSideBet: false, pays: [ { hand: "Escalera REAL", payout: "100 : 1" }, { hand: "Escalera Color", payout: "20 : 1" }, { hand: "Poker", payout: "10 : 1" }, { hand: "Full", payout: "3 : 1" }, { hand: "Color", payout: "2 : 1" }, { hand: "Escalera", payout: "1 : 1" }, { hand: "Trío", payout: "1 : 1" }, { hand: "Dos Pares", payout: "1 : 1" }, { hand: "Un Par", payout: "1 : 1" } ]},
-                "Black Jack Par Perfecto": { hasSideBet: true, pays: [ { hand: "Par Perfecto", payout: "25 veces la Apuesta" }, { hand: "Par Color", payout: "15 veces la Apuesta" }, { hand: "Par Mezclado", payout: "5 veces la Apuesta" } ]}
+                // CAMBIO: Se actualiza "Par Mesclado" a "Par Mixto".
+                "Black Jack Par Perfecto": { hasSideBet: true, pays: [ { hand: "Par Perfecto", payout: "25 veces la Apuesta" }, { hand: "Par Color", payout: "15 veces la Apuesta" }, { hand: "Par Mixto", payout: "5 veces la Apuesta" } ]}
             };
             
             const mainSignEl = document.getElementById('main-sign');
@@ -400,7 +399,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV37'); 
+                const savedConfig = localStorage.getItem('pokerConfigV38'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -440,7 +439,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV37', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV38', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
@@ -561,4 +560,3 @@
     </script>
 </body>
 </html>
-
