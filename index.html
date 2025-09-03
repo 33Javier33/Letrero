@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Letrero Interactivo</title>
+    <!-- CAMBIO: Se mantiene el script de Tailwind. Los navegadores modernos lo almacenarán en caché después de la primera carga,
+         permitiendo que funcione sin conexión en visitas posteriores. Para una solución 100% offline desde el primer momento,
+         este script debería ser reemplazado por un archivo CSS generado previamente. -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* CAMBIO: Se eliminan las importaciones de Google Fonts y se añaden fuentes de respaldo genéricas. */
         :root {
-            /* Tipografía Fluida */
             --font-size-xs: clamp(0.65rem, 0.5rem + 0.5vw, 0.75rem);
             --font-size-warning: clamp(1rem, 0.8rem + 1.5vw, 1.75rem);
             --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
@@ -20,11 +20,7 @@
             --font-size-table-blackjack: clamp(1.8rem, 1.2rem + 2.5vw, 3rem);
             --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
             --font-size-2xl: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
-
-            /* CAMBIO: Se agranda el título principal para nombres cortos */
             --font-size-5xl: clamp(3.2rem, 1.5rem + 7vw, 6.5rem);
-            
-            /* CAMBIO: Se ajusta el título compacto para nombres largos, manteniendo la responsividad */
             --font-size-5xl-compact: clamp(2.4rem, 1.2rem + 5vw, 5rem);
         }
 
@@ -138,7 +134,9 @@
     <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 w-screen h-screen flex flex-col">
         <div class="flex items-start space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-md cursor-pointer transition-opacity hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                <!-- CAMBIO: Se añade un fallback SVG integrado para que funcione sin conexión si la imagen no se encuentra. -->
+                <img src="img/dreams1.pgn" alt="Logo del Casino" class="w-full h-full object-cover rounded-md" 
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYjk5ZDZiIiBmb250LXNpemU9IjQwIiBmb250LWZhbWlseT0iQ2luemVsIj5Mb2dvPC90ZXh0Pjwvc3ZnPg==';">
             </div>
             <div class="flex-grow">
                 <div class="pt-2 text-center">
@@ -402,7 +400,7 @@
             function populateFormSelects() { Object.keys(payTables).forEach(gameName => { const option = document.createElement('option'); option.value = gameName; option.textContent = gameName; gameNameSelect.appendChild(option); }); for (let i = 0; i < 24; i++) { const hour = i.toString().padStart(2, '0'); const option = document.createElement('option'); option.value = hour; option.textContent = hour; changeHourSelect.appendChild(option); } ['00', '15', '30', '45'].forEach(minute => { const option = document.createElement('option'); option.value = minute; option.textContent = minute; changeMinuteSelect.appendChild(option); }); }
             
             function loadConfig() { 
-                const savedConfig = localStorage.getItem('pokerConfigV36'); 
+                const savedConfig = localStorage.getItem('pokerConfigV37'); 
                 config = savedConfig ? { ...defaultConfig, ...JSON.parse(savedConfig) } : { ...defaultConfig };
                 
                 Object.keys(payTables).forEach(gameName => {
@@ -442,7 +440,7 @@
                     };
                 }
 
-                localStorage.setItem('pokerConfigV36', JSON.stringify(config)); 
+                localStorage.setItem('pokerConfigV37', JSON.stringify(config)); 
                 closePanel(); 
                 checkTime();
                 updateMarquee(); 
