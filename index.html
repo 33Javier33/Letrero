@@ -27,8 +27,20 @@
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #1a202c;
+            /* --- CAMBIO: Mosaico de fondo con el logo --- */
+            background-image: url('img/dreams1.png');
+            background-size: 100px; /* Controla el tamaño del mosaico */
+            /* --- FIN CAMBIO --- */
             overflow: hidden;
         }
+
+        /* --- CAMBIO: Estilo para resaltar el botón del logo sobre el mosaico --- */
+        #open-config-btn {
+            border: 2px solid #b99d6b;
+            box-shadow: 0 0 15px rgba(245, 208, 125, 0.7);
+            background-color: rgba(15, 23, 42, 0.75);
+        }
+        /* --- FIN CAMBIO --- */
 
         .poker-sign {
             font-family: 'Cinzel', serif;
@@ -37,7 +49,9 @@
         }
 
         .theme-poker {
-            background: #0f172a;
+            /* --- CAMBIO: Fondo semi-transparente para ver el mosaico --- */
+            background: rgba(15, 23, 42, 0.96);
+            /* --- FIN CAMBIO --- */
             border: 4px solid #b99d6b;
             animation: pulse-gold 3s infinite ease-in-out;
         }
@@ -47,7 +61,9 @@
         }
 
         .theme-blackjack {
-            background: #1a2a45;
+            /* --- CAMBIO: Fondo semi-transparente para ver el mosaico --- */
+            background: rgba(26, 42, 69, 0.96);
+            /* --- FIN CAMBIO --- */
             border: 4px solid #63b3ed;
             animation: pulse-blue 3s infinite ease-in-out;
         }
@@ -560,3 +576,4 @@
     </script>
 </body>
 </html>
+
