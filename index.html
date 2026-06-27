@@ -9,18 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* ═══════════════════════════════════════════════════════════
+           TIPOGRAFÍA FLUIDA — vmin escala con la dimensión menor
+           Valores mínimos altos para legibilidad a distancia (TV/tablet)
+        ═══════════════════════════════════════════════════════════ */
         :root {
-            --font-size-xs:              clamp(0.5rem,  1.3vmin, 0.75rem);
-            --font-size-warning:         clamp(0.7rem,  2.2vmin, 1.75rem);
-            --font-size-sm:              clamp(0.6rem,  1.5vmin, 1rem);
-            --font-size-base:            clamp(0.75rem, 1.8vmin, 1.25rem);
-            --font-size-xl:              clamp(0.8rem,  2.2vmin, 1.5rem);
-            --font-size-table:           clamp(0.85rem, 3.5vmin, 3.25rem);
-            --font-size-table-blackjack: clamp(0.9rem,  3vmin,   3rem);
-            --font-size-minmax:          clamp(0.9rem,  3.8vmin, 3.5rem);
-            --font-size-2xl:             clamp(0.85rem, 2.8vmin, 2.75rem);
-            --font-size-5xl:             clamp(1.4rem,  7vmin,   6.5rem);
-            --font-size-5xl-compact:     clamp(1.1rem,  5.5vmin, 5rem);
+            --font-size-xs:              clamp(0.6rem,  1.4vmin, 0.85rem);
+            --font-size-sm:              clamp(0.75rem, 1.7vmin, 1.1rem);
+            --font-size-base:            clamp(0.85rem, 1.9vmin, 1.3rem);
+            --font-size-xl:              clamp(1rem,    2.6vmin, 1.9rem);
+            --font-size-warning:         clamp(1.05rem, 2.6vmin, 2.1rem);
+            --font-size-2xl:             clamp(1.35rem, 3.3vmin, 3.1rem);
+            --font-size-table:           clamp(1.35rem, 4.3vmin, 3.9rem);
+            --font-size-table-blackjack: clamp(1.35rem, 3.9vmin, 3.6rem);
+            --font-size-minmax:          clamp(1.55rem, 4.6vmin, 4.2rem);
+            --font-size-5xl:             clamp(2.1rem,  8.5vmin, 7.5rem);
+            --font-size-5xl-compact:     clamp(1.7rem,  6.5vmin, 6rem);
         }
 
         body {
@@ -28,67 +32,165 @@
             overflow: hidden;
         }
 
-        /* ── FONDOS DE PANTALLA ── */
+        /* ═══════════════════════════════════════════════════════════
+           FONDOS DE PANTALLA — cuerpo (visible en bordes/glow)
+        ═══════════════════════════════════════════════════════════ */
         body.bg-logo     { background-color:#1a202c; background-image:url('img/dreams1.png'); background-size:100px; }
-        body.bg-casino   { background-color:#1a202c; background-image:url('img/casino.jpg');  background-size:cover; background-position:center; }
-        body.bg-felt     { background-color:#0a2e1a; background-image:radial-gradient(ellipse at 50% 30%,#1a5c38 0%,#0a2e1a 70%,#051509 100%); }
-        body.bg-dark     { background-color:#030303; background-image:none; }
-        body.bg-wood     { background-color:#2d1a0e; background-image:repeating-linear-gradient(110deg,rgba(0,0,0,.08) 0,rgba(0,0,0,.08) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(20deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 60px); }
-        body.bg-diamonds { background-color:#0f172a; background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 0,transparent 25px),repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 0,transparent 25px); background-size:25px 25px; }
+        body.bg-casino   { background-color:#0d1520; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
+        body.bg-cards    { background-color:#0f172a; }
+        body.bg-felt     { background-color:#051a0d; }
+        body.bg-dark     { background-color:#020202; }
+        body.bg-wood     { background-color:#180b04; }
+        body.bg-diamonds { background-color:#04071a; }
 
-        /* ── VARIABLES DE TEMA DE COLOR (aplicadas en #main-sign) ── */
+        /* ═══════════════════════════════════════════════════════════
+           VARIABLES DE TEMA DE COLOR + VELOCIDAD DE EFECTO
+           Aplicadas en #main-sign; heredadas por hijos via cascade
+        ═══════════════════════════════════════════════════════════ */
         #main-sign {
             --border-color: #b99d6b;
-            --glow-lo:  rgba(245,208,125,.5);
-            --glow-hi:  rgba(245,208,125,.8);
-            --glow-btn: rgba(245,208,125,.7);
+            --glow-lo:      rgba(245,208,125,.50);
+            --glow-hi:      rgba(245,208,125,.85);
+            --glow-btn:     rgba(245,208,125,.70);
+            --pulse-speed:  3s;
         }
-        #main-sign.color-blue   { --border-color:#63b3ed; --glow-lo:rgba(99,179,237,.5);  --glow-hi:rgba(99,179,237,.8);  --glow-btn:rgba(99,179,237,.7); }
-        #main-sign.color-red    { --border-color:#fc8181; --glow-lo:rgba(252,129,129,.5); --glow-hi:rgba(252,129,129,.8); --glow-btn:rgba(252,129,129,.7); }
-        #main-sign.color-green  { --border-color:#68d391; --glow-lo:rgba(104,211,145,.5); --glow-hi:rgba(104,211,145,.8); --glow-btn:rgba(104,211,145,.7); }
-        #main-sign.color-purple { --border-color:#b794f4; --glow-lo:rgba(183,148,244,.5); --glow-hi:rgba(183,148,244,.8); --glow-btn:rgba(183,148,244,.7); }
-        #main-sign.color-white  { --border-color:#e2e8f0; --glow-lo:rgba(226,232,240,.4); --glow-hi:rgba(226,232,240,.7); --glow-btn:rgba(226,232,240,.6); }
+        #main-sign.color-blue   { --border-color:#63b3ed; --glow-lo:rgba(99,179,237,.50);  --glow-hi:rgba(99,179,237,.90);  --glow-btn:rgba(99,179,237,.70);  --pulse-speed:1.8s; }
+        #main-sign.color-red    { --border-color:#fc8181; --glow-lo:rgba(252,129,129,.50); --glow-hi:rgba(252,129,129,.90); --glow-btn:rgba(252,129,129,.70); --pulse-speed:0.9s; }
+        #main-sign.color-green  { --border-color:#68d391; --glow-lo:rgba(104,211,145,.50); --glow-hi:rgba(104,211,145,.85); --glow-btn:rgba(104,211,145,.70); --pulse-speed:5s;   }
+        #main-sign.color-purple { --border-color:#b794f4; --glow-lo:rgba(183,148,244,.50); --glow-hi:rgba(183,148,244,.90); --glow-btn:rgba(183,148,244,.70); --pulse-speed:2.5s; }
+        #main-sign.color-white  { --border-color:#e2e8f0; --glow-lo:rgba(226,232,240,.40); --glow-hi:rgba(226,232,240,.75); --glow-btn:rgba(226,232,240,.60); --pulse-speed:7s;   }
 
-        /* Logo button */
+        /* Logo responsivo */
         #open-config-btn {
-            width: clamp(3rem,10vmin,6rem);
-            height: clamp(3rem,10vmin,6rem);
+            width:  clamp(3rem, 10vmin, 6rem);
+            height: clamp(3rem, 10vmin, 6rem);
             flex-shrink: 0;
             border: 2px solid var(--border-color);
             box-shadow: 0 0 15px var(--glow-btn);
             background-color: rgba(15,23,42,.75);
         }
 
-        .poker-sign { font-family:'Cinzel',serif; position:relative; transition:background-color .5s ease, border-color .5s ease; }
+        /* ═══════════════════════════════════════════════════════════
+           ANIMACIONES POR TEMA DE COLOR
+        ═══════════════════════════════════════════════════════════ */
+        .poker-sign { font-family:'Cinzel',serif; position:relative; transition:background-color .5s, border-color .5s; }
 
+        /* — Pulso base (oro, verde, blanco) — */
         @keyframes pulse-theme {
             0%,100% { box-shadow:0 0 25px var(--glow-lo); }
-            50%      { box-shadow:0 0 45px var(--glow-hi); }
+            50%     { box-shadow:0 0 55px var(--glow-hi); }
         }
-        .theme-poker    { background:rgba(15,23,42,.96); border:4px solid var(--border-color); animation:pulse-theme 3s infinite ease-in-out; }
-        .theme-blackjack{ background:rgba(26,42,69,.96); border:4px solid var(--border-color); animation:pulse-theme 3s infinite ease-in-out; }
 
-        /* Casino background: sign slightly more transparent so the image shows */
-        body.bg-casino .theme-poker     { background:rgba(15,23,42,.88); }
-        body.bg-casino .theme-blackjack { background:rgba(26,42,69,.88); }
+        /* — Azul: doble destello eléctrico — */
+        @keyframes pulse-electric {
+            0%,100% { box-shadow:0 0 20px var(--glow-lo); }
+            28%     { box-shadow:0 0 65px var(--glow-hi), 0 0 100px rgba(99,179,237,.2); }
+            40%     { box-shadow:0 0 14px var(--glow-lo); }
+            55%     { box-shadow:0 0 60px var(--glow-hi), 0 0 90px rgba(99,179,237,.2); }
+        }
 
-        /* ── MARQUEE ── */
+        /* — Rojo: estrobo rápido e intenso — */
+        @keyframes pulse-strobe {
+            0%,46%,54%,100% { box-shadow:0 0 15px var(--glow-lo); }
+            50%              { box-shadow:0 0 80px var(--glow-hi), 0 0 120px rgba(252,129,129,.3); }
+        }
+
+        /* — Morado: aurora doble — */
+        @keyframes pulse-aurora {
+            0%,100% { box-shadow:0 0 25px rgba(183,148,244,.5), 0 0 60px rgba(200,80,220,.1); }
+            50%     { box-shadow:0 0 55px rgba(183,148,244,.9), 0 0 100px rgba(200,80,220,.3), 0 0 140px rgba(120,40,200,.15); }
+        }
+
+        .theme-poker {
+            background: rgba(15,23,42,.96);
+            border: 4px solid var(--border-color);
+            animation: pulse-theme var(--pulse-speed) infinite ease-in-out;
+        }
+        .theme-blackjack {
+            background: rgba(26,42,69,.96);
+            border: 4px solid var(--border-color);
+            animation: pulse-theme var(--pulse-speed) infinite ease-in-out;
+        }
+
+        /* Override animation-name por tema de color */
+        #main-sign.color-blue .theme-poker,
+        #main-sign.color-blue .theme-blackjack   { animation-name: pulse-electric; }
+        #main-sign.color-red  .theme-poker,
+        #main-sign.color-red  .theme-blackjack   { animation-name: pulse-strobe; }
+        #main-sign.color-purple .theme-poker,
+        #main-sign.color-purple .theme-blackjack { animation-name: pulse-aurora; }
+
+        /* ═══════════════════════════════════════════════════════════
+           FONDOS APLICADOS DIRECTAMENTE AL PANEL (resuelve el
+           problema de fondos invisibles detrás del panel opaco)
+        ═══════════════════════════════════════════════════════════ */
+
+        /* Casino: panel semi-transparente para ver la foto */
+        body.bg-casino .theme-poker     { background:rgba(12,20,40,.87); }
+        body.bg-casino .theme-blackjack { background:rgba(18,32,60,.87); }
+
+        /* Naipes: gradiente oscuro sobre imagen en mosaico */
+        body.bg-cards .theme-poker,
+        body.bg-cards .theme-blackjack {
+            background-color: #0c1528;
+            background-image:
+                linear-gradient(rgba(10,17,36,.82), rgba(10,17,36,.82)),
+                url('img/cards.jpg');
+            background-size: auto, 220px auto;
+            background-repeat: no-repeat, repeat;
+        }
+
+        /* Fieltro verde */
+        body.bg-felt .theme-poker,
+        body.bg-felt .theme-blackjack {
+            background: radial-gradient(ellipse at 50% 25%, rgba(18,75,42,.97) 0%, rgba(6,28,16,.98) 65%);
+        }
+
+        /* Oscuro total */
+        body.bg-dark .theme-poker,
+        body.bg-dark .theme-blackjack {
+            background: rgba(4,4,6,.98);
+        }
+
+        /* Madera oscura */
+        body.bg-wood .theme-poker {
+            background-color: #1c0e05;
+            background-image: repeating-linear-gradient(168deg, rgba(210,150,60,.045) 0, rgba(210,150,60,.045) 1px, transparent 1px, transparent 52px);
+        }
+        body.bg-wood .theme-blackjack {
+            background-color: #1a1430;
+            background-image: repeating-linear-gradient(168deg, rgba(210,150,60,.045) 0, rgba(210,150,60,.045) 1px, transparent 1px, transparent 52px);
+        }
+
+        /* Diamantes */
+        body.bg-diamonds .theme-poker,
+        body.bg-diamonds .theme-blackjack {
+            background-color: #05081c;
+            background-image:
+                repeating-linear-gradient(45deg,  rgba(110,140,255,.08) 0, rgba(110,140,255,.08) 1px, transparent 0, transparent 20px),
+                repeating-linear-gradient(-45deg, rgba(110,140,255,.08) 0, rgba(110,140,255,.08) 1px, transparent 0, transparent 20px);
+            background-size: 20px 20px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           MARQUEE
+        ═══════════════════════════════════════════════════════════ */
         .rules-container { overflow:hidden; white-space:nowrap; position:relative; }
         #rules-text { display:inline-block; padding-left:100%; animation:marquee 50s linear infinite; }
         @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
 
-        /* ── TABLA DE PAGOS — base ── */
-        .pay-table td { padding:clamp(.1rem,.45vmin,.45rem) clamp(.1rem,.4vmin,.4rem); }
+        /* ═══════════════════════════════════════════════════════════
+           TABLA DE PAGOS + EFECTOS
+        ═══════════════════════════════════════════════════════════ */
+        .pay-table td { padding:clamp(.12rem,.48vmin,.48rem) clamp(.12rem,.42vmin,.42rem); }
         .pay-table tr { position:relative; overflow:hidden; transition:all .2s ease-in-out; }
         .pay-table tr:hover { background-color:var(--border-color); color:#0f172a; transform:scale(1.02); }
 
-        /* ── EFECTOS DE TABLA ── */
-
-        /* shimmer (default) */
+        /* shimmer */
         @keyframes shimmer { 0%{background-position:-1000px 0} 100%{background-position:1000px 0} }
         .effect-shimmer .pay-table tr::after {
             content:''; position:absolute; inset:0;
-            background:linear-gradient(to right,transparent 0%,rgba(255,255,255,.12) 50%,transparent 100%);
+            background:linear-gradient(to right,transparent 0%,rgba(255,255,255,.13) 50%,transparent 100%);
             animation:shimmer 5s infinite linear;
             animation-delay:calc(var(--delay) * 1s);
         }
@@ -103,8 +205,8 @@
 
         /* neon */
         @keyframes neon-glow {
-            0%,100% { text-shadow:0 0 4px var(--glow-lo),0 0 8px var(--glow-lo); }
-            50%      { text-shadow:0 0 10px var(--glow-hi),0 0 20px var(--glow-hi),0 0 35px var(--glow-hi); }
+            0%,100% { text-shadow:0 0 5px var(--glow-lo),0 0 10px var(--glow-lo); }
+            50%      { text-shadow:0 0 12px var(--glow-hi),0 0 25px var(--glow-hi),0 0 40px var(--glow-hi); }
         }
         .effect-neon .pay-table tr { animation:neon-glow 2.5s infinite ease-in-out; animation-delay:calc(var(--delay) * .25s); }
         .effect-neon .pay-table tr::after { display:none; }
@@ -118,54 +220,63 @@
         .effect-wave .pay-table tr { animation:wave-slide 3s infinite ease-in-out; animation-delay:calc(var(--delay) * .35s); }
         .effect-wave .pay-table tr::after { display:none; }
 
-        /* rainbow border on table */
+        /* rainbow */
         @keyframes rainbow-hue { to { filter:hue-rotate(360deg); } }
         .effect-rainbow .pay-table { animation:rainbow-hue 4s linear infinite; }
         .effect-rainbow .pay-table tr::after { display:none; }
-        .effect-rainbow .pay-table tr:hover { background-color:#f6d860; color:#0f172a; }
 
         .pay-table-blackjack { font-size:var(--font-size-table-blackjack) !important; }
-        .pay-table-blackjack td { padding-top:clamp(.3rem,1.2vmin,1.2rem); padding-bottom:clamp(.3rem,1.2vmin,1.2rem); }
+        .pay-table-blackjack td { padding-top:clamp(.32rem,1.3vmin,1.3rem); padding-bottom:clamp(.32rem,1.3vmin,1.3rem); }
 
-        /* ── MIN/MAX BOX ── */
+        /* ═══════════════════════════════════════════════════════════
+           MIN-MAX BOX
+        ═══════════════════════════════════════════════════════════ */
         @keyframes breathing-glow-theme {
-            0%,100% { box-shadow:0 0 5px var(--border-color),0 0 10px var(--border-color),0 0 15px var(--glow-lo); }
-            50%      { box-shadow:0 0 10px var(--border-color),0 0 20px var(--border-color),0 0 30px var(--glow-hi); }
+            0%,100% { box-shadow:0 0 5px var(--border-color),0 0 12px var(--border-color),0 0 18px var(--glow-lo); }
+            50%      { box-shadow:0 0 12px var(--border-color),0 0 24px var(--border-color),0 0 36px var(--glow-hi); }
         }
-        #min-max-box { border:2px solid var(--border-color); border-radius:.5rem; animation:breathing-glow-theme 2.5s infinite ease-in-out; }
-
-        .value-display { transition:opacity .3s ease-in-out, transform .3s ease-in-out; }
-        .value-display.updating { opacity:0; transform:scale(.95); }
+        #min-max-box {
+            border:2px solid var(--border-color);
+            border-radius:.5rem;
+            animation:breathing-glow-theme calc(var(--pulse-speed) * 0.85) infinite ease-in-out;
+        }
 
         #config-panel { transition:opacity .3s ease-in-out,transform .3s ease-in-out; }
 
-        /* ── SELECTOR DE TEMA — bolitas de color ── */
+        .value-display { transition:opacity .3s ease-in-out,transform .3s ease-in-out; }
+        .value-display.updating { opacity:0; transform:scale(.95); }
+
+        /* ═══════════════════════════════════════════════════════════
+           PANEL DE CONFIGURACIÓN — controles visuales
+        ═══════════════════════════════════════════════════════════ */
+        /* Toggle switch */
+        .toggle-track { width:2.5rem; height:1.25rem; border-radius:9999px; background:#4b5563; transition:background .2s; cursor:pointer; position:relative; flex-shrink:0; }
+        .toggle-track.on { background:#d97706; }
+        .toggle-thumb { position:absolute; top:.1875rem; left:.1875rem; width:.875rem; height:.875rem; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.4); transition:transform .2s; }
+        .toggle-track.on .toggle-thumb { transform:translateX(1.25rem); }
+
+        /* Bolitas de tema de color */
         .theme-swatch {
-            width:2.1rem; height:2.1rem; border-radius:50%;
+            width:2rem; height:2rem; border-radius:50%;
             border:3px solid transparent; cursor:pointer;
-            transition:transform .15s, border-color .15s; flex-shrink:0;
+            transition:transform .15s,border-color .15s; flex-shrink:0;
         }
         .theme-swatch.active { border-color:#fff; transform:scale(1.25); }
         .theme-swatch:hover  { transform:scale(1.1); }
 
-        /* ── SELECTOR DE FONDO — miniaturas ── */
-        .bg-btn { position:relative; height:3rem; border-radius:.5rem; border:2px solid #4a5568; cursor:pointer; overflow:hidden; transition:border-color .15s; }
-        .bg-btn.active { border-color:#f6d860; box-shadow:0 0 0 2px #f6d860; }
+        /* Miniaturas de fondo */
+        .bg-btn { position:relative; height:2.8rem; border-radius:.4rem; border:2px solid #4a5568; cursor:pointer; overflow:hidden; transition:border-color .15s; }
+        .bg-btn.active { border-color:#f6d860; box-shadow:0 0 0 1px #f6d860; }
         .bg-btn:hover  { border-color:#a0aec0; }
-        .bg-btn span   { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.68rem; font-weight:700; text-shadow:0 1px 4px rgba(0,0,0,.9); color:#fff; background:rgba(0,0,0,.25); }
+        .bg-btn span   { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:700; letter-spacing:.01em; text-shadow:0 1px 4px rgba(0,0,0,.95); color:#fff; background:rgba(0,0,0,.22); }
 
         .bg-preview-logo     { background:#1a202c url('img/dreams1.png') center/40px; }
-        .bg-preview-casino   { background-color:#4a3520; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
+        .bg-preview-casino   { background-color:#1a202c; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
+        .bg-preview-cards    { background-color:#0f172a; background-image:url('img/cards.jpg'); background-size:70px auto; }
         .bg-preview-felt     { background:radial-gradient(ellipse at 50% 30%,#1a5c38 0%,#0a2e1a 100%); }
         .bg-preview-dark     { background:#030303; }
-        .bg-preview-wood     { background:#2d1a0e; background-image:repeating-linear-gradient(110deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 1px,transparent 1px,transparent 30px); }
-        .bg-preview-diamonds { background-color:#0f172a; background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 1px,transparent 0,transparent 12px),repeating-linear-gradient(-45deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 1px,transparent 0,transparent 12px); background-size:12px 12px; }
-
-        /* Toggle switch */
-        .toggle-track { width:2.5rem; height:1.25rem; border-radius:9999px; background:#4b5563; transition:background .2s; cursor:pointer; position:relative; flex-shrink:0; }
-        .toggle-track.on { background:#d97706; }
-        .toggle-thumb { position:absolute; top:.1875rem; left:.1875rem; width:0.875rem; height:0.875rem; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.4); transition:transform .2s; }
-        .toggle-track.on .toggle-thumb { transform:translateX(1.25rem); }
+        .bg-preview-wood     { background-color:#2d1a0e; background-image:repeating-linear-gradient(168deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 1px,transparent 1px,transparent 28px); }
+        .bg-preview-diamonds { background-color:#0a0f24; background-image:repeating-linear-gradient(45deg,rgba(110,140,255,.14) 0,rgba(110,140,255,.14) 1px,transparent 0,transparent 10px),repeating-linear-gradient(-45deg,rgba(110,140,255,.14) 0,rgba(110,140,255,.14) 1px,transparent 0,transparent 10px); background-size:10px 10px; }
 
         @media (max-height:500px) {
             #time-subtitle { display:none; }
@@ -176,31 +287,39 @@
 <body class="bg-logo">
 
     <div id="main-sign" class="poker-sign effect-shimmer text-white p-3 sm:p-4 lg:p-6 w-screen h-screen flex flex-col">
+
+        <!-- ENCABEZADO -->
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="rounded-3xl cursor-pointer transition-opacity hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-3xl" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                <img src="img/dreams1.png" alt="Logo" class="w-full h-full object-cover rounded-3xl"
+                     onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
-            <div class="flex-grow min-w-0">
-                <div class="text-center">
-                    <h1 id="game-title" class="font-bold text-yellow-300 tracking-wider leading-tight" style="text-shadow:2px 2px 4px #000; font-size:var(--font-size-5xl);"></h1>
-                    <p id="time-subtitle" class="mt-1 text-yellow-400" style="font-size:var(--font-size-sm); min-height:1em;"></p>
-                </div>
+            <div class="flex-grow min-w-0 text-center">
+                <h1 id="game-title" class="font-bold text-yellow-300 tracking-wider leading-tight"
+                    style="text-shadow:2px 2px 4px #000; font-size:var(--font-size-5xl);"></h1>
+                <p id="time-subtitle" class="mt-1 text-yellow-400"
+                   style="font-size:var(--font-size-sm); min-height:1em;"></p>
             </div>
         </div>
 
+        <!-- TABLA DE PAGO -->
         <div class="px-2 pt-1 sm:pt-2 flex-grow min-h-0 overflow-hidden flex flex-col justify-center">
-            <h2 class="text-center font-bold text-yellow-300 mb-1 sm:mb-2" style="font-size:var(--font-size-2xl);">Tabla de Pago</h2>
-            <div class="max-w-3xl mx-auto w-full">
-                <div id="side-bet-info" class="text-center text-yellow-200 mb-2 hidden value-display font-bold" style="font-size:var(--font-size-2xl);"></div>
+            <h2 class="text-center font-bold text-yellow-300 mb-1 sm:mb-2"
+                style="font-size:var(--font-size-2xl);">Tabla de Pago</h2>
+            <div class="max-w-4xl mx-auto w-full">
+                <div id="side-bet-info" class="text-center text-yellow-200 mb-2 hidden value-display font-bold"
+                     style="font-size:var(--font-size-2xl);"></div>
                 <table id="pay-table" class="w-full pay-table" style="font-size:var(--font-size-table);">
                     <tbody id="pay-table-body" class="divide-y divide-yellow-700/50"></tbody>
                 </table>
             </div>
         </div>
 
+        <!-- PIE -->
         <div class="mt-auto flex-shrink-0 pt-1 sm:pt-2">
             <div class="mx-2" id="min-max-box">
-                <div class="bg-gray-900/50 p-1 sm:p-2 flex items-center" style="font-size:var(--font-size-minmax);">
+                <div class="bg-gray-900/50 p-1 sm:p-2 flex items-center"
+                     style="font-size:var(--font-size-minmax);">
                     <div class="w-1/2 text-center">
                         <span class="text-gray-400">MÍNIMO:</span>
                         <span id="min-bet" class="font-bold text-green-400 value-display"></span>
@@ -211,15 +330,17 @@
                     </div>
                 </div>
             </div>
-            <p id="min-change-info" class="text-center text-yellow-400 px-2 flex items-center justify-center font-semibold leading-snug" style="font-size:var(--font-size-warning);"></p>
-
+            <p id="min-change-info"
+               class="text-center text-yellow-400 px-2 flex items-center justify-center font-semibold leading-snug"
+               style="font-size:var(--font-size-warning);"></p>
             <div class="text-center">
-                <p id="countdown-location" class="flex items-center justify-center" style="font-size:var(--font-size-xl);"></p>
-                <div class="rules-container bg-red-600 text-white font-bold py-1 px-2 sm:p-2 rounded-lg shadow-lg" style="font-size:var(--font-size-xl);">
+                <p id="countdown-location" class="flex items-center justify-center"
+                   style="font-size:var(--font-size-xl);"></p>
+                <div class="rules-container bg-red-600 text-white font-bold py-1 px-2 sm:p-2 rounded-lg shadow-lg"
+                     style="font-size:var(--font-size-xl);">
                     <span id="rules-text"></span>
                 </div>
             </div>
-
             <div class="text-center mt-0.5 sm:mt-1">
                 <p class="text-gray-500 italic" style="font-size:var(--font-size-xs);">CarlosPN Interactive®</p>
             </div>
@@ -227,46 +348,48 @@
     </div>
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
-    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-gray-800 text-white p-6 rounded-lg shadow-2xl w-full max-w-sm relative my-4">
-            <button id="close-config-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-            <h3 class="text-2xl font-bold mb-5 text-center text-yellow-300">Configuración</h3>
-            <div class="space-y-5">
+            <button id="close-config-btn"
+                    class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            <h3 class="text-xl font-bold mb-4 text-center text-yellow-300">Configuración</h3>
+            <div class="space-y-4">
 
                 <!-- JUEGO -->
                 <div>
-                    <label for="game-name-select" class="block text-sm font-medium text-gray-300">Juego Actual:</label>
-                    <select id="game-name-select" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
+                    <label class="block text-sm font-medium text-gray-300">Juego Actual:</label>
+                    <select id="game-name-select"
+                            class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></select>
                 </div>
 
-                <!-- PAR PERFECTO (solo blackjack) -->
-                <div id="side-bet-config-container" class="hidden border border-gray-700 rounded-lg p-3 space-y-3">
+                <!-- PAR PERFECTO -->
+                <div id="side-bet-config-container" class="hidden border border-gray-700 rounded-lg p-3 space-y-2">
                     <h4 class="text-xs font-semibold text-gray-400 text-center uppercase tracking-wide">Valor Par Perfecto</h4>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="block text-xs text-gray-400">Mín Base ($):</label><input type="text" inputmode="numeric" id="side-bet-base-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Máx Base ($):</label><input type="text" inputmode="numeric" id="side-bet-base-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Mín Nuevo ($):</label><input type="text" inputmode="numeric" id="side-bet-new-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Máx Nuevo ($):</label><input type="text" inputmode="numeric" id="side-bet-new-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs text-gray-400">Mín Base:</label><input type="text" inputmode="numeric" id="side-bet-base-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Máx Base:</label><input type="text" inputmode="numeric" id="side-bet-base-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Mín Nuevo:</label><input type="text" inputmode="numeric" id="side-bet-new-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Máx Nuevo:</label><input type="text" inputmode="numeric" id="side-bet-new-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                     </div>
                 </div>
 
                 <!-- APUESTA DE MESA -->
                 <div class="border border-gray-700 rounded-lg p-3 space-y-3">
                     <h4 class="text-xs font-semibold text-gray-400 text-center uppercase tracking-wide">Apuesta de Mesa</h4>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="block text-xs text-gray-400">Mín Base ($):</label><input type="text" inputmode="numeric" id="base-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Máx Base ($):</label><input type="text" inputmode="numeric" id="base-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Mín Nuevo ($):</label><input type="text" inputmode="numeric" id="new-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
-                        <div><label class="block text-xs text-gray-400">Máx Nuevo ($):</label><input type="text" inputmode="numeric" id="new-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs text-gray-400">Mín Base:</label><input type="text" inputmode="numeric" id="base-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Máx Base:</label><input type="text" inputmode="numeric" id="base-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Mín Nuevo:</label><input type="text" inputmode="numeric" id="new-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Máx Nuevo:</label><input type="text" inputmode="numeric" id="new-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                     </div>
 
-                    <!-- HORA DE CAMBIO (con toggle) -->
+                    <!-- HORA DE CAMBIO -->
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-gray-300">Hora de Cambio:</span>
-                            <label class="flex items-center space-x-2 cursor-pointer select-none">
+                            <label class="flex items-center space-x-2 cursor-pointer">
                                 <span class="text-xs text-gray-400">Activar</span>
-                                <div id="toggle-track" class="toggle-track" role="checkbox" tabindex="0" aria-label="Activar hora de cambio">
+                                <div id="toggle-track" class="toggle-track" role="checkbox" tabindex="0">
                                     <div class="toggle-thumb"></div>
                                 </div>
                             </label>
@@ -282,20 +405,39 @@
                 <!-- TEMA DE COLOR -->
                 <div class="border border-gray-700 rounded-lg p-3">
                     <label class="block text-sm font-medium text-gray-300 mb-3">Tema de Color:</label>
-                    <div class="flex items-center justify-between px-1">
-                        <button class="theme-swatch active" data-color="gold"   style="background:#b99d6b" title="Dorado"></button>
-                        <button class="theme-swatch"        data-color="blue"   style="background:#63b3ed" title="Azul"></button>
-                        <button class="theme-swatch"        data-color="red"    style="background:#fc8181" title="Rojo"></button>
-                        <button class="theme-swatch"        data-color="green"  style="background:#68d391" title="Verde"></button>
-                        <button class="theme-swatch"        data-color="purple" style="background:#b794f4" title="Morado"></button>
-                        <button class="theme-swatch"        data-color="white"  style="background:#e2e8f0" title="Blanco"></button>
+                    <div class="flex items-center justify-between px-2">
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch active" data-color="gold"   style="background:#b99d6b" title="Dorado"></button>
+                            <span class="text-gray-500 text-xs">Dorado</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch" data-color="blue"   style="background:#63b3ed" title="Azul"></button>
+                            <span class="text-gray-500 text-xs">Azul</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch" data-color="red"    style="background:#fc8181" title="Rojo"></button>
+                            <span class="text-gray-500 text-xs">Rojo</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch" data-color="green"  style="background:#68d391" title="Verde"></button>
+                            <span class="text-gray-500 text-xs">Verde</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch" data-color="purple" style="background:#b794f4" title="Morado"></button>
+                            <span class="text-gray-500 text-xs">Morado</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch" data-color="white"  style="background:#e2e8f0" title="Blanco"></button>
+                            <span class="text-gray-500 text-xs">Blanco</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- EFECTO DE TABLA -->
+                <!-- EFECTO TABLA -->
                 <div>
                     <label for="table-effect-select" class="block text-sm font-medium text-gray-300">Efecto Tabla de Pago:</label>
-                    <select id="table-effect-select" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+                    <select id="table-effect-select"
+                            class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
                         <option value="shimmer">✨  Destello (Shimmer)</option>
                         <option value="pulse">💫  Pulso</option>
                         <option value="neon">🌟  Neón</option>
@@ -307,10 +449,11 @@
 
                 <!-- FONDO DE PANTALLA -->
                 <div class="border border-gray-700 rounded-lg p-3">
-                    <label class="block text-sm font-medium text-gray-300 mb-3">Fondo de Pantalla:</label>
-                    <div class="grid grid-cols-3 gap-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Fondo de Pantalla:</label>
+                    <div class="grid grid-cols-4 gap-1.5">
                         <button class="bg-btn bg-preview-logo"     data-bg="logo">    <span>Logo</span></button>
                         <button class="bg-btn bg-preview-casino"   data-bg="casino">  <span>Casino</span></button>
+                        <button class="bg-btn bg-preview-cards"    data-bg="cards">   <span>Naipes</span></button>
                         <button class="bg-btn bg-preview-felt"     data-bg="felt">    <span>Fieltro</span></button>
                         <button class="bg-btn bg-preview-dark"     data-bg="dark">    <span>Oscuro</span></button>
                         <button class="bg-btn bg-preview-wood"     data-bg="wood">    <span>Madera</span></button>
@@ -321,23 +464,27 @@
                 <!-- FRASES CARRUSEL -->
                 <div>
                     <label for="rules-input" class="block text-sm font-medium text-gray-300">Frases del carrusel (una por línea):</label>
-                    <textarea id="rules-input" rows="3" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></textarea>
+                    <textarea id="rules-input" rows="3"
+                              class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></textarea>
                 </div>
 
-                <!-- PANTALLA COMPLETA / WAKE LOCK -->
+                <!-- PANTALLA / WAKE LOCK -->
                 <div class="grid grid-cols-2 gap-3">
-                    <button id="fullscreen-btn-config" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1 text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    <button id="fullscreen-btn-config"
+                            class="w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                         <span id="fullscreen-btn-text">Pantalla</span>
                     </button>
-                    <button id="wake-lock-btn" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1 text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"></path><path d="M12 9v4l2 1"></path></svg>
+                    <button id="wake-lock-btn"
+                            class="w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"></path><path d="M12 9v4l2 1"></path></svg>
                         <span id="wake-lock-status-text">Pantalla ON</span>
                     </button>
                 </div>
             </div>
 
-            <button id="save-config-btn" class="mt-6 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
+            <button id="save-config-btn"
+                    class="mt-5 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
                 Guardar Cambios
             </button>
         </div>
@@ -349,11 +496,10 @@
         // ── Fullscreen ──
         const fullscreenBtnConfig = document.getElementById('fullscreen-btn-config');
         const fullscreenBtnText   = document.getElementById('fullscreen-btn-text');
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>console.error(e));
-            else if (document.exitFullscreen) document.exitFullscreen();
-        }
-        function updateFSText() { fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir' : 'Pantalla'; }
+        const toggleFullScreen = () => !document.fullscreenElement
+            ? document.documentElement.requestFullscreen().catch(e=>console.error(e))
+            : document.exitFullscreen();
+        const updateFSText = () => fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir' : 'Pantalla';
         fullscreenBtnConfig.addEventListener('click', toggleFullScreen);
         document.addEventListener('fullscreenchange', updateFSText);
 
@@ -363,15 +509,31 @@
         const wakeLockText = document.getElementById('wake-lock-status-text');
         const acquireWL = async () => {
             if ('wakeLock' in navigator && wakeLockEnabled) {
-                try { wakeLock = await navigator.wakeLock.request('screen'); wakeLockText.textContent='ON'; wakeLockBtn.classList.replace('bg-gray-700','bg-green-600'); wakeLockBtn.classList.replace('hover:bg-gray-600','hover:bg-green-700'); } catch(e){}
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    wakeLockText.textContent = 'ON';
+                    wakeLockBtn.classList.replace('bg-gray-700','bg-green-600');
+                    wakeLockBtn.classList.replace('hover:bg-gray-600','hover:bg-green-700');
+                } catch(e){}
             }
         };
         const releaseWL = async () => {
-            if (wakeLock) { await wakeLock.release(); wakeLock=null; wakeLockText.textContent='Pantalla ON'; wakeLockBtn.classList.replace('bg-green-600','bg-gray-700'); wakeLockBtn.classList.replace('hover:bg-green-700','hover:bg-gray-600'); }
+            if (wakeLock) {
+                await wakeLock.release(); wakeLock = null;
+                wakeLockText.textContent = 'Pantalla ON';
+                wakeLockBtn.classList.replace('bg-green-600','bg-gray-700');
+                wakeLockBtn.classList.replace('hover:bg-green-700','hover:bg-gray-600');
+            }
         };
-        wakeLockBtn.addEventListener('click', async () => { wakeLockEnabled=!wakeLockEnabled; wakeLockEnabled ? await acquireWL() : await releaseWL(); });
+        wakeLockBtn.addEventListener('click', async () => {
+            wakeLockEnabled = !wakeLockEnabled;
+            wakeLockEnabled ? await acquireWL() : await releaseWL();
+        });
         document.addEventListener('visibilitychange', () => { if(document.visibilityState==='visible') acquireWL(); });
-        if (!('wakeLock' in navigator)) { wakeLockBtn.disabled=true; wakeLockText.textContent='N/A'; wakeLockBtn.classList.add('opacity-50','cursor-not-allowed'); }
+        if (!('wakeLock' in navigator)) {
+            wakeLockBtn.disabled = true; wakeLockText.textContent = 'N/A';
+            wakeLockBtn.classList.add('opacity-50','cursor-not-allowed');
+        }
 
         // ── Toggle hora de cambio ──
         const toggleTrack      = document.getElementById('toggle-track');
@@ -385,7 +547,7 @@
             changeTimeFields.classList.toggle('pointer-events-none', !enabled);
         }
         toggleTrack.addEventListener('click', () => syncToggle(!changeTimeEnabled));
-        toggleTrack.addEventListener('keydown', e => { if(e.key===' '||e.key==='Enter'){ e.preventDefault(); syncToggle(!changeTimeEnabled); }});
+        toggleTrack.addEventListener('keydown', e => { if(e.key===' '||e.key==='Enter'){e.preventDefault();syncToggle(!changeTimeEnabled);} });
 
         // ── Datos de juegos ──
         const payTables = {
@@ -396,63 +558,60 @@
         };
 
         // ── DOM refs ──
-        const mainSignEl         = document.getElementById('main-sign');
-        const gameTitleEl        = document.getElementById('game-title');
-        const minBetEl           = document.getElementById('min-bet');
-        const maxBetEl           = document.getElementById('max-bet');
-        const timeSubtitleEl     = document.getElementById('time-subtitle');
-        const minChangeInfoEl    = document.getElementById('min-change-info');
-        const payTableEl         = document.getElementById('pay-table');
-        const payTableBodyEl     = document.getElementById('pay-table-body');
-        const countdownEl        = document.getElementById('countdown-location');
-        const configPanel        = document.getElementById('config-panel');
-        const openConfigBtn      = document.getElementById('open-config-btn');
-        const closeConfigBtn     = document.getElementById('close-config-btn');
-        const saveConfigBtn      = document.getElementById('save-config-btn');
-        const gameNameSelect     = document.getElementById('game-name-select');
-        const changeHourSelect   = document.getElementById('change-hour');
-        const changeMinuteSelect = document.getElementById('change-minute');
-        const baseMinInput       = document.getElementById('base-min-bet');
-        const baseMaxInput       = document.getElementById('base-max-bet');
-        const newMinInput        = document.getElementById('new-min-bet');
-        const newMaxInput        = document.getElementById('new-max-bet');
-        const rulesInput         = document.getElementById('rules-input');
-        const rulesTextEl        = document.getElementById('rules-text');
-        const sideBetInfoEl      = document.getElementById('side-bet-info');
-        const sideBetContainer   = document.getElementById('side-bet-config-container');
-        const sbBaseMin          = document.getElementById('side-bet-base-min');
-        const sbBaseMax          = document.getElementById('side-bet-base-max');
-        const sbNewMin           = document.getElementById('side-bet-new-min');
-        const sbNewMax           = document.getElementById('side-bet-new-max');
-        const tableEffectSelect  = document.getElementById('table-effect-select');
+        const mainSignEl          = document.getElementById('main-sign');
+        const gameTitleEl         = document.getElementById('game-title');
+        const minBetEl            = document.getElementById('min-bet');
+        const maxBetEl            = document.getElementById('max-bet');
+        const timeSubtitleEl      = document.getElementById('time-subtitle');
+        const minChangeInfoEl     = document.getElementById('min-change-info');
+        const payTableEl          = document.getElementById('pay-table');
+        const payTableBodyEl      = document.getElementById('pay-table-body');
+        const countdownEl         = document.getElementById('countdown-location');
+        const configPanel         = document.getElementById('config-panel');
+        const openConfigBtn       = document.getElementById('open-config-btn');
+        const closeConfigBtn      = document.getElementById('close-config-btn');
+        const saveConfigBtn       = document.getElementById('save-config-btn');
+        const gameNameSelect      = document.getElementById('game-name-select');
+        const changeHourSelect    = document.getElementById('change-hour');
+        const changeMinuteSelect  = document.getElementById('change-minute');
+        const baseMinInput        = document.getElementById('base-min-bet');
+        const baseMaxInput        = document.getElementById('base-max-bet');
+        const newMinInput         = document.getElementById('new-min-bet');
+        const newMaxInput         = document.getElementById('new-max-bet');
+        const rulesInput          = document.getElementById('rules-input');
+        const rulesTextEl         = document.getElementById('rules-text');
+        const sideBetInfoEl       = document.getElementById('side-bet-info');
+        const sideBetContainer    = document.getElementById('side-bet-config-container');
+        const sbBaseMin           = document.getElementById('side-bet-base-min');
+        const sbBaseMax           = document.getElementById('side-bet-base-max');
+        const sbNewMin            = document.getElementById('side-bet-new-min');
+        const sbNewMax            = document.getElementById('side-bet-new-max');
+        const tableEffectSelect   = document.getElementById('table-effect-select');
 
-        // ── Config por defecto ──
+        // ── Config ──
         let config;
         const defaultConfig = {
             gameName: "Draw Poker",
-            changeTimeEnabled: false,
-            changeTime: '22:00',
+            changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold',
-            tableEffect: 'shimmer',
-            background: 'logo',
+            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
             }
         };
 
-        // ── Formateadores ──
-        const fmtCLP     = n => new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',minimumFractionDigits:0}).format(n);
-        const fmtInput   = n => new Intl.NumberFormat('es-CL').format(n);
-        const unformat   = s => parseInt(s.replace(/\./g,''),10)||0;
+        // ── Formatters ──
+        const fmtCLP   = n => new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',minimumFractionDigits:0}).format(n);
+        const fmtInput = n => new Intl.NumberFormat('es-CL').format(n);
+        const unformat = s => parseInt(s.replace(/\./g,''),10)||0;
 
         function animateValue(el, val, isHTML=false) {
             const cur = isHTML ? el.innerHTML : el.textContent;
             if (cur !== val) {
                 el.classList.add('updating');
-                setTimeout(()=>{ isHTML ? el.innerHTML=val : el.textContent=val; el.classList.remove('updating'); }, 300);
+                setTimeout(() => { isHTML ? el.innerHTML=val : el.textContent=val; el.classList.remove('updating'); }, 300);
             }
         }
 
@@ -460,12 +619,13 @@
         function applyBackground(bg) {
             document.body.className = document.body.className.replace(/\bbg-\S+/g,'').trim();
             document.body.classList.add('bg-'+bg);
+            document.querySelectorAll('.bg-btn').forEach(b => b.classList.toggle('active', b.dataset.bg===bg));
         }
 
         function applyColorTheme(color) {
             mainSignEl.className = mainSignEl.className.replace(/\bcolor-\S+/g,'').trim();
             if (color !== 'gold') mainSignEl.classList.add('color-'+color);
-            document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active', s.dataset.color===color));
+            document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.color===color));
         }
 
         function applyTableEffect(effect) {
@@ -476,7 +636,7 @@
 
         // ── Marquee ──
         function updateMarquee() {
-            if (config.rules && config.rules.length) {
+            if (config.rules?.length) {
                 const sep = " ••• ";
                 rulesTextEl.textContent = (config.rules.join(sep)+sep).repeat(2);
             } else rulesTextEl.textContent='';
@@ -489,12 +649,16 @@
             if (gd.hasSideBet && gs) {
                 const min = isNewActive ? gs.newMinBet : gs.baseMinBet;
                 const max = isNewActive ? gs.newMaxBet : gs.baseMaxBet;
-                animateValue(sideBetInfoEl, `Valor Par Perfecto:<br><span class="font-normal">${fmtCLP(min)}</span> / <span class="font-normal">${fmtCLP(max)}</span>`, true);
+                animateValue(sideBetInfoEl,
+                    `Valor Par Perfecto:<br><span class="font-normal">${fmtCLP(min)}</span> / <span class="font-normal">${fmtCLP(max)}</span>`,
+                    true);
                 sideBetInfoEl.classList.remove('hidden');
             } else sideBetInfoEl.classList.add('hidden');
-            payTableBodyEl.innerHTML='';
-            gd.pays.forEach((item,i)=>{
-                payTableBodyEl.innerHTML+=`<tr style="--delay:${i*.2};"><td class="font-semibold">${item.hand}</td><td class="text-right font-bold">${item.payout}</td></tr>`;
+
+            payTableBodyEl.innerHTML = '';
+            gd.pays.forEach((item, i) => {
+                payTableBodyEl.innerHTML +=
+                    `<tr style="--delay:${i*.2};"><td class="font-semibold">${item.hand}</td><td class="text-right font-bold">${item.payout}</td></tr>`;
             });
         }
 
@@ -502,14 +666,14 @@
             const g = gameNameSelect.value;
             if (payTables[g]?.hasSideBet) {
                 const s = config.gameSettings[g] || defaultConfig.gameSettings[g];
-                sbBaseMin.value = fmtInput(s.baseMinBet); sbBaseMax.value = fmtInput(s.baseMaxBet);
-                sbNewMin.value  = fmtInput(s.newMinBet);  sbNewMax.value  = fmtInput(s.newMaxBet);
+                sbBaseMin.value=fmtInput(s.baseMinBet); sbBaseMax.value=fmtInput(s.baseMaxBet);
+                sbNewMin.value =fmtInput(s.newMinBet);  sbNewMax.value =fmtInput(s.newMaxBet);
                 sideBetContainer.classList.remove('hidden');
             } else sideBetContainer.classList.add('hidden');
         }
 
         function populateFormSelects() {
-            Object.keys(payTables).forEach(name=>{
+            Object.keys(payTables).forEach(name => {
                 const o=document.createElement('option'); o.value=name; o.textContent=name; gameNameSelect.appendChild(o);
             });
             for(let i=0;i<24;i++){const o=document.createElement('option'); o.value=i.toString().padStart(2,'0'); o.textContent=o.value; changeHourSelect.appendChild(o);}
@@ -517,27 +681,22 @@
         }
 
         function loadConfig() {
-            const saved = localStorage.getItem('pokerConfigV40');
+            const saved = localStorage.getItem('pokerConfigV41');
             config = saved ? {...defaultConfig,...JSON.parse(saved)} : {...defaultConfig};
-            if (!config.gameSettings) config.gameSettings={};
-            Object.keys(payTables).forEach(g=>{
-                if(payTables[g].hasSideBet && !config.gameSettings[g]) config.gameSettings[g]=defaultConfig.gameSettings[g];
+            if (!config.gameSettings) config.gameSettings = {};
+            Object.keys(payTables).forEach(g => {
+                if (payTables[g].hasSideBet && !config.gameSettings[g])
+                    config.gameSettings[g] = defaultConfig.gameSettings[g];
             });
-            // Poblar formulario
             gameNameSelect.value    = config.gameName;
             const [h,m]             = (config.changeTime||'22:00').split(':');
             changeHourSelect.value  = h; changeMinuteSelect.value = m;
             syncToggle(!!config.changeTimeEnabled);
-            baseMinInput.value      = fmtInput(config.baseMin);
-            newMinInput.value       = fmtInput(config.newMin);
-            baseMaxInput.value      = fmtInput(config.baseMax);
-            newMaxInput.value       = fmtInput(config.newMax);
-            rulesInput.value        = config.rules.join('\n');
+            baseMinInput.value = fmtInput(config.baseMin); baseMaxInput.value = fmtInput(config.baseMax);
+            newMinInput.value  = fmtInput(config.newMin);  newMaxInput.value  = fmtInput(config.newMax);
+            rulesInput.value   = config.rules.join('\n');
             tableEffectSelect.value = config.tableEffect||'shimmer';
             updateSideBetConfigUI();
-            // Sincronizar botones de fondo
-            document.querySelectorAll('.bg-btn').forEach(b=>b.classList.toggle('active',b.dataset.bg===(config.background||'logo')));
-            // Aplicar visual
             applyBackground(config.background||'logo');
             applyColorTheme(config.colorTheme||'gold');
             applyTableEffect(config.tableEffect||'shimmer');
@@ -547,20 +706,18 @@
             config.gameName          = gameNameSelect.value;
             config.changeTimeEnabled = changeTimeEnabled;
             config.changeTime        = `${changeHourSelect.value}:${changeMinuteSelect.value}`;
-            config.baseMin           = unformat(baseMinInput.value);
-            config.newMin            = unformat(newMinInput.value);
-            config.baseMax           = unformat(baseMaxInput.value);
-            config.newMax            = unformat(newMaxInput.value);
-            config.rules             = rulesInput.value.split('\n').filter(r=>r.trim()!=='');
-            config.tableEffect       = tableEffectSelect.value;
+            config.baseMin = unformat(baseMinInput.value); config.baseMax = unformat(baseMaxInput.value);
+            config.newMin  = unformat(newMinInput.value);  config.newMax  = unformat(newMaxInput.value);
+            config.rules       = rulesInput.value.split('\n').filter(r=>r.trim()!=='');
+            config.tableEffect = tableEffectSelect.value;
             const g = config.gameName;
             if (payTables[g]?.hasSideBet) {
-                config.gameSettings[g]={
+                config.gameSettings[g] = {
                     baseMinBet:unformat(sbBaseMin.value), baseMaxBet:unformat(sbBaseMax.value),
-                    newMinBet:unformat(sbNewMin.value),   newMaxBet:unformat(sbNewMax.value),
+                    newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
-            localStorage.setItem('pokerConfigV40', JSON.stringify(config));
+            localStorage.setItem('pokerConfigV41', JSON.stringify(config));
             closePanel(); checkTime(); updateMarquee();
         }
 
@@ -586,7 +743,7 @@
             animateValue(minBetEl, fmtCLP(minAmt));
             animateValue(maxBetEl, fmtCLP(maxAmt));
             renderPayTable(config.gameName, isNewActive);
-            if (config.gameName==="Black Jack Par Perfecto") {
+            if (config.gameName === "Black Jack Par Perfecto") {
                 mainSignEl.classList.remove('theme-poker');   mainSignEl.classList.add('theme-blackjack');
                 payTableEl.classList.add('pay-table-blackjack');
             } else {
@@ -600,7 +757,6 @@
         function checkTime() {
             const newActive = isNewMinimumActive();
             updateDisplay(newActive);
-            // Limpiar textos dinámicos si hora de cambio está desactivada
             if (!config.changeTimeEnabled) {
                 timeSubtitleEl.textContent=''; minChangeInfoEl.textContent='';
                 countdownEl.textContent=''; countdownEl.classList.remove('text-orange-400','font-bold','animate-pulse');
@@ -611,21 +767,21 @@
             const nowMin  = now.getHours()*60+now.getMinutes();
             const tgtMin  = th*60+tm;
             if (newActive) {
-                let passed=nowMin-tgtMin; if(passed<0)passed+=24*60;
-                timeSubtitleEl.textContent=(passed<1)?'Mínimos actualizados.':'';
+                let passed = nowMin - tgtMin; if(passed<0) passed+=24*60;
+                timeSubtitleEl.textContent = (passed<1) ? 'Mínimos actualizados.' : '';
                 minChangeInfoEl.textContent=''; countdownEl.textContent='';
                 countdownEl.classList.remove('text-orange-400','font-bold','animate-pulse');
             } else {
-                const minsLeft=tgtMin-nowMin;
+                const minsLeft = tgtMin - nowMin;
                 timeSubtitleEl.textContent='';
-                if(minsLeft>0&&minsLeft<=5){
-                    countdownEl.textContent=`¡CAMBIO A ${fmtCLP(config.newMin)} EN ${minsLeft} MINUTO${minsLeft===1?'':'S'}!`;
+                if (minsLeft>0&&minsLeft<=5) {
+                    countdownEl.textContent = `¡CAMBIO A ${fmtCLP(config.newMin)} EN ${minsLeft} MINUTO${minsLeft===1?'':'S'}!`;
                     countdownEl.classList.add('text-orange-400','font-bold','animate-pulse');
                     minChangeInfoEl.textContent='';
                 } else {
                     countdownEl.textContent='';
                     countdownEl.classList.remove('text-orange-400','font-bold','animate-pulse');
-                    minChangeInfoEl.textContent=`Estos mínimos son hasta las ${config.changeTime}, luego suben a ${fmtCLP(config.newMin)}`;
+                    minChangeInfoEl.textContent = `Estos mínimos son hasta las ${config.changeTime}, luego suben a ${fmtCLP(config.newMin)}`;
                 }
             }
         }
@@ -646,18 +802,15 @@
         gameNameSelect.addEventListener('change', updateSideBetConfigUI);
         configPanel.addEventListener('click', e=>{ if(e.target===configPanel) closePanel(); });
 
-        document.querySelectorAll('.theme-swatch').forEach(btn=>{
-            btn.addEventListener('click',()=>{ config.colorTheme=btn.dataset.color; applyColorTheme(btn.dataset.color); });
+        document.querySelectorAll('.theme-swatch').forEach(btn => {
+            btn.addEventListener('click', () => { config.colorTheme=btn.dataset.color; applyColorTheme(btn.dataset.color); });
         });
 
-        document.querySelectorAll('.bg-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>{
-                config.background=btn.dataset.bg; applyBackground(btn.dataset.bg);
-                document.querySelectorAll('.bg-btn').forEach(b=>b.classList.toggle('active',b===btn));
-            });
+        document.querySelectorAll('.bg-btn').forEach(btn => {
+            btn.addEventListener('click', () => { config.background=btn.dataset.bg; applyBackground(btn.dataset.bg); });
         });
 
-        tableEffectSelect.addEventListener('change',()=>applyTableEffect(tableEffectSelect.value));
+        tableEffectSelect.addEventListener('change', () => applyTableEffect(tableEffectSelect.value));
 
         populateFormSelects();
         loadConfig();
