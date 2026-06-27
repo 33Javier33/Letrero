@@ -68,7 +68,21 @@
             border: 2px solid var(--border-color);
             box-shadow: 0 0 15px var(--glow-btn);
             background-color: rgba(15,23,42,.75);
+            border-radius: 50%;
+            transition: border-color .5s, box-shadow .5s, border-radius .3s;
         }
+        #open-config-btn img               { border-radius: 50%;    transition: border-radius .3s; }
+        #open-config-btn.logo-square       { border-radius: .55rem; }
+        #open-config-btn.logo-square   img { border-radius: .35rem; }
+        #open-config-btn.logo-plain        { border: none !important; box-shadow: none !important; background: transparent !important; border-radius: .35rem; }
+        #open-config-btn.logo-plain    img { border-radius: .35rem; }
+
+        /* Botones selector de forma */
+        .logo-shape-btn { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .7rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
+        .logo-shape-btn.active  { border-color:#d97706; background:#44372a; }
+        .logo-shape-btn:hover:not(.active) { border-color:#6b7280; background:#4b5563; }
+        .logo-shape-btn span { font-size:.68rem; color:#9ca3af; font-weight:600; }
+        .logo-shape-btn.active span { color:#fbbf24; }
 
         /* ═══════════════════════════════════════════════════════════
            ANIMACIONES POR TEMA DE COLOR
@@ -316,8 +330,8 @@
 
         <!-- ENCABEZADO -->
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-            <div id="open-config-btn" class="rounded-3xl cursor-pointer transition-opacity hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo" class="w-full h-full object-cover rounded-3xl"
+            <div id="open-config-btn" class="cursor-pointer hover:opacity-80">
+                <img src="img/dreams1.png" alt="Logo" class="w-full h-full object-cover"
                      onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
             <div class="flex-grow min-w-0 text-center">
@@ -457,6 +471,25 @@
                             <button class="theme-swatch" data-color="white"  style="background:#e2e8f0" title="Blanco"></button>
                             <span class="text-gray-500 text-xs">Blanco</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- FORMA DEL LOGO -->
+                <div class="border border-gray-700 rounded-lg p-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Forma del Logo:</label>
+                    <div class="flex gap-2">
+                        <button class="logo-shape-btn active" data-lshape="circle">
+                            <div class="w-8 h-8 bg-gray-500 border-2 border-yellow-600" style="border-radius:50%;"></div>
+                            <span>Círculo</span>
+                        </button>
+                        <button class="logo-shape-btn" data-lshape="square">
+                            <div class="w-8 h-8 bg-gray-500 border-2 border-yellow-600 rounded-lg"></div>
+                            <span>Cuadro</span>
+                        </button>
+                        <button class="logo-shape-btn" data-lshape="plain">
+                            <div class="w-8 h-8 bg-gray-500 rounded" style="border:2px dashed #6b7280;"></div>
+                            <span>Sin marco</span>
+                        </button>
                     </div>
                 </div>
 
@@ -629,7 +662,7 @@
             changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee',
+            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'circle',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
@@ -671,6 +704,13 @@
         // ── Carrusel de frases ──
         let fadeCarouselIndex = 0;
         let fadeCarouselTimer = null;
+
+        function applyLogoShape(shape) {
+            openConfigBtn.className = openConfigBtn.className.replace(/\blogo-\S+/g,'').trim();
+            if (shape !== 'circle') openConfigBtn.classList.add('logo-' + shape);
+            document.querySelectorAll('.logo-shape-btn').forEach(b =>
+                b.classList.toggle('active', b.dataset.lshape === shape));
+        }
 
         function applyCarouselStyle(style) {
             rulesContainerEl.classList.toggle('carousel-fade',    style === 'fade');
@@ -777,6 +817,7 @@
             applyColorTheme(config.colorTheme||'gold');
             applyTableEffect(config.tableEffect||'shimmer');
             applyCarouselStyle(config.carouselStyle||'marquee');
+            applyLogoShape(config.logoShape||'circle');
         }
 
         function saveConfig() {
@@ -888,6 +929,13 @@
         });
 
         tableEffectSelect.addEventListener('change', () => applyTableEffect(tableEffectSelect.value));
+
+        document.querySelectorAll('.logo-shape-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                config.logoShape = btn.dataset.lshape;
+                applyLogoShape(btn.dataset.lshape);
+            });
+        });
 
         document.querySelectorAll('.carousel-style-btn').forEach(btn => {
             btn.addEventListener('click', () => {
