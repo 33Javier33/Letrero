@@ -60,25 +60,29 @@
         #main-sign.color-purple { --border-color:#b794f4; --glow-lo:rgba(183,148,244,.50); --glow-hi:rgba(183,148,244,.90); --glow-btn:rgba(183,148,244,.70); --pulse-speed:2.5s; }
         #main-sign.color-white  { --border-color:#e2e8f0; --glow-lo:rgba(226,232,240,.40); --glow-hi:rgba(226,232,240,.75); --glow-btn:rgba(226,232,240,.60); --pulse-speed:7s;   }
 
-        /* Logo responsivo */
+        /* Logo responsivo — rectangular para mostrar texto completo */
         #open-config-btn {
-            width:  clamp(3rem, 10vmin, 6rem);
-            height: clamp(3rem, 10vmin, 6rem);
-            flex-shrink: 0;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 0 15px var(--glow-btn);
-            background-color: rgba(15,23,42,.75);
-            border-radius: 50%;
+            width:         clamp(7rem, 20vmin, 13rem);
+            height:        clamp(2.8rem, 8vmin, 5.2rem);
+            flex-shrink:   0;
+            overflow:      hidden;
+            border:        2px solid var(--border-color);
+            box-shadow:    0 0 15px var(--glow-btn);
+            background-color: #fff;
+            border-radius: .45rem;
             transition: border-color .5s, box-shadow .5s, border-radius .3s;
         }
-        #open-config-btn img               { border-radius: 50%;    transition: border-radius .3s; }
-        #open-config-btn.logo-square       { border-radius: .55rem; }
-        #open-config-btn.logo-square   img { border-radius: .35rem; }
-        #open-config-btn.logo-plain        { border: none !important; box-shadow: none !important; background: transparent !important; border-radius: .35rem; }
-        #open-config-btn.logo-plain    img { border-radius: .35rem; }
+        /* img llena el ancho; overflow:hidden corta las estrellas del fondo */
+        #open-config-btn img {
+            width: 100%; height: auto; display: block;
+            transition: border-radius .3s;
+        }
+        /* Formas — todas en contexto rectangular */
+        #open-config-btn.logo-circle     { border-radius: 9999px; }       /* oval */
+        #open-config-btn.logo-plain      { border: none !important; box-shadow: none !important; border-radius: .35rem; }
 
         /* Botones selector de forma */
-        .logo-shape-btn { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .7rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
+        .logo-shape-btn { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .6rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
         .logo-shape-btn.active  { border-color:#d97706; background:#44372a; }
         .logo-shape-btn:hover:not(.active) { border-color:#6b7280; background:#4b5563; }
         .logo-shape-btn span { font-size:.68rem; color:#9ca3af; font-weight:600; }
@@ -331,7 +335,7 @@
         <!-- ENCABEZADO -->
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="cursor-pointer hover:opacity-80">
-                <img src="img/dreams1.png" alt="Logo" class="w-full h-full object-cover"
+                <img src="img/dreams2.png" alt="Logo" class="w-full object-cover"
                      onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
             <div class="flex-grow min-w-0 text-center">
@@ -476,18 +480,18 @@
 
                 <!-- FORMA DEL LOGO -->
                 <div class="border border-gray-700 rounded-lg p-3">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Forma del Logo:</label>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Marco del Logo:</label>
                     <div class="flex gap-2">
-                        <button class="logo-shape-btn active" data-lshape="circle">
-                            <div class="w-8 h-8 bg-gray-500 border-2 border-yellow-600" style="border-radius:50%;"></div>
-                            <span>Círculo</span>
+                        <button class="logo-shape-btn active" data-lshape="square">
+                            <div class="h-4 bg-gray-400 border-2 border-yellow-600 rounded mx-auto" style="width:2.8rem;"></div>
+                            <span>Clásico</span>
                         </button>
-                        <button class="logo-shape-btn" data-lshape="square">
-                            <div class="w-8 h-8 bg-gray-500 border-2 border-yellow-600 rounded-lg"></div>
-                            <span>Cuadro</span>
+                        <button class="logo-shape-btn" data-lshape="circle">
+                            <div class="h-4 bg-gray-400 border-2 border-yellow-600 mx-auto" style="width:2.8rem; border-radius:9999px;"></div>
+                            <span>Oval</span>
                         </button>
                         <button class="logo-shape-btn" data-lshape="plain">
-                            <div class="w-8 h-8 bg-gray-500 rounded" style="border:2px dashed #6b7280;"></div>
+                            <div class="h-4 bg-gray-400 rounded mx-auto" style="width:2.8rem; border:2px dashed #6b7280;"></div>
                             <span>Sin marco</span>
                         </button>
                     </div>
@@ -662,7 +666,7 @@
             changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'circle',
+            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'square',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
@@ -707,7 +711,7 @@
 
         function applyLogoShape(shape) {
             openConfigBtn.className = openConfigBtn.className.replace(/\blogo-\S+/g,'').trim();
-            if (shape !== 'circle') openConfigBtn.classList.add('logo-' + shape);
+            if (shape !== 'square') openConfigBtn.classList.add('logo-' + shape);
             document.querySelectorAll('.logo-shape-btn').forEach(b =>
                 b.classList.toggle('active', b.dataset.lshape === shape));
         }
@@ -797,7 +801,7 @@
         }
 
         function loadConfig() {
-            const saved = localStorage.getItem('pokerConfigV42');
+            const saved = localStorage.getItem('pokerConfigV43');
             config = saved ? {...defaultConfig,...JSON.parse(saved)} : {...defaultConfig};
             if (!config.gameSettings) config.gameSettings = {};
             Object.keys(payTables).forEach(g => {
@@ -835,7 +839,7 @@
                     newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
-            localStorage.setItem('pokerConfigV42', JSON.stringify(config));
+            localStorage.setItem('pokerConfigV43', JSON.stringify(config));
             closePanel(); checkTime(); updateMarquee();
         }
 
