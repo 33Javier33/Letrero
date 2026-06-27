@@ -465,7 +465,8 @@
     </div>
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
-    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 overflow-y-auto z-50">
+      <div id="config-panel-inner" class="min-h-full flex items-center justify-center p-4">
         <div class="bg-gray-800 text-white p-6 rounded-lg shadow-2xl w-full max-w-sm relative my-4">
             <button id="close-config-btn"
                     class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
@@ -648,6 +649,7 @@
                 Guardar Cambios
             </button>
         </div>
+      </div>
     </div>
 
     <script>
@@ -942,8 +944,8 @@
             closePanel(); checkTime(); updateMarquee();
         }
 
-        function openPanel()  { configPanel.classList.remove('hidden'); configPanel.classList.add('flex'); }
-        function closePanel() { configPanel.classList.add('hidden');    configPanel.classList.remove('flex'); }
+        function openPanel()  { configPanel.classList.remove('hidden'); }
+        function closePanel() { configPanel.classList.add('hidden'); }
 
         // ── Lógica de hora de cambio ──
         function isNewMinimumActive() {
@@ -1021,7 +1023,10 @@
         closeConfigBtn.addEventListener('click', closePanel);
         saveConfigBtn.addEventListener('click', saveConfig);
         gameNameSelect.addEventListener('change', updateSideBetConfigUI);
-        configPanel.addEventListener('click', e=>{ if(e.target===configPanel) closePanel(); });
+        configPanel.addEventListener('click', e=>{
+            const inner = document.getElementById('config-panel-inner');
+            if(e.target===configPanel||e.target===inner) closePanel();
+        });
 
         document.querySelectorAll('.theme-swatch').forEach(btn => {
             btn.addEventListener('click', () => { config.colorTheme=btn.dataset.color; applyColorTheme(btn.dataset.color); });
