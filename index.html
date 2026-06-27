@@ -10,18 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Tipografía Fluida */
-            --font-size-xs: clamp(0.65rem, 0.5rem + 0.5vw, 0.75rem);
-            --font-size-warning: clamp(1rem, 0.8rem + 1.5vw, 1.75rem);
-            --font-size-sm: clamp(0.8rem, 0.5rem + 1vw, 1rem);
-            --font-size-base: clamp(1rem, 0.8rem + 1vw, 1.25rem);
-            --font-size-xl: clamp(1.1rem, 0.8rem + 1.2vw, 1.5rem);
-            --font-size-table: clamp(1.5rem, 1rem + 3vw, 3.25rem);
-            --font-size-table-blackjack: clamp(1.8rem, 1.2rem + 2.5vw, 3rem);
-            --font-size-minmax: clamp(1.8rem, 1rem + 4vw, 3.5rem);
-            --font-size-2xl: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
-            --font-size-5xl: clamp(3.2rem, 1.5rem + 7vw, 6.5rem);
-            --font-size-5xl-compact: clamp(2.4rem, 1.2rem + 5vw, 5rem);
+            /* Tipografía Fluida — usa vmin para escalar con la dimensión menor de la pantalla */
+            --font-size-xs: clamp(0.5rem, 1.3vmin, 0.75rem);
+            --font-size-warning: clamp(0.7rem, 2.2vmin, 1.75rem);
+            --font-size-sm: clamp(0.6rem, 1.5vmin, 1rem);
+            --font-size-base: clamp(0.75rem, 1.8vmin, 1.25rem);
+            --font-size-xl: clamp(0.8rem, 2.2vmin, 1.5rem);
+            --font-size-table: clamp(0.85rem, 3.5vmin, 3.25rem);
+            --font-size-table-blackjack: clamp(0.9rem, 3vmin, 3rem);
+            --font-size-minmax: clamp(0.9rem, 3.8vmin, 3.5rem);
+            --font-size-2xl: clamp(0.85rem, 2.8vmin, 2.75rem);
+            --font-size-5xl: clamp(1.4rem, 7vmin, 6.5rem);
+            --font-size-5xl-compact: clamp(1.1rem, 5.5vmin, 5rem);
         }
 
         body {
@@ -33,8 +33,11 @@
             overflow: hidden;
         }
 
-        /* Estilo para resaltar el botón del logo sobre el mosaico */
+        /* Logo responsivo: escala con vmin para adaptarse a cualquier pantalla */
         #open-config-btn {
+            width: clamp(3rem, 10vmin, 6rem);
+            height: clamp(3rem, 10vmin, 6rem);
+            flex-shrink: 0;
             border: 2px solid #b99d6b;
             box-shadow: 0 0 15px rgba(245, 208, 125, 0.7);
             background-color: rgba(15, 23, 42, 0.75);
@@ -90,10 +93,17 @@
             100% { background-position: 1000px 0; }
         }
 
-        .pay-table tr { 
-            position: relative; 
-            overflow: hidden; 
-            transition: all 0.2s ease-in-out; 
+        .pay-table td {
+            padding-top: clamp(0.1rem, 0.45vmin, 0.45rem);
+            padding-bottom: clamp(0.1rem, 0.45vmin, 0.45rem);
+            padding-left: clamp(0.1rem, 0.4vmin, 0.4rem);
+            padding-right: clamp(0.1rem, 0.4vmin, 0.4rem);
+        }
+
+        .pay-table tr {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
         }
 
         .pay-table tr::after {
@@ -113,10 +123,10 @@
         .pay-table-blackjack {
             font-size: var(--font-size-table-blackjack) !important;
         }
-        
+
         .pay-table-blackjack td {
-            padding-top: 1.2rem;
-            padding-bottom: 1.2rem;
+            padding-top: clamp(0.3rem, 1.2vmin, 1.2rem);
+            padding-bottom: clamp(0.3rem, 1.2vmin, 1.2rem);
         }
 
         #config-panel { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
@@ -139,27 +149,31 @@
             opacity: 0;
             transform: scale(0.95);
         }
+
+        /* Pantallas de poca altura (ej. móvil horizontal < 500px de alto) */
+        @media (max-height: 500px) {
+            #time-subtitle { display: none; }
+            #min-change-info { padding-top: 0; padding-bottom: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="main-sign" class="poker-sign text-white p-4 sm:p-6 w-screen h-screen flex flex-col">
-        <div class="flex items-start space-x-4 flex-shrink-0">
-            <!-- --- CAMBIO: El toque final de redondeo --- -->
-            <div id="open-config-btn" class="w-24 h-24 flex-shrink-0 rounded-3xl cursor-pointer transition-opacity hover:opacity-80">
+    <div id="main-sign" class="poker-sign text-white p-3 sm:p-4 lg:p-6 w-screen h-screen flex flex-col">
+        <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+            <div id="open-config-btn" class="rounded-3xl cursor-pointer transition-opacity hover:opacity-80">
                 <img src="img/dreams1.png" alt="Logo del Casino" class="w-full h-full object-cover rounded-3xl" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
             </div>
-            <!-- --- FIN CAMBIO --- -->
-            <div class="flex-grow">
-                <div class="pt-2 text-center">
-                    <h1 id="game-title" class="font-bold text-yellow-300 tracking-wider" style="text-shadow: 2px 2px 4px #000; font-size: var(--font-size-5xl);"></h1>
-                    <p id="time-subtitle" class="mt-2 text-yellow-400 h-5" style="font-size: var(--font-size-sm);"></p>
+            <div class="flex-grow min-w-0">
+                <div class="text-center">
+                    <h1 id="game-title" class="font-bold text-yellow-300 tracking-wider leading-tight" style="text-shadow: 2px 2px 4px #000; font-size: var(--font-size-5xl);"></h1>
+                    <p id="time-subtitle" class="mt-1 text-yellow-400" style="font-size: var(--font-size-sm); min-height: 1em;"></p>
                 </div>
             </div>
         </div>
         
-        <div class="px-2 pt-2 flex-grow overflow-y-hidden flex flex-col justify-center">
-            <h2 class="text-center font-bold text-yellow-300 mb-2" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
+        <div class="px-2 pt-1 sm:pt-2 flex-grow min-h-0 overflow-hidden flex flex-col justify-center">
+            <h2 class="text-center font-bold text-yellow-300 mb-1 sm:mb-2" style="font-size: var(--font-size-2xl);">Tabla de Pago</h2>
             <div class="max-w-3xl mx-auto w-full">
                 <div id="side-bet-info" class="text-center text-yellow-200 mb-2 hidden value-display font-bold" style="font-size: var(--font-size-2xl);"></div>
                 <table id="pay-table" class="w-full pay-table" style="font-size: var(--font-size-table);">
@@ -168,9 +182,9 @@
             </div>
         </div>
 
-        <div class="mt-auto flex-shrink-0 pt-2">
+        <div class="mt-auto flex-shrink-0 pt-1 sm:pt-2">
             <div class="mx-2" id="min-max-box">
-                <div class="bg-gray-900/50 p-2 flex items-center" style="font-size: var(--font-size-minmax);">
+                <div class="bg-gray-900/50 p-1 sm:p-2 flex items-center" style="font-size: var(--font-size-minmax);">
                     <div class="w-1/2 text-center">
                         <span class="text-gray-400">MÍNIMO:</span>
                         <span id="min-bet" class="font-bold text-green-400 value-display"></span>
@@ -181,16 +195,16 @@
                     </div>
                 </div>
             </div>
-            <p id="min-change-info" class="text-center text-yellow-400 px-2 h-auto flex items-center justify-center font-semibold" style="font-size: var(--font-size-warning);"></p>
-            
+            <p id="min-change-info" class="text-center text-yellow-400 px-2 flex items-center justify-center font-semibold leading-snug" style="font-size: var(--font-size-warning);"></p>
+
             <div class="text-center">
-                <p id="countdown-location" class="h-auto flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
-                <div class="rules-container bg-red-600 text-white font-bold p-2 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
+                <p id="countdown-location" class="flex items-center justify-center" style="font-size: var(--font-size-xl);"></p>
+                <div class="rules-container bg-red-600 text-white font-bold py-1 px-2 sm:p-2 rounded-lg shadow-lg" style="font-size: var(--font-size-xl);">
                     <span id="rules-text"></span>
                 </div>
             </div>
-            
-            <div class="text-center mt-1">
+
+            <div class="text-center mt-0.5 sm:mt-1">
                 <p class="text-gray-500 italic" style="font-size: var(--font-size-xs);">CarlosPN Interactive®</p>
             </div>
         </div>
