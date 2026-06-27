@@ -68,25 +68,55 @@
             overflow:      hidden;
             border:        2px solid var(--border-color);
             box-shadow:    0 0 15px var(--glow-btn);
-            background-color: #fff;
+            background:    transparent;
             border-radius: .45rem;
+            display:       flex;
+            align-items:   center;
+            justify-content: center;
             transition: border-color .5s, box-shadow .5s, border-radius .3s;
         }
-        /* img llena el ancho; overflow:hidden corta las estrellas del fondo */
+        /* Foto: img llena el ancho; filtro SVG elimina blanco/plateado */
         #open-config-btn img {
-            width: 100%; height: auto; display: block;
-            transition: border-radius .3s;
+            width: 100%; height: auto; display: block; flex-shrink: 0;
+            filter: url(#rm-white);
         }
-        /* Formas — todas en contexto rectangular */
-        #open-config-btn.logo-circle     { border-radius: 9999px; }       /* oval */
+
+        /* Tipos de logo — texto CSS */
+        #open-config-btn.logo-tipo-neon img,
+        #open-config-btn.logo-tipo-texto img { display: none; }
+
+        #open-config-btn.logo-tipo-neon::after,
+        #open-config-btn.logo-tipo-texto::after {
+            content: 'DREAMS';
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--border-color);
+            font-size: clamp(1rem, 3vmin, 2rem);
+            letter-spacing: .14em;
+        }
+        @keyframes logo-pulse {
+            0%,100% { text-shadow: 0 0 6px var(--glow-lo), 0 0 16px var(--glow-lo); }
+            50%      { text-shadow: 0 0 14px var(--glow-hi), 0 0 32px var(--glow-hi), 0 0 55px var(--glow-lo); }
+        }
+        #open-config-btn.logo-tipo-neon::after {
+            animation: logo-pulse var(--pulse-speed) infinite ease-in-out;
+        }
+        #open-config-btn.logo-tipo-texto::after {
+            text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 2px 6px rgba(0,0,0,.6);
+        }
+
+        /* Formas — oval y sin marco */
+        #open-config-btn.logo-circle     { border-radius: 9999px; }
         #open-config-btn.logo-plain      { border: none !important; box-shadow: none !important; border-radius: .35rem; }
 
-        /* Botones selector de forma */
-        .logo-shape-btn { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .6rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
-        .logo-shape-btn.active  { border-color:#d97706; background:#44372a; }
-        .logo-shape-btn:hover:not(.active) { border-color:#6b7280; background:#4b5563; }
-        .logo-shape-btn span { font-size:.68rem; color:#9ca3af; font-weight:600; }
-        .logo-shape-btn.active span { color:#fbbf24; }
+        /* Botones selector */
+        .logo-shape-btn, .logo-tipo-btn  { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .5rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
+        .logo-shape-btn.active,
+        .logo-tipo-btn.active  { border-color:#d97706; background:#44372a; }
+        .logo-shape-btn:hover:not(.active),
+        .logo-tipo-btn:hover:not(.active) { border-color:#6b7280; background:#4b5563; }
+        .logo-shape-btn span, .logo-tipo-btn span { font-size:.68rem; color:#9ca3af; font-weight:600; }
+        .logo-shape-btn.active span, .logo-tipo-btn.active span { color:#fbbf24; }
 
         /* ═══════════════════════════════════════════════════════════
            ANIMACIONES POR TEMA DE COLOR
@@ -330,6 +360,21 @@
 </head>
 <body class="bg-logo">
 
+    <!-- Filtro SVG: elimina fondo blanco/plateado manteniendo letras doradas -->
+    <!-- El canal alfa se calcula como 5×R - 5×B: dorado (R>B) queda opaco,
+         blanco/plateado (R≈B) queda transparente. -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+        <defs>
+            <filter id="rm-white" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix"
+                    values="1 0 0 0 0
+                            0 1 0 0 0
+                            0 0 1 0 0
+                            5 0 -5 0 0" />
+            </filter>
+        </defs>
+    </svg>
+
     <div id="main-sign" class="poker-sign effect-shimmer text-white p-3 sm:p-4 lg:p-6 w-screen h-screen flex flex-col">
 
         <!-- ENCABEZADO -->
@@ -475,6 +520,25 @@
                             <button class="theme-swatch" data-color="white"  style="background:#e2e8f0" title="Blanco"></button>
                             <span class="text-gray-500 text-xs">Blanco</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- TIPO DE LOGO -->
+                <div class="border border-gray-700 rounded-lg p-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Tipo de Logo:</label>
+                    <div class="flex gap-2">
+                        <button class="logo-tipo-btn active" data-ltipo="foto">
+                            <div class="h-5 w-14 bg-gray-800 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#b99d6b;border:1px solid #b99d6b;">DREAMS</div>
+                            <span>Foto</span>
+                        </button>
+                        <button class="logo-tipo-btn" data-ltipo="neon">
+                            <div class="h-5 w-14 bg-gray-900 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#f6d860;text-shadow:0 0 6px #f6d860,0 0 14px #f6d860;">DREAMS</div>
+                            <span>Neón</span>
+                        </button>
+                        <button class="logo-tipo-btn" data-ltipo="texto">
+                            <div class="h-5 w-14 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#b99d6b;text-shadow:0 1px 3px rgba(0,0,0,.9);">DREAMS</div>
+                            <span>Texto</span>
+                        </button>
                     </div>
                 </div>
 
@@ -666,7 +730,7 @@
             changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'square',
+            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'square', logoTipo: 'foto',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
@@ -708,6 +772,13 @@
         // ── Carrusel de frases ──
         let fadeCarouselIndex = 0;
         let fadeCarouselTimer = null;
+
+        function applyLogoTipo(tipo) {
+            openConfigBtn.className = openConfigBtn.className.replace(/\blogo-tipo-\S+/g,'').trim();
+            if (tipo !== 'foto') openConfigBtn.classList.add('logo-tipo-' + tipo);
+            document.querySelectorAll('.logo-tipo-btn').forEach(b =>
+                b.classList.toggle('active', b.dataset.ltipo === tipo));
+        }
 
         function applyLogoShape(shape) {
             openConfigBtn.className = openConfigBtn.className.replace(/\blogo-\S+/g,'').trim();
@@ -801,7 +872,7 @@
         }
 
         function loadConfig() {
-            const saved = localStorage.getItem('pokerConfigV43');
+            const saved = localStorage.getItem('pokerConfigV44');
             config = saved ? {...defaultConfig,...JSON.parse(saved)} : {...defaultConfig};
             if (!config.gameSettings) config.gameSettings = {};
             Object.keys(payTables).forEach(g => {
@@ -821,7 +892,8 @@
             applyColorTheme(config.colorTheme||'gold');
             applyTableEffect(config.tableEffect||'shimmer');
             applyCarouselStyle(config.carouselStyle||'marquee');
-            applyLogoShape(config.logoShape||'circle');
+            applyLogoTipo(config.logoTipo||'foto');
+            applyLogoShape(config.logoShape||'square');
         }
 
         function saveConfig() {
@@ -839,7 +911,7 @@
                     newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
-            localStorage.setItem('pokerConfigV43', JSON.stringify(config));
+            localStorage.setItem('pokerConfigV44', JSON.stringify(config));
             closePanel(); checkTime(); updateMarquee();
         }
 
@@ -933,6 +1005,13 @@
         });
 
         tableEffectSelect.addEventListener('change', () => applyTableEffect(tableEffectSelect.value));
+
+        document.querySelectorAll('.logo-tipo-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                config.logoTipo = btn.dataset.ltipo;
+                applyLogoTipo(btn.dataset.ltipo);
+            });
+        });
 
         document.querySelectorAll('.logo-shape-btn').forEach(btn => {
             btn.addEventListener('click', () => {
