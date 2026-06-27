@@ -60,10 +60,10 @@
         #main-sign.color-purple { --border-color:#b794f4; --glow-lo:rgba(183,148,244,.50); --glow-hi:rgba(183,148,244,.90); --glow-btn:rgba(183,148,244,.70); --pulse-speed:2.5s; }
         #main-sign.color-white  { --border-color:#e2e8f0; --glow-lo:rgba(226,232,240,.40); --glow-hi:rgba(226,232,240,.75); --glow-btn:rgba(226,232,240,.60); --pulse-speed:7s;   }
 
-        /* Logo responsivo — rectangular para mostrar texto completo */
+        /* Logo responsivo — rectangular, altura automática según contenido */
         #open-config-btn {
             width:         clamp(7rem, 20vmin, 13rem);
-            height:        clamp(2.8rem, 8vmin, 5.2rem);
+            height:        auto;
             flex-shrink:   0;
             overflow:      hidden;
             border:        2px solid var(--border-color);
@@ -71,43 +71,68 @@
             background:    transparent;
             border-radius: .45rem;
             display:       flex;
+            flex-direction: column;
             align-items:   center;
-            justify-content: center;
             transition: border-color .5s, box-shadow .5s, border-radius .3s;
         }
-        /* Foto: img llena el ancho; filtro SVG elimina blanco/plateado */
-        #open-config-btn img {
-            width: 100%; height: auto; display: block; flex-shrink: 0;
+
+        /* Sección de imagen: muestra letras + estrellas (top 75% del original) */
+        #logo-img-crop {
+            width: 100%;
+            overflow: hidden;
+            aspect-ratio: 1080 / 585; /* = 75% de la altura de 780px */
+        }
+        #logo-img-crop img {
+            width: 100%; height: auto; display: block;
             filter: url(#rm-white);
         }
 
-        /* Tipos de logo — texto CSS */
-        #open-config-btn.logo-tipo-neon img,
-        #open-config-btn.logo-tipo-texto img { display: none; }
-
-        #open-config-btn.logo-tipo-neon::after,
-        #open-config-btn.logo-tipo-texto::after {
-            content: 'DREAMS';
+        /* Texto "DREAMS" para modos Neón / Texto */
+        #logo-dreams-text {
+            display: none;
             font-family: 'Cinzel', serif;
             font-weight: 700;
             color: var(--border-color);
             font-size: clamp(1rem, 3vmin, 2rem);
             letter-spacing: .14em;
+            padding: .5em 0 .3em;
+            width: 100%;
+            justify-content: center;
         }
         @keyframes logo-pulse {
             0%,100% { text-shadow: 0 0 6px var(--glow-lo), 0 0 16px var(--glow-lo); }
             50%      { text-shadow: 0 0 14px var(--glow-hi), 0 0 32px var(--glow-hi), 0 0 55px var(--glow-lo); }
         }
-        #open-config-btn.logo-tipo-neon::after {
+
+        /* Ciudad debajo de la imagen */
+        #logo-city {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--border-color);
+            font-size: clamp(.52rem, 1.4vmin, .88rem);
+            letter-spacing: .22em;
+            text-align: center;
+            width: 100%;
+            padding: .2rem .3rem .22rem;
+            border-top: 1px solid var(--glow-lo);
+            text-shadow: 0 0 8px var(--glow-lo);
+        }
+
+        /* Modos Neón / Texto: ocultar imagen, mostrar texto */
+        #open-config-btn.logo-tipo-neon  #logo-img-crop,
+        #open-config-btn.logo-tipo-texto #logo-img-crop  { display: none; }
+        #open-config-btn.logo-tipo-neon  #logo-dreams-text,
+        #open-config-btn.logo-tipo-texto #logo-dreams-text { display: flex; }
+        #open-config-btn.logo-tipo-neon  #logo-dreams-text {
             animation: logo-pulse var(--pulse-speed) infinite ease-in-out;
         }
-        #open-config-btn.logo-tipo-texto::after {
+        #open-config-btn.logo-tipo-texto #logo-dreams-text {
             text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 2px 6px rgba(0,0,0,.6);
         }
 
-        /* Formas — oval y sin marco */
-        #open-config-btn.logo-circle     { border-radius: 9999px; }
-        #open-config-btn.logo-plain      { border: none !important; box-shadow: none !important; border-radius: .35rem; }
+        /* Formas */
+        #open-config-btn.logo-circle { border-radius: 9999px; }
+        #open-config-btn.logo-plain  { border: none !important; box-shadow: none !important; border-radius: .35rem; }
 
         /* Botones selector */
         .logo-shape-btn, .logo-tipo-btn  { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:.4rem .5rem; border-radius:.4rem; border:1px solid #4b5568; background:#374151; cursor:pointer; transition:border-color .15s,background .15s; flex:1; }
@@ -360,9 +385,7 @@
 </head>
 <body class="bg-logo">
 
-    <!-- Filtro SVG: elimina fondo blanco/plateado manteniendo letras doradas -->
-    <!-- El canal alfa se calcula como 5×R - 5×B: dorado (R>B) queda opaco,
-         blanco/plateado (R≈B) queda transparente. -->
+    <!-- Filtro SVG: alpha = 5 − 5×luminance → blanco puro (lum=1) = 0, gris/plata/dorado = opaco -->
     <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
         <defs>
             <filter id="rm-white" color-interpolation-filters="sRGB">
@@ -370,7 +393,7 @@
                     values="1 0 0 0 0
                             0 1 0 0 0
                             0 0 1 0 0
-                            5 0 -5 0 0" />
+                            -1.495 -2.935 -0.570 0 5" />
             </filter>
         </defs>
     </svg>
@@ -380,8 +403,12 @@
         <!-- ENCABEZADO -->
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
             <div id="open-config-btn" class="cursor-pointer hover:opacity-80">
-                <img src="img/dreams2.png" alt="Logo" class="w-full object-cover"
-                     onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                <div id="logo-img-crop">
+                    <img src="img/dreams2.png" alt="Logo"
+                         onerror="this.onerror=null;this.src='https://placehold.co/100x100/0f172a/b99d6b?text=Logo';">
+                </div>
+                <div id="logo-dreams-text">DREAMS</div>
+                <div id="logo-city">PUERTO VARAS</div>
             </div>
             <div class="flex-grow min-w-0 text-center">
                 <h1 id="game-title" class="font-bold text-yellow-300 tracking-wider leading-tight"
