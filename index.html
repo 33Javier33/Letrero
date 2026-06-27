@@ -173,11 +173,37 @@
         }
 
         /* ═══════════════════════════════════════════════════════════
-           MARQUEE
+           CARRUSEL DE FRASES
         ═══════════════════════════════════════════════════════════ */
-        .rules-container { overflow:hidden; white-space:nowrap; position:relative; }
-        #rules-text { display:inline-block; padding-left:100%; animation:marquee 50s linear infinite; }
-        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+        #rules-container {
+            overflow:hidden; position:relative; display:flex; align-items:center;
+            min-height:2.5em; border-radius:.4rem;
+            border:1px solid var(--border-color);
+            background:rgba(0,0,0,.5);
+            box-shadow:0 0 10px var(--glow-lo), inset 0 0 14px rgba(0,0,0,.35);
+            transition:border-color .5s, box-shadow .5s;
+        }
+
+        /* — Modo marquee — */
+        .carousel-marquee #marquee-wrap    { display:block; width:100%; overflow:hidden; white-space:nowrap; padding:.3em 0; }
+        .carousel-marquee #rules-fade-text { display:none !important; }
+        #rules-marquee-text { display:inline-block; font-weight:700; letter-spacing:.05em; color:var(--border-color); }
+        @keyframes marquee-loop { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+        /* — Modo fade — */
+        .carousel-fade #marquee-wrap { display:none !important; }
+        .carousel-fade #rules-fade-text {
+            display:flex !important; width:100%; justify-content:center; align-items:center;
+            text-align:center; padding:.3em 1.2em;
+            font-weight:700; letter-spacing:.05em; color:var(--border-color);
+            transition:opacity .65s ease, transform .65s ease;
+        }
+        #rules-fade-text.carousel-out { opacity:0; transform:translateY(6px); }
+
+        /* — Botones de estilo de carrusel — */
+        .carousel-style-btn { flex:1; padding:.28rem .5rem; border-radius:.3rem; font-size:.72rem; font-weight:700; background:#374151; color:#9ca3af; border:1px solid #4b5568; cursor:pointer; transition:background .15s,color .15s; }
+        .carousel-style-btn.active { background:#b45309; color:#fff; border-color:#d97706; }
+        .carousel-style-btn:hover:not(.active) { background:#4b5563; color:#d1d5db; }
 
         /* ═══════════════════════════════════════════════════════════
            TABLA DE PAGOS + EFECTOS
@@ -336,9 +362,10 @@
             <div class="text-center">
                 <p id="countdown-location" class="flex items-center justify-center"
                    style="font-size:var(--font-size-xl);"></p>
-                <div class="rules-container bg-red-600 text-white font-bold py-1 px-2 sm:p-2 rounded-lg shadow-lg"
+                <div id="rules-container" class="carousel-marquee"
                      style="font-size:var(--font-size-xl);">
-                    <span id="rules-text"></span>
+                    <div id="marquee-wrap"><span id="rules-marquee-text"></span></div>
+                    <div id="rules-fade-text"></div>
                 </div>
             </div>
             <div class="text-center mt-0.5 sm:mt-1">
@@ -466,6 +493,11 @@
                     <label for="rules-input" class="block text-sm font-medium text-gray-300">Frases del carrusel (una por línea):</label>
                     <textarea id="rules-input" rows="3"
                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"></textarea>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="text-xs text-gray-400 flex-shrink-0">Estilo:</span>
+                        <button class="carousel-style-btn active" data-cstyle="marquee">↔ Marquee</button>
+                        <button class="carousel-style-btn" data-cstyle="fade">✦ Fade</button>
+                    </div>
                 </div>
 
                 <!-- PANTALLA / WAKE LOCK -->
@@ -579,7 +611,9 @@
         const newMinInput         = document.getElementById('new-min-bet');
         const newMaxInput         = document.getElementById('new-max-bet');
         const rulesInput          = document.getElementById('rules-input');
-        const rulesTextEl         = document.getElementById('rules-text');
+        const rulesContainerEl    = document.getElementById('rules-container');
+        const rulesMarqueeTextEl  = document.getElementById('rules-marquee-text');
+        const rulesFadeTextEl     = document.getElementById('rules-fade-text');
         const sideBetInfoEl       = document.getElementById('side-bet-info');
         const sideBetContainer    = document.getElementById('side-bet-config-container');
         const sbBaseMin           = document.getElementById('side-bet-base-min');
@@ -595,7 +629,7 @@
             changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo',
+            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
@@ -634,12 +668,54 @@
             if (tableEffectSelect) tableEffectSelect.value = effect;
         }
 
-        // ── Marquee ──
+        // ── Carrusel de frases ──
+        let fadeCarouselIndex = 0;
+        let fadeCarouselTimer = null;
+
+        function applyCarouselStyle(style) {
+            rulesContainerEl.classList.toggle('carousel-fade',    style === 'fade');
+            rulesContainerEl.classList.toggle('carousel-marquee', style === 'marquee');
+            document.querySelectorAll('.carousel-style-btn').forEach(b =>
+                b.classList.toggle('active', b.dataset.cstyle === style));
+            if (style === 'fade') {
+                startFadeCarousel();
+            } else {
+                if (fadeCarouselTimer) { clearInterval(fadeCarouselTimer); fadeCarouselTimer = null; }
+            }
+        }
+
+        function startFadeCarousel() {
+            if (fadeCarouselTimer) { clearInterval(fadeCarouselTimer); fadeCarouselTimer = null; }
+            const phrases = config.rules || [];
+            if (!phrases.length) { rulesFadeTextEl.textContent = ''; return; }
+            fadeCarouselIndex = 0;
+            rulesFadeTextEl.textContent = phrases[0];
+            rulesFadeTextEl.classList.remove('carousel-out');
+            if (phrases.length <= 1) return;
+            fadeCarouselTimer = setInterval(() => {
+                rulesFadeTextEl.classList.add('carousel-out');
+                setTimeout(() => {
+                    fadeCarouselIndex = (fadeCarouselIndex + 1) % phrases.length;
+                    rulesFadeTextEl.textContent = phrases[fadeCarouselIndex];
+                    rulesFadeTextEl.classList.remove('carousel-out');
+                }, 680);
+            }, 5000);
+        }
+
         function updateMarquee() {
-            if (config.rules?.length) {
-                const sep = " ••• ";
-                rulesTextEl.textContent = (config.rules.join(sep)+sep).repeat(2);
-            } else rulesTextEl.textContent='';
+            const phrases = config.rules || [];
+            if (!phrases.length) {
+                rulesMarqueeTextEl.textContent = '';
+                rulesMarqueeTextEl.style.animation = 'none';
+                rulesFadeTextEl.textContent = '';
+                return;
+            }
+            const sep = "  ◆  ";
+            const oneCopy = phrases.join(sep) + sep;
+            rulesMarqueeTextEl.textContent = oneCopy + oneCopy;
+            const dur = Math.min(120, Math.max(18, oneCopy.length * 0.24));
+            rulesMarqueeTextEl.style.animation = `marquee-loop ${dur}s linear infinite`;
+            if (config.carouselStyle === 'fade') startFadeCarousel();
         }
 
         // ── Tabla de pagos ──
@@ -681,7 +757,7 @@
         }
 
         function loadConfig() {
-            const saved = localStorage.getItem('pokerConfigV41');
+            const saved = localStorage.getItem('pokerConfigV42');
             config = saved ? {...defaultConfig,...JSON.parse(saved)} : {...defaultConfig};
             if (!config.gameSettings) config.gameSettings = {};
             Object.keys(payTables).forEach(g => {
@@ -700,6 +776,7 @@
             applyBackground(config.background||'logo');
             applyColorTheme(config.colorTheme||'gold');
             applyTableEffect(config.tableEffect||'shimmer');
+            applyCarouselStyle(config.carouselStyle||'marquee');
         }
 
         function saveConfig() {
@@ -717,7 +794,7 @@
                     newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
-            localStorage.setItem('pokerConfigV41', JSON.stringify(config));
+            localStorage.setItem('pokerConfigV42', JSON.stringify(config));
             closePanel(); checkTime(); updateMarquee();
         }
 
@@ -811,6 +888,13 @@
         });
 
         tableEffectSelect.addEventListener('change', () => applyTableEffect(tableEffectSelect.value));
+
+        document.querySelectorAll('.carousel-style-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                config.carouselStyle = btn.dataset.cstyle;
+                applyCarouselStyle(btn.dataset.cstyle);
+            });
+        });
 
         populateFormSelects();
         loadConfig();
