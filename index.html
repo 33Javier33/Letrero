@@ -397,34 +397,22 @@
         }
 
         /* ═══════════════════════════════════════════════════════════
-           PORTRAIT MODE: oculta el letrero y muestra aviso de rotación
+           PORTRAIT MODE: rota el letrero 90° para llenar la pantalla
+           sin que el usuario tenga que girar el teléfono
         ═══════════════════════════════════════════════════════════ */
         @media (orientation: portrait) {
-            #main-sign      { display: none !important; }
-            #rotate-overlay { display: flex !important; }
+            #main-sign {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 100vh !important;
+                height: 100vw !important;
+                transform: translate(-50%, -50%) rotate(90deg) !important;
+            }
         }
-
-        @keyframes rotate-hint {
-            0%   { transform: rotate(0deg);   }
-            40%  { transform: rotate(90deg);  }
-            60%  { transform: rotate(90deg);  }
-            100% { transform: rotate(0deg);   }
-        }
-        #rotate-icon { animation: rotate-hint 2.5s ease-in-out infinite; }
     </style>
 </head>
 <body class="bg-logo">
-
-    <!-- Aviso de rotación (solo visible en portrait) -->
-    <div id="rotate-overlay" style="display:none; position:fixed; inset:0; background:#1a202c; z-index:300; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center; padding:2rem; font-family:'Cinzel',serif;">
-        <svg id="rotate-icon" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#b99d6b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="2" width="16" height="20" rx="2"/>
-            <path d="M9 19h6"/>
-            <path d="M12 1v3"/>
-        </svg>
-        <p style="color:#b99d6b; font-size:clamp(1.1rem,5vw,1.6rem); letter-spacing:.12em;">GIRA TU PANTALLA</p>
-        <p style="color:#6b7280; font-size:clamp(.7rem,3vw,.95rem); letter-spacing:.05em; font-family:'Roboto',sans-serif;">Este letrero está optimizado<br>para pantalla horizontal</p>
-    </div>
 
     <!-- Filtro SVG: alpha = 5 − 5×luminance → blanco puro (lum=1) = 0, gris/plata/dorado = opaco -->
     <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
