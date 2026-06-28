@@ -396,20 +396,6 @@
             #main-sign { height: 100dvh; }
         }
 
-        /* ═══════════════════════════════════════════════════════════
-           PORTRAIT MODE: rota el letrero 90° para llenar la pantalla
-           sin que el usuario tenga que girar el teléfono
-        ═══════════════════════════════════════════════════════════ */
-        @media (orientation: portrait) {
-            #main-sign {
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                width: 100vh !important;
-                height: 100vw !important;
-                transform: translate(-50%, -50%) rotate(90deg) !important;
-            }
-        }
     </style>
 </head>
 <body class="bg-logo">
@@ -688,11 +674,7 @@
           .catch(err => console.error('SW error:', err));
       });
     }
-    // Bloquear orientación a landscape en PWA / fullscreen
-    if (screen.orientation && typeof screen.orientation.lock === 'function') {
-      screen.orientation.lock('landscape').catch(() => {});
-    }
-    </script>
+</script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {

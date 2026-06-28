@@ -7,7 +7,7 @@
   "display": "standalone",
   "background_color": "#1a202c",
   "theme_color": "#b99d6b",
-  "orientation": "landscape",
+  "orientation": "any",
   "icons": [
     {
       "src": "./img/dreams2.png",
