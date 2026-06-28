@@ -1,0 +1,19 @@
+{
+  "name": "Letrero Interactivo Dreams",
+  "short_name": "Letrero",
+  "description": "Letrero interactivo para casino Dreams Puerto Varas",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a202c",
+  "theme_color": "#b99d6b",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "./img/dreams2.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
