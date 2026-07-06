@@ -14,7 +14,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         /* ═══════════════════════════════════════════════════════════
            TIPOGRAFÍA FLUIDA — vmin escala con la dimensión menor
@@ -396,6 +396,97 @@
             #main-sign { height: 100dvh; }
         }
 
+        /* ═══════════════════════════════════════════════════════════
+           LAYOUT CASINO — columnas estilo letrero físico
+        ═══════════════════════════════════════════════════════════ */
+        #layout-casino { position: relative; }
+        .cas-title-col {
+            border-right: 2px solid rgba(255,255,255,.45);
+            padding: .5rem .35rem;
+            min-width: clamp(2.8rem, 8vw, 6.5rem);
+            flex-shrink: 0;
+        }
+        #cas-game-name {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: -2px 0 rgba(0,0,0,.85), 2px 0 rgba(0,0,0,.85),
+                          0 -2px rgba(0,0,0,.85), 0  2px rgba(0,0,0,.85);
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+            font-size: clamp(2.2rem, 5.5vh, 5.5rem);
+            line-height: 1;
+            letter-spacing: .05em;
+            white-space: nowrap;
+        }
+        .cas-minmax-col {
+            border-right: 2px solid rgba(255,255,255,.45);
+            padding: .75rem 1rem;
+            min-width: clamp(9rem, 23vw, 19rem);
+            flex-shrink: 0;
+            gap: clamp(.3rem, 1.5vh, 1rem);
+        }
+        .cas-label {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; text-transform: uppercase;
+            color: rgba(255,255,255,.88);
+            font-size: clamp(.95rem, 2.4vw, 2.2rem);
+            text-shadow: 1px 1px 3px rgba(0,0,0,.9);
+            letter-spacing: .04em; line-height: 1.1;
+        }
+        .cas-value {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; color: #fff;
+            font-size: clamp(1.6rem, 4.5vw, 4.5rem);
+            text-shadow: 2px 2px 7px rgba(0,0,0,.9), -1px -1px 0 rgba(0,0,0,.5);
+            letter-spacing: .02em; line-height: 1.05;
+        }
+        .cas-solo {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 700; text-transform: uppercase;
+            color: rgba(255,255,255,.78);
+            font-size: clamp(.65rem, 1.6vw, 1.4rem);
+            text-align: center; letter-spacing: .04em;
+            line-height: 1.2;
+            margin-top: clamp(.3rem, 1vh, .8rem);
+        }
+        .cas-sidebet-col {
+            border-right: 2px solid rgba(255,255,255,.45);
+            padding: .75rem .9rem;
+            min-width: clamp(8rem, 19vw, 16rem);
+            flex-shrink: 0;
+            gap: clamp(.25rem, 1.2vh, .8rem);
+        }
+        .cas-section-header {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; text-transform: uppercase; color: #fff;
+            font-size: clamp(.85rem, 2.3vw, 2.1rem);
+            text-shadow: 1px 1px 4px rgba(0,0,0,.9);
+            letter-spacing: .05em; text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,.4);
+            padding-bottom: .35rem; margin-bottom: .35rem; width: 100%;
+        }
+        .cas-paytable-col { flex-grow: 1; padding: .75rem 1rem; }
+        #cas-pay-table-body tr { border-bottom: 1px solid rgba(255,255,255,.2); }
+        #cas-pay-table-body td {
+            padding: clamp(.12rem,.5vh,.4rem) .35rem;
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; text-transform: uppercase; color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,.8);
+            letter-spacing: .03em;
+            font-size: clamp(.9rem, 2.7vw, 2.6rem);
+            line-height: 1.1;
+        }
+        #cas-pay-table-body td:last-child { text-align: right; white-space: nowrap; }
+        .cas-row-subtitle {
+            display: block; font-size: clamp(.55rem, 1.5vw, 1.2rem);
+            font-weight: 700; opacity: .72;
+            letter-spacing: .03em; line-height: 1; text-transform: uppercase;
+        }
+        .cas-dreams-logo { position: absolute; bottom: .8rem; right: .9rem; }
+        .cas-dreams-logo img { height: clamp(2rem, 5vw, 4.5rem); width: auto; filter: url(#rm-white); opacity: .85; }
+
     </style>
 </head>
 <body class="bg-logo">
@@ -413,7 +504,10 @@
         </defs>
     </svg>
 
-    <div id="main-sign" class="poker-sign effect-shimmer text-white p-3 sm:p-4 lg:p-6 w-screen h-screen flex flex-col">
+    <div id="main-sign" class="poker-sign effect-shimmer text-white w-screen h-screen">
+
+    <!-- ── LAYOUT ESTÁNDAR (Draw Poker, Caribbean) ── -->
+    <div id="layout-standard" class="w-full h-full flex flex-col p-3 sm:p-4 lg:p-6">
 
         <!-- ENCABEZADO -->
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
@@ -478,6 +572,60 @@
             </div>
         </div>
     </div>
+    <!-- /layout-standard -->
+
+    <!-- ── LAYOUT CASINO (Hold'em Texas, Black Jack) ── -->
+    <div id="layout-casino" class="w-full h-full flex" style="display:none;">
+
+        <!-- Col 1: Título del juego (texto vertical) -->
+        <div class="cas-title-col flex items-center justify-center">
+            <span id="cas-game-name"></span>
+        </div>
+
+        <!-- Col 2: Mínimo / Máximo / Solo jugadores -->
+        <div class="cas-minmax-col flex flex-col justify-center items-center">
+            <div class="text-center">
+                <div class="cas-label">MÍNIMO</div>
+                <div id="cas-min-val" class="cas-value"></div>
+            </div>
+            <div class="text-center">
+                <div class="cas-label">MÁXIMO</div>
+                <div id="cas-max-val" class="cas-value"></div>
+            </div>
+            <div class="cas-solo">SOLO JUGADORES<br>SENTADOS</div>
+        </div>
+
+        <!-- Col 3: Par Perfecto (solo Blackjack) -->
+        <div id="cas-sidebet-col" class="cas-sidebet-col flex-col justify-center items-center" style="display:none;">
+            <div class="cas-section-header">PAR PERFECTO</div>
+            <div class="text-center">
+                <div class="cas-label">MÍNIMO</div>
+                <div id="cas-sb-min-val" class="cas-value"></div>
+            </div>
+            <div class="text-center">
+                <div class="cas-label">MÁXIMO</div>
+                <div id="cas-sb-max-val" class="cas-value"></div>
+            </div>
+        </div>
+
+        <!-- Col 4: Tabla de pagos -->
+        <div class="cas-paytable-col flex flex-col justify-center">
+            <div class="cas-section-header">TABLA DE PAGOS</div>
+            <table class="w-full">
+                <tbody id="cas-pay-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Logo Dreams esquina inferior derecha -->
+        <div class="cas-dreams-logo">
+            <img src="img/dreams2.png" alt="Dreams">
+        </div>
+
+    </div>
+    <!-- /layout-casino -->
+
+    </div>
+    <!-- /main-sign -->
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
     <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 overflow-y-auto z-50">
@@ -737,14 +885,23 @@
 
         // ── Datos de juegos ──
         const payTables = {
-            "Draw Poker":              { hasSideBet:false, pays:[{hand:"Escalera REAL",payout:"100 : 1"},{hand:"Escalera Color",payout:"50 : 1"},{hand:"Poker",payout:"20 : 1"},{hand:"Full",payout:"7 : 1"},{hand:"Color",payout:"5 : 1"},{hand:"Escalera",payout:"3 : 1"},{hand:"Trío",payout:"2 : 1"},{hand:"Dos Pares",payout:"1 : 1"},{hand:"Un Par",payout:"1 : 1"}]},
-            "Caribbean Poker Plus":    { hasSideBet:false, pays:[{hand:"Escalera REAL",payout:"100 : 1"},{hand:"Escalera Color",payout:"50 : 1"},{hand:"Poker",payout:"20 : 1"},{hand:"Full",payout:"7 : 1"},{hand:"Color",payout:"5 : 1"},{hand:"Escalera",payout:"4 : 1"},{hand:"Trío",payout:"3 : 1"},{hand:"Dos Pares",payout:"2 : 1"},{hand:"Un Par",payout:"1 : 1"}]},
-            "Hold'em Texas Poker Plus":{ hasSideBet:false, pays:[{hand:"Escalera REAL",payout:"100 : 1"},{hand:"Escalera Color",payout:"20 : 1"},{hand:"Poker",payout:"10 : 1"},{hand:"Full",payout:"3 : 1"},{hand:"Color",payout:"2 : 1"},{hand:"Escalera",payout:"1 : 1"},{hand:"Trío",payout:"1 : 1"},{hand:"Dos Pares",payout:"1 : 1"},{hand:"Un Par",payout:"1 : 1"}]},
-            "Black Jack Par Perfecto": { hasSideBet:true,  pays:[{hand:"Par Perfecto",payout:"25 veces la Apuesta"},{hand:"Par Color",payout:"15 veces la Apuesta"},{hand:"Par Mixto",payout:"5 veces la Apuesta"}]}
+            "Draw Poker":              { hasSideBet:false, useCasino:false, pays:[{hand:"Escalera REAL",payout:"100 : 1"},{hand:"Escalera Color",payout:"50 : 1"},{hand:"Poker",payout:"20 : 1"},{hand:"Full",payout:"7 : 1"},{hand:"Color",payout:"5 : 1"},{hand:"Escalera",payout:"3 : 1"},{hand:"Trío",payout:"2 : 1"},{hand:"Dos Pares",payout:"1 : 1"},{hand:"Un Par",payout:"1 : 1"}]},
+            "Caribbean Poker Plus":    { hasSideBet:false, useCasino:false, pays:[{hand:"Escalera REAL",payout:"100 : 1"},{hand:"Escalera Color",payout:"50 : 1"},{hand:"Poker",payout:"20 : 1"},{hand:"Full",payout:"7 : 1"},{hand:"Color",payout:"5 : 1"},{hand:"Escalera",payout:"4 : 1"},{hand:"Trío",payout:"3 : 1"},{hand:"Dos Pares",payout:"2 : 1"},{hand:"Un Par",payout:"1 : 1"}]},
+            "Hold'em Texas Poker Plus":{ hasSideBet:false, useCasino:true,  shortName:"HOLD'EM POKER", pays:[{hand:"Escalera Real",payout:"100 A 1"},{hand:"Escalera Color",payout:"20 A 1"},{hand:"Poker",payout:"10 A 1"},{hand:"Full",payout:"3 A 1"},{hand:"Color",payout:"2 A 1"},{hand:"Escalera",payout:"1 A 1"},{hand:"Trío",payout:"1 A 1"},{hand:"Dos Pares",payout:"1 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
+            "Black Jack Par Perfecto": { hasSideBet:true,  useCasino:true,  shortName:"BLACK JACK",    pays:[{hand:"Par Perfecto",subtitle:"Par de la misma pinta y color",payout:"25 A 1"},{hand:"Par Color",subtitle:"Par del mismo color",payout:"15 A 1"},{hand:"Par Mixto",subtitle:"Par rojo y negro",payout:"5 A 1"}]}
         };
 
         // ── DOM refs ──
         const mainSignEl          = document.getElementById('main-sign');
+        const layoutStandardEl    = document.getElementById('layout-standard');
+        const layoutCasinoEl      = document.getElementById('layout-casino');
+        const casGameNameEl       = document.getElementById('cas-game-name');
+        const casMinValEl         = document.getElementById('cas-min-val');
+        const casMaxValEl         = document.getElementById('cas-max-val');
+        const casSidebetColEl     = document.getElementById('cas-sidebet-col');
+        const casSbMinEl          = document.getElementById('cas-sb-min-val');
+        const casSbMaxEl          = document.getElementById('cas-sb-max-val');
+        const casPayBodyEl        = document.getElementById('cas-pay-table-body');
         const gameTitleEl         = document.getElementById('game-title');
         const minBetEl            = document.getElementById('min-bet');
         const maxBetEl            = document.getElementById('max-bet');
@@ -981,24 +1138,60 @@
             return (nowMin>=tgtMin)||((tgtMin-nowMin)>12*60);
         }
 
-        function updateDisplay(isNewActive) {
+        function renderCasinoLayout(gameName, isNewActive) {
+            const gd = payTables[gameName];
+            const gs = config.gameSettings[gameName];
+            casGameNameEl.textContent = gd.shortName || gameName;
             const minAmt = isNewActive ? config.newMin : config.baseMin;
             const maxAmt = isNewActive ? config.newMax : config.baseMax;
-            const longTitle = config.gameName==="Hold'em Texas Poker Plus"||config.gameName==="Caribbean Poker Plus";
-            gameTitleEl.style.fontSize = longTitle ? 'var(--font-size-5xl-compact)' : 'var(--font-size-5xl)';
-            animateValue(gameTitleEl, config.gameName);
-            animateValue(minBetEl, fmtCLP(minAmt));
-            animateValue(maxBetEl, fmtCLP(maxAmt));
-            renderPayTable(config.gameName, isNewActive);
-            if (config.gameName === "Black Jack Par Perfecto") {
-                mainSignEl.classList.remove('theme-poker');   mainSignEl.classList.add('theme-blackjack');
-                payTableEl.classList.add('pay-table-blackjack');
+            casMinValEl.textContent = fmtCLP(minAmt);
+            casMaxValEl.textContent = fmtCLP(maxAmt);
+            if (gd.hasSideBet && gs) {
+                const sbMin = isNewActive ? gs.newMinBet : gs.baseMinBet;
+                const sbMax = isNewActive ? gs.newMaxBet : gs.baseMaxBet;
+                casSbMinEl.textContent = fmtCLP(sbMin);
+                casSbMaxEl.textContent = fmtCLP(sbMax);
+                casSidebetColEl.style.display = 'flex';
             } else {
-                mainSignEl.classList.remove('theme-blackjack'); mainSignEl.classList.add('theme-poker');
-                payTableEl.classList.remove('pay-table-blackjack');
+                casSidebetColEl.style.display = 'none';
             }
-            minBetEl.classList.toggle('text-green-400',  !isNewActive);
-            minBetEl.classList.toggle('text-orange-400',  isNewActive);
+            casPayBodyEl.innerHTML = '';
+            gd.pays.forEach(item => {
+                const sub = item.subtitle ? `<span class="cas-row-subtitle">${item.subtitle}</span>` : '';
+                casPayBodyEl.innerHTML += `<tr><td>${item.hand}${sub}</td><td>${item.payout}</td></tr>`;
+            });
+        }
+
+        function updateDisplay(isNewActive) {
+            const gameName = config.gameName;
+            const gd = payTables[gameName];
+            // Tema visual (siempre)
+            if (gameName === "Black Jack Par Perfecto") {
+                mainSignEl.classList.remove('theme-poker');
+                mainSignEl.classList.add('theme-blackjack');
+            } else {
+                mainSignEl.classList.remove('theme-blackjack');
+                mainSignEl.classList.add('theme-poker');
+            }
+            if (gd?.useCasino) {
+                layoutStandardEl.style.display = 'none';
+                layoutCasinoEl.style.display   = 'flex';
+                renderCasinoLayout(gameName, isNewActive);
+            } else {
+                layoutCasinoEl.style.display   = 'none';
+                layoutStandardEl.style.display  = 'flex';
+                const minAmt = isNewActive ? config.newMin : config.baseMin;
+                const maxAmt = isNewActive ? config.newMax : config.baseMax;
+                const longTitle = gameName === "Caribbean Poker Plus";
+                gameTitleEl.style.fontSize = longTitle ? 'var(--font-size-5xl-compact)' : 'var(--font-size-5xl)';
+                animateValue(gameTitleEl, gameName);
+                animateValue(minBetEl, fmtCLP(minAmt));
+                animateValue(maxBetEl, fmtCLP(maxAmt));
+                renderPayTable(gameName, isNewActive);
+                payTableEl.classList.remove('pay-table-blackjack');
+                minBetEl.classList.toggle('text-green-400',  !isNewActive);
+                minBetEl.classList.toggle('text-orange-400',  isNewActive);
+            }
         }
 
         function checkTime() {
