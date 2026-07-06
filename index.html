@@ -397,109 +397,125 @@
         }
 
         /* ═══════════════════════════════════════════════════════════
-           LAYOUT CASINO — columnas estilo letrero físico
+           LAYOUT CASINO — portrait-first, vertical
         ═══════════════════════════════════════════════════════════ */
-        #layout-casino { position: relative; }
-        .cas-title-col {
-            border-right: 2px solid rgba(255,255,255,.45);
-            padding: .5rem .35rem;
-            min-width: clamp(2.8rem, 8vw, 6.5rem);
-            flex-shrink: 0;
+        #layout-casino { flex-direction: column; }
+
+        /* Header */
+        .cas-header {
+            display: flex; align-items: center; flex-shrink: 0;
+            padding: .5rem .75rem;
+            border-bottom: 2px solid rgba(255,255,255,.3);
+            gap: .75rem;
+        }
+        .cas-logo-small img {
+            height: clamp(2.5rem, 9vw, 5.5rem);
+            width: auto; filter: url(#rm-white); opacity: .85; flex-shrink: 0;
         }
         #cas-game-name {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: -2px 0 rgba(0,0,0,.85), 2px 0 rgba(0,0,0,.85),
-                          0 -2px rgba(0,0,0,.85), 0  2px rgba(0,0,0,.85);
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            font-size: clamp(2.2rem, 5.5vh, 5.5rem);
-            line-height: 1;
-            letter-spacing: .05em;
-            white-space: nowrap;
+            font-weight: 900; text-transform: uppercase; color: #fff;
+            text-shadow: 2px 2px 6px rgba(0,0,0,.9), -1px -1px 0 rgba(0,0,0,.5);
+            font-size: clamp(2rem, 8.5vw, 6.5rem);
+            line-height: 1; letter-spacing: .04em;
+            flex-grow: 1; text-align: center;
         }
-        .cas-minmax-col {
-            border-right: 2px solid rgba(255,255,255,.45);
-            padding: .75rem 1rem;
-            min-width: clamp(9rem, 23vw, 19rem);
-            flex-shrink: 0;
-            gap: clamp(.3rem, 1.5vh, 1rem);
+
+        /* Min/Max row */
+        .cas-minmax-row {
+            display: flex; align-items: stretch; flex-shrink: 0;
+            border-bottom: 2px solid rgba(255,255,255,.2);
+        }
+        .cas-minmax-cell {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: .5rem .4rem;
+        }
+        .cas-minmax-divider {
+            width: 2px; background: rgba(255,255,255,.4); flex-shrink: 0;
         }
         .cas-label {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase;
-            color: rgba(255,255,255,.88);
-            font-size: clamp(.95rem, 2.4vw, 2.2rem);
-            text-shadow: 1px 1px 3px rgba(0,0,0,.9);
-            letter-spacing: .04em; line-height: 1.1;
+            color: rgba(255,255,255,.85);
+            font-size: clamp(.9rem, 3vw, 2rem);
+            letter-spacing: .05em; line-height: 1.1;
         }
         .cas-value {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; color: #fff;
-            font-size: clamp(1.6rem, 4.5vw, 4.5rem);
-            text-shadow: 2px 2px 7px rgba(0,0,0,.9), -1px -1px 0 rgba(0,0,0,.5);
+            font-size: clamp(1.8rem, 8vw, 5.5rem);
+            text-shadow: 2px 2px 8px rgba(0,0,0,.9);
             letter-spacing: .02em; line-height: 1.05;
         }
         .cas-solo {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 700; text-transform: uppercase;
-            color: rgba(255,255,255,.78);
-            font-size: clamp(.65rem, 1.6vw, 1.4rem);
-            text-align: center; letter-spacing: .04em;
-            line-height: 1.2;
-            margin-top: clamp(.3rem, 1vh, .8rem);
+            color: rgba(255,255,255,.7);
+            font-size: clamp(.55rem, 1.8vw, 1.2rem);
+            text-align: center; letter-spacing: .04em; line-height: 1.25;
         }
-        .cas-sidebet-col {
-            border-right: 2px solid rgba(255,255,255,.45);
-            padding: .75rem .9rem;
-            min-width: clamp(8rem, 19vw, 16rem);
+
+        /* Sidebet row (Black Jack only) */
+        #cas-sidebet-row {
+            display: none; flex-direction: column; align-items: center;
             flex-shrink: 0;
-            gap: clamp(.25rem, 1.2vh, .8rem);
+            border-bottom: 2px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.05);
+            padding: .4rem .75rem;
         }
+        #cas-sidebet-row.visible { display: flex; }
         .cas-section-header {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
-            font-size: clamp(.85rem, 2.3vw, 2.1rem);
-            text-shadow: 1px 1px 4px rgba(0,0,0,.9);
+            font-size: clamp(.85rem, 2.8vw, 2rem);
             letter-spacing: .05em; text-align: center;
-            border-bottom: 2px solid rgba(255,255,255,.4);
-            padding-bottom: .35rem; margin-bottom: .35rem; width: 100%;
+            border-bottom: 1px solid rgba(255,255,255,.35);
+            padding-bottom: .25rem; margin-bottom: .25rem; width: 100%;
         }
-        .cas-paytable-col { flex-grow: 1; padding: .75rem 1rem; }
-        #cas-pay-table-body tr { border-bottom: 1px solid rgba(255,255,255,.2); }
+        .cas-sidebet-minmax {
+            display: flex; width: 100%; align-items: center;
+        }
+
+        /* Pay table section */
+        .cas-paytable-section {
+            flex-grow: 1; min-height: 0; overflow: hidden;
+            display: flex; flex-direction: column;
+            padding: .35rem .75rem .2rem;
+        }
+        #cas-pay-table-body tr { border-bottom: 1px solid rgba(255,255,255,.18); }
         #cas-pay-table-body td {
-            padding: clamp(.12rem,.5vh,.4rem) .35rem;
+            padding: clamp(.12rem,.8vh,.55rem) .4rem;
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
             text-shadow: 1px 1px 3px rgba(0,0,0,.8);
             letter-spacing: .03em;
-            font-size: clamp(.9rem, 2.7vw, 2.6rem);
+            font-size: clamp(1rem, 3.5vw, 2.8rem);
             line-height: 1.1;
         }
         #cas-pay-table-body td:last-child { text-align: right; white-space: nowrap; }
         .cas-row-subtitle {
-            display: block; font-size: clamp(.55rem, 1.5vw, 1.2rem);
+            display: block; font-size: clamp(.55rem, 1.6vw, 1.2rem);
             font-weight: 700; opacity: .72;
-            letter-spacing: .03em; line-height: 1; text-transform: uppercase;
+            letter-spacing: .03em; line-height: 1;
         }
-        .cas-dreams-logo { position: absolute; bottom: .8rem; right: .9rem; }
-        .cas-dreams-logo img { height: clamp(2rem, 5vw, 4.5rem); width: auto; filter: url(#rm-white); opacity: .85; }
 
-        /* ═══════════════════════════════════════════════════════════
-           PORTRAIT: solo el layout casino rota 90° para llenar la
-           pantalla como hace la tablet física del casino
-        ═══════════════════════════════════════════════════════════ */
-        @media (orientation: portrait) {
-            #layout-casino {
-                position: fixed !important;
-                top: 50%   !important;
-                left: 50%  !important;
-                width:  100vh !important;
-                height: 100vw !important;
-                transform: translate(-50%, -50%) rotate(90deg) !important;
-            }
+        /* Carousel strip */
+        .cas-carousel-strip {
+            flex-shrink: 0; overflow: hidden;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0,0,0,.45);
+            box-shadow: 0 0 8px var(--glow-lo);
+            padding: .3rem 0;
+            transition: border-color .5s, box-shadow .5s;
+        }
+        #cas-marquee-text {
+            display: inline-block;
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 700; letter-spacing: .05em;
+            color: var(--border-color);
+            font-size: clamp(.9rem, 2.8vw, 1.8rem);
+            white-space: nowrap;
         }
 
     </style>
@@ -592,48 +608,58 @@
     <!-- ── LAYOUT CASINO (Hold'em Texas, Black Jack) ── -->
     <div id="layout-casino" class="w-full h-full flex" style="display:none;">
 
-        <!-- Col 1: Título del juego (texto vertical) -->
-        <div class="cas-title-col flex items-center justify-center">
+        <!-- Header: logo + game title -->
+        <div class="cas-header">
+            <div class="cas-logo-small">
+                <img src="img/dreams2.png" alt="Dreams">
+            </div>
             <span id="cas-game-name"></span>
         </div>
 
-        <!-- Col 2: Mínimo / Máximo / Solo jugadores -->
-        <div class="cas-minmax-col flex flex-col justify-center items-center">
-            <div class="text-center">
+        <!-- Min/Max row -->
+        <div class="cas-minmax-row">
+            <div class="cas-minmax-cell">
                 <div class="cas-label">MÍNIMO</div>
                 <div id="cas-min-val" class="cas-value"></div>
             </div>
-            <div class="text-center">
+            <div class="cas-minmax-divider"></div>
+            <div class="cas-minmax-cell">
                 <div class="cas-label">MÁXIMO</div>
                 <div id="cas-max-val" class="cas-value"></div>
             </div>
-            <div class="cas-solo">SOLO JUGADORES<br>SENTADOS</div>
+            <div class="cas-minmax-divider"></div>
+            <div class="cas-minmax-cell">
+                <div class="cas-solo">SOLO<br>JUGADORES<br>SENTADOS</div>
+            </div>
         </div>
 
-        <!-- Col 3: Par Perfecto (solo Blackjack) -->
-        <div id="cas-sidebet-col" class="cas-sidebet-col flex-col justify-center items-center" style="display:none;">
+        <!-- Par Perfecto (solo Blackjack) -->
+        <div id="cas-sidebet-row">
             <div class="cas-section-header">PAR PERFECTO</div>
-            <div class="text-center">
-                <div class="cas-label">MÍNIMO</div>
-                <div id="cas-sb-min-val" class="cas-value"></div>
-            </div>
-            <div class="text-center">
-                <div class="cas-label">MÁXIMO</div>
-                <div id="cas-sb-max-val" class="cas-value"></div>
+            <div class="cas-sidebet-minmax">
+                <div class="cas-minmax-cell">
+                    <div class="cas-label">MÍNIMO</div>
+                    <div id="cas-sb-min-val" class="cas-value"></div>
+                </div>
+                <div class="cas-minmax-divider"></div>
+                <div class="cas-minmax-cell">
+                    <div class="cas-label">MÁXIMO</div>
+                    <div id="cas-sb-max-val" class="cas-value"></div>
+                </div>
             </div>
         </div>
 
-        <!-- Col 4: Tabla de pagos -->
-        <div class="cas-paytable-col flex flex-col justify-center">
+        <!-- Tabla de pagos -->
+        <div class="cas-paytable-section">
             <div class="cas-section-header">TABLA DE PAGOS</div>
             <table class="w-full">
                 <tbody id="cas-pay-table-body"></tbody>
             </table>
         </div>
 
-        <!-- Logo Dreams esquina inferior derecha -->
-        <div class="cas-dreams-logo">
-            <img src="img/dreams2.png" alt="Dreams">
+        <!-- Carousel strip -->
+        <div class="cas-carousel-strip">
+            <span id="cas-marquee-text"></span>
         </div>
 
     </div>
@@ -913,10 +939,11 @@
         const casGameNameEl       = document.getElementById('cas-game-name');
         const casMinValEl         = document.getElementById('cas-min-val');
         const casMaxValEl         = document.getElementById('cas-max-val');
-        const casSidebetColEl     = document.getElementById('cas-sidebet-col');
+        const casSidebetColEl     = document.getElementById('cas-sidebet-row');
         const casSbMinEl          = document.getElementById('cas-sb-min-val');
         const casSbMaxEl          = document.getElementById('cas-sb-max-val');
         const casPayBodyEl        = document.getElementById('cas-pay-table-body');
+        const casMarqueeEl        = document.getElementById('cas-marquee-text');
         const gameTitleEl         = document.getElementById('game-title');
         const minBetEl            = document.getElementById('min-bet');
         const maxBetEl            = document.getElementById('max-bet');
@@ -1048,6 +1075,7 @@
                 rulesMarqueeTextEl.textContent = '';
                 rulesMarqueeTextEl.style.animation = 'none';
                 rulesFadeTextEl.textContent = '';
+                if (casMarqueeEl) { casMarqueeEl.textContent = ''; casMarqueeEl.style.animation = 'none'; }
                 return;
             }
             const sep = "  ◆  ";
@@ -1055,6 +1083,10 @@
             rulesMarqueeTextEl.textContent = oneCopy + oneCopy;
             const dur = Math.min(120, Math.max(18, oneCopy.length * 0.24));
             rulesMarqueeTextEl.style.animation = `marquee-loop ${dur}s linear infinite`;
+            if (casMarqueeEl) {
+                casMarqueeEl.textContent = oneCopy + oneCopy;
+                casMarqueeEl.style.animation = `marquee-loop ${dur}s linear infinite`;
+            }
             if (config.carouselStyle === 'fade') startFadeCarousel();
         }
 
@@ -1166,9 +1198,9 @@
                 const sbMax = isNewActive ? gs.newMaxBet : gs.baseMaxBet;
                 casSbMinEl.textContent = fmtCLP(sbMin);
                 casSbMaxEl.textContent = fmtCLP(sbMax);
-                casSidebetColEl.style.display = 'flex';
+                casSidebetColEl.classList.add('visible');
             } else {
-                casSidebetColEl.style.display = 'none';
+                casSidebetColEl.classList.remove('visible');
             }
             casPayBodyEl.innerHTML = '';
             gd.pays.forEach(item => {
