@@ -487,6 +487,21 @@
         .cas-dreams-logo { position: absolute; bottom: .8rem; right: .9rem; }
         .cas-dreams-logo img { height: clamp(2rem, 5vw, 4.5rem); width: auto; filter: url(#rm-white); opacity: .85; }
 
+        /* ═══════════════════════════════════════════════════════════
+           PORTRAIT: solo el layout casino rota 90° para llenar la
+           pantalla como hace la tablet física del casino
+        ═══════════════════════════════════════════════════════════ */
+        @media (orientation: portrait) {
+            #layout-casino {
+                position: fixed !important;
+                top: 50%   !important;
+                left: 50%  !important;
+                width:  100vh !important;
+                height: 100vw !important;
+                transform: translate(-50%, -50%) rotate(90deg) !important;
+            }
+        }
+
     </style>
 </head>
 <body class="bg-logo">
