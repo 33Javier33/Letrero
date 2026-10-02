@@ -608,9 +608,9 @@
     <!-- ── LAYOUT CASINO (Hold'em Texas, Black Jack) ── -->
     <div id="layout-casino" class="w-full h-full flex" style="display:none;">
 
-        <!-- Header: logo + game title -->
+        <!-- Header: logo (abre config) + game title -->
         <div class="cas-header">
-            <div class="cas-logo-small">
+            <div class="cas-logo-small" id="cas-open-config-btn" style="cursor:pointer;">
                 <img src="img/dreams2.png" alt="Dreams">
             </div>
             <span id="cas-game-name"></span>
@@ -1284,6 +1284,7 @@
         // ── Eventos ──
         document.querySelectorAll('#config-panel input[inputmode="numeric"]').forEach(i=>i.addEventListener('input',handleNumberInput));
         openConfigBtn.addEventListener('click', openPanel);
+        document.getElementById('cas-open-config-btn').addEventListener('click', openPanel);
         closeConfigBtn.addEventListener('click', closePanel);
         saveConfigBtn.addEventListener('click', saveConfig);
         gameNameSelect.addEventListener('change', updateSideBetConfigUI);
