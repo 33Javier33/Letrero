@@ -432,13 +432,13 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase;
             color: rgba(255,255,255,.92);
-            font-size: clamp(1.5rem, 7vw, 5rem);
+            font-size: clamp(2rem, 10vw, 7rem);
             letter-spacing: .04em;
         }
         .cas-value {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; color: #fff;
-            font-size: clamp(1.8rem, 9vw, 6.5rem);
+            font-size: clamp(2.5rem, 13vw, 9rem);
             text-shadow: 1px 1px 5px rgba(0,0,0,.6);
             letter-spacing: .02em;
         }
@@ -477,21 +477,22 @@
             padding: .3rem 1.1rem .1rem;
         }
         .cas-paytable-section table { width: 100%; height: 100%; border-collapse: collapse; }
-        #cas-pay-table-body tr { border-bottom: 1px solid rgba(255,255,255,.18); }
+        #cas-pay-table-body tr { border-top: 1px solid rgba(255,255,255,.22); }
+        #cas-pay-table-body tr:first-child { border-top: none; }
         #cas-pay-table-body td {
-            padding: 0;
+            padding: .15rem 0;
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
             text-shadow: 1px 1px 3px rgba(0,0,0,.7);
             letter-spacing: .03em;
-            font-size: clamp(1.1rem, 4.5vw, 3.5rem);
-            line-height: 1.15;
+            font-size: clamp(1.3rem, 5.5vw, 4rem);
+            line-height: 1.1;
             vertical-align: middle;
         }
         #cas-pay-table-body td:last-child { text-align: right; white-space: nowrap; padding-left: .5rem; }
         .cas-row-subtitle {
-            display: block; font-size: clamp(.6rem, 2vw, 1.3rem);
-            font-weight: 700; opacity: .78;
+            display: block; font-size: clamp(.7rem, 2.5vw, 1.8rem);
+            font-weight: 700; opacity: .75;
             letter-spacing: .04em; line-height: 1.1; text-transform: uppercase;
         }
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'letrero-v7';
+const CACHE_NAME = 'letrero-v8';
 
 // Archivos locales que se cachean en la instalación
 const LOCAL_ASSETS = [
