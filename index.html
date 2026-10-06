@@ -469,6 +469,29 @@
             text-shadow: 1px 1px 5px rgba(0,0,0,.6);
             letter-spacing: .02em;
         }
+        /* ── Efectos mínimos/máximos ── */
+        @keyframes mm-pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+        .mm-effect-pulse .cas-value { animation: mm-pulse 1.8s infinite ease-in-out; }
+        .mm-effect-pulse .cas-value:nth-child(2) { animation-delay: .5s; }
+
+        @keyframes mm-neon-glow {
+            0%,100% { text-shadow: 0 0 6px var(--glow-lo), 0 0 14px var(--glow-lo); color:#fff; }
+            50%      { text-shadow: 0 0 18px var(--glow-hi), 0 0 40px var(--glow-hi), 0 0 70px var(--glow-hi); color:#fff; }
+        }
+        .mm-effect-neon .cas-value { animation: mm-neon-glow 2s infinite ease-in-out; }
+        .mm-effect-neon .cas-value:nth-child(2) { animation-delay: .6s; }
+
+        @keyframes mm-shimmer-fade { 0%,100%{opacity:.55} 50%{opacity:1} }
+        .mm-effect-shimmer .cas-value { animation: mm-shimmer-fade 2.2s infinite ease-in-out; }
+        .mm-effect-shimmer .cas-value:nth-child(2) { animation-delay: .7s; }
+
+        @keyframes mm-rainbow {
+            0%{color:#ff6b6b;} 16%{color:#ffd93d;} 33%{color:#6bcb77;}
+            50%{color:#4ec9f0;} 66%{color:#c77dff;} 83%{color:#ff9a3c;} 100%{color:#ff6b6b;}
+        }
+        .mm-effect-rainbow .cas-value { animation: mm-rainbow 3s linear infinite; }
+        .mm-effect-rainbow .cas-value:nth-child(2) { animation-delay: .9s; }
+
         .cas-solo {
             text-align: center;
             font-family: 'Barlow Condensed','Roboto',sans-serif;
@@ -697,7 +720,7 @@
             <button id="close-config-btn"
                     class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
             <h3 class="text-xl font-bold text-center text-yellow-300">Configuración</h3>
-            <p class="text-center text-xs text-gray-500 italic mt-0.5" style="letter-spacing:.06em;">Carlos P. Nauto</p>
+            <p class="text-center text-xs text-gray-500 italic mt-0.5" style="letter-spacing:.06em;">Carlos P. Nauto Interactive</p>
         </div>
         <div class="bg-gray-800 text-white px-6 overflow-y-auto flex-1 pb-2">
             <div class="space-y-4 pt-3">
@@ -780,44 +803,6 @@
                     </div>
                 </div>
 
-                <!-- TIPO DE LOGO -->
-                <div class="border border-gray-700 rounded-lg p-3">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Tipo de Logo:</label>
-                    <div class="flex gap-2">
-                        <button class="logo-tipo-btn active" data-ltipo="foto">
-                            <div class="h-5 w-14 bg-gray-800 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#b99d6b;border:1px solid #b99d6b;">DREAMS</div>
-                            <span>Foto</span>
-                        </button>
-                        <button class="logo-tipo-btn" data-ltipo="neon">
-                            <div class="h-5 w-14 bg-gray-900 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#f6d860;text-shadow:0 0 6px #f6d860,0 0 14px #f6d860;">DREAMS</div>
-                            <span>Neón</span>
-                        </button>
-                        <button class="logo-tipo-btn" data-ltipo="texto">
-                            <div class="h-5 w-14 rounded flex items-center justify-center" style="font-family:Cinzel,serif;font-size:.55rem;letter-spacing:.1em;font-weight:700;color:#b99d6b;text-shadow:0 1px 3px rgba(0,0,0,.9);">DREAMS</div>
-                            <span>Texto</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- FORMA DEL LOGO -->
-                <div class="border border-gray-700 rounded-lg p-3">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Marco del Logo:</label>
-                    <div class="flex gap-2">
-                        <button class="logo-shape-btn active" data-lshape="square">
-                            <div class="h-4 bg-gray-400 border-2 border-yellow-600 rounded mx-auto" style="width:2.8rem;"></div>
-                            <span>Clásico</span>
-                        </button>
-                        <button class="logo-shape-btn" data-lshape="circle">
-                            <div class="h-4 bg-gray-400 border-2 border-yellow-600 mx-auto" style="width:2.8rem; border-radius:9999px;"></div>
-                            <span>Oval</span>
-                        </button>
-                        <button class="logo-shape-btn" data-lshape="plain">
-                            <div class="h-4 bg-gray-400 rounded mx-auto" style="width:2.8rem; border:2px dashed #6b7280;"></div>
-                            <span>Sin marco</span>
-                        </button>
-                    </div>
-                </div>
-
                 <!-- EFECTO TABLA -->
                 <div>
                     <label for="table-effect-select" class="block text-sm font-medium text-gray-300">Efecto Tabla de Pago:</label>
@@ -829,6 +814,19 @@
                         <option value="wave">〰  Onda</option>
                         <option value="rainbow">🌈  Arcoíris</option>
                         <option value="none">—  Sin efecto</option>
+                    </select>
+                </div>
+
+                <!-- EFECTO MÍNIMOS/MÁXIMOS -->
+                <div>
+                    <label for="minmax-effect-select" class="block text-sm font-medium text-gray-300">Efecto Mínimos / Máximos:</label>
+                    <select id="minmax-effect-select"
+                            class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+                        <option value="none">—  Sin efecto</option>
+                        <option value="pulse">💫  Pulso</option>
+                        <option value="neon">🌟  Neón</option>
+                        <option value="shimmer">✨  Destello</option>
+                        <option value="rainbow">🌈  Arcoíris</option>
                     </select>
                 </div>
 
@@ -1009,7 +1007,7 @@
             changeTimeEnabled: false, changeTime: '22:00',
             baseMin: 3000, newMin: 5000,
             baseMax: 100000, newMax: 100000,
-            colorTheme: 'gold', tableEffect: 'shimmer', background: 'logo', carouselStyle: 'marquee', logoShape: 'square', logoTipo: 'foto',
+            colorTheme: 'gold', tableEffect: 'shimmer', minmaxEffect: 'none', background: 'logo', carouselStyle: 'marquee',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
@@ -1046,6 +1044,14 @@
             mainSignEl.className = mainSignEl.className.replace(/\beffect-\S+/g,'').trim();
             mainSignEl.classList.add('effect-'+effect);
             if (tableEffectSelect) tableEffectSelect.value = effect;
+        }
+
+        function applyMinmaxEffect(effect) {
+            const casinoEl = document.getElementById('layout-casino');
+            casinoEl.className = casinoEl.className.replace(/\bmm-effect-\S+/g,'').trim();
+            if (effect !== 'none') casinoEl.classList.add('mm-effect-'+effect);
+            const sel = document.getElementById('minmax-effect-select');
+            if (sel) sel.value = effect;
         }
 
         // ── Carrusel de frases ──
@@ -1195,8 +1201,7 @@
             applyColorTheme(config.colorTheme||'gold');
             applyTableEffect(config.tableEffect||'shimmer');
             applyCarouselStyle(config.carouselStyle||'marquee');
-            applyLogoTipo(config.logoTipo||'foto');
-            applyLogoShape(config.logoShape||'square');
+            applyMinmaxEffect(config.minmaxEffect||'none');
         }
 
         function saveConfig() {
@@ -1206,7 +1211,9 @@
             config.baseMin = unformat(baseMinInput.value); config.baseMax = unformat(baseMaxInput.value);
             config.newMin  = unformat(newMinInput.value);  config.newMax  = unformat(newMaxInput.value);
             config.rules       = rulesInput.value.split('\n').filter(r=>r.trim()!=='');
-            config.tableEffect = tableEffectSelect.value;
+            config.tableEffect   = tableEffectSelect.value;
+            config.minmaxEffect  = (document.getElementById('minmax-effect-select')||{}).value || 'none';
+            applyMinmaxEffect(config.minmaxEffect);
             const g = config.gameName;
             if (payTables[g]?.hasSideBet) {
                 config.gameSettings[g] = {
@@ -1351,18 +1358,9 @@
 
         tableEffectSelect.addEventListener('change', () => applyTableEffect(tableEffectSelect.value));
 
-        document.querySelectorAll('.logo-tipo-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                config.logoTipo = btn.dataset.ltipo;
-                applyLogoTipo(btn.dataset.ltipo);
-            });
-        });
-
-        document.querySelectorAll('.logo-shape-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                config.logoShape = btn.dataset.lshape;
-                applyLogoShape(btn.dataset.lshape);
-            });
+        document.getElementById('minmax-effect-select').addEventListener('change', e => {
+            config.minmaxEffect = e.target.value;
+            applyMinmaxEffect(e.target.value);
         });
 
         document.querySelectorAll('.carousel-style-btn').forEach(btn => {
