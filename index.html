@@ -450,6 +450,7 @@
             font-size: clamp(.85rem, 3.2vw, 2rem);
             letter-spacing: .07em;
             padding-top: .25rem;
+            transition: opacity .5s ease;
         }
 
         /* Sección PAR PERFECTO (solo Black Jack) */
@@ -624,7 +625,7 @@
                 <span class="cas-label">MÁXIMO</span>
                 <span id="cas-max-val" class="cas-value"></span>
             </div>
-            <div class="cas-solo">SOLO JUGADORES SENTADOS</div>
+            <div class="cas-solo" id="cas-solo-carousel">SOLO JUGADORES SENTADOS</div>
         </div>
 
         <!-- PAR PERFECTO (solo Black Jack) -->
@@ -643,7 +644,7 @@
         <!-- Tabla de pagos -->
         <div class="cas-paytable-section">
             <div id="cas-paytable-header" class="cas-section-header" style="display:none; padding-bottom:.3rem;">TABLA DE PAGOS</div>
-            <table class="w-full">
+            <table class="w-full pay-table">
                 <tbody id="cas-pay-table-body"></tbody>
             </table>
         </div>
@@ -936,6 +937,7 @@
         const casSbMaxEl          = document.getElementById('cas-sb-max-val');
         const casPayBodyEl        = document.getElementById('cas-pay-table-body');
         const casPayHeaderEl      = document.getElementById('cas-paytable-header');
+        const casSoloCarouselEl   = document.getElementById('cas-solo-carousel');
         const gameTitleEl         = document.getElementById('game-title');
         const minBetEl            = document.getElementById('min-bet');
         const maxBetEl            = document.getElementById('max-bet');
@@ -1016,6 +1018,8 @@
         // ── Carrusel de frases ──
         let fadeCarouselIndex = 0;
         let fadeCarouselTimer = null;
+        let casFadeIndex = 0;
+        let casFadeTimer = null;
 
         function applyLogoTipo(tipo) {
             openConfigBtn.className = openConfigBtn.className.replace(/\blogo-tipo-\S+/g,'').trim();
@@ -1063,23 +1067,40 @@
 
         function updateMarquee() {
             const phrases = config.rules || [];
+
+            // Reinicia carrusel casino (.cas-solo)
+            if (casFadeTimer) { clearInterval(casFadeTimer); casFadeTimer = null; }
             if (!phrases.length) {
                 rulesMarqueeTextEl.textContent = '';
                 rulesMarqueeTextEl.style.animation = 'none';
                 rulesFadeTextEl.textContent = '';
-                if (casMarqueeEl) { casMarqueeEl.textContent = ''; casMarqueeEl.style.animation = 'none'; }
+                casSoloCarouselEl.textContent = 'SOLO JUGADORES SENTADOS';
+                casSoloCarouselEl.style.opacity = '1';
                 return;
             }
+
+            // Layout estándar — marquee
             const sep = "  ◆  ";
             const oneCopy = phrases.join(sep) + sep;
             rulesMarqueeTextEl.textContent = oneCopy + oneCopy;
             const dur = Math.min(120, Math.max(18, oneCopy.length * 0.24));
             rulesMarqueeTextEl.style.animation = `marquee-loop ${dur}s linear infinite`;
-            if (casMarqueeEl) {
-                casMarqueeEl.textContent = oneCopy + oneCopy;
-                casMarqueeEl.style.animation = `marquee-loop ${dur}s linear infinite`;
-            }
             if (config.carouselStyle === 'fade') startFadeCarousel();
+
+            // Layout casino — fade rotativo en .cas-solo
+            casFadeIndex = 0;
+            casSoloCarouselEl.style.opacity = '1';
+            casSoloCarouselEl.textContent = phrases[0];
+            if (phrases.length > 1) {
+                casFadeTimer = setInterval(() => {
+                    casSoloCarouselEl.style.opacity = '0';
+                    setTimeout(() => {
+                        casFadeIndex = (casFadeIndex + 1) % phrases.length;
+                        casSoloCarouselEl.textContent = phrases[casFadeIndex];
+                        casSoloCarouselEl.style.opacity = '1';
+                    }, 500);
+                }, 5000);
+            }
         }
 
         // ── Tabla de pagos ──
@@ -1197,9 +1218,9 @@
                 casPayHeaderEl.style.display = 'block';
             }
             casPayBodyEl.innerHTML = '';
-            gd.pays.forEach(item => {
+            gd.pays.forEach((item, i) => {
                 const sub = item.subtitle ? `<span class="cas-row-subtitle">${item.subtitle}</span>` : '';
-                casPayBodyEl.innerHTML += `<tr><td>${item.hand}${sub}</td><td>${item.payout}</td></tr>`;
+                casPayBodyEl.innerHTML += `<tr style="--delay:${i*.2};"><td>${item.hand}${sub}</td><td>${item.payout}</td></tr>`;
             });
         }
 
