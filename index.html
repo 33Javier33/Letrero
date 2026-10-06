@@ -292,42 +292,57 @@
         .pay-table tr { position:relative; overflow:hidden; }
 
         /* shimmer */
-        @keyframes shimmer { 0%{background-position:-1000px 0} 100%{background-position:1000px 0} }
+        @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
         .effect-shimmer .pay-table tr::after {
             content:''; position:absolute; inset:0;
-            background:linear-gradient(to right,transparent 0%,rgba(255,255,255,.13) 50%,transparent 100%);
-            animation:shimmer 5s infinite linear;
-            animation-delay:calc(var(--delay) * 1s);
+            background:linear-gradient(to right,transparent 20%,rgba(255,255,255,.35) 50%,transparent 80%);
+            animation:shimmer 2.5s infinite linear;
+            animation-delay:calc(var(--delay) * .8s);
         }
 
         /* none */
         .effect-none .pay-table tr::after { display:none; }
 
         /* pulse */
-        @keyframes row-pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
-        .effect-pulse .pay-table tr { animation:row-pulse 2s infinite ease-in-out; animation-delay:calc(var(--delay) * .2s); }
+        @keyframes row-pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+        .effect-pulse .pay-table tr { animation:row-pulse 1.8s infinite ease-in-out; animation-delay:calc(var(--delay) * .2s); }
         .effect-pulse .pay-table tr::after { display:none; }
 
-        /* neon */
+        /* neon — apunta a td para sobreescribir text-shadow propio */
         @keyframes neon-glow {
-            0%,100% { text-shadow:0 0 5px var(--glow-lo),0 0 10px var(--glow-lo); }
-            50%      { text-shadow:0 0 12px var(--glow-hi),0 0 25px var(--glow-hi),0 0 40px var(--glow-hi); }
+            0%,100% { text-shadow:0 0 6px var(--glow-lo),0 0 14px var(--glow-lo); color:#fff; }
+            50%      { text-shadow:0 0 18px var(--glow-hi),0 0 40px var(--glow-hi),0 0 70px var(--glow-hi); color:#fff; }
         }
-        .effect-neon .pay-table tr { animation:neon-glow 2.5s infinite ease-in-out; animation-delay:calc(var(--delay) * .25s); }
+        .effect-neon .pay-table td {
+            animation:neon-glow 2s infinite ease-in-out;
+            animation-delay:calc(var(--delay) * .25s);
+            text-shadow:0 0 6px var(--glow-lo) !important;
+        }
         .effect-neon .pay-table tr::after { display:none; }
 
         /* wave */
         @keyframes wave-slide {
-            0%   { transform:translateX(-5px); opacity:.7; }
-            50%  { transform:translateX(5px);  opacity:1; }
-            100% { transform:translateX(-5px); opacity:.7; }
+            0%   { transform:translateX(-12px); opacity:.55; }
+            50%  { transform:translateX(12px);  opacity:1; }
+            100% { transform:translateX(-12px); opacity:.55; }
         }
-        .effect-wave .pay-table tr { animation:wave-slide 3s infinite ease-in-out; animation-delay:calc(var(--delay) * .35s); }
+        .effect-wave .pay-table tr { animation:wave-slide 2.5s infinite ease-in-out; animation-delay:calc(var(--delay) * .35s); }
         .effect-wave .pay-table tr::after { display:none; }
 
-        /* rainbow */
-        @keyframes rainbow-hue { to { filter:hue-rotate(360deg); } }
-        .effect-rainbow .pay-table { animation:rainbow-hue 4s linear infinite; }
+        /* rainbow — anima color del texto (hue-rotate no afecta blanco) */
+        @keyframes rainbow-color {
+            0%   { color:#ff6b6b; }
+            16%  { color:#ffd93d; }
+            33%  { color:#6bcb77; }
+            50%  { color:#4ec9f0; }
+            66%  { color:#c77dff; }
+            83%  { color:#ff9a3c; }
+            100% { color:#ff6b6b; }
+        }
+        .effect-rainbow .pay-table td {
+            animation:rainbow-color 3s linear infinite;
+            animation-delay:calc(var(--delay) * .4s);
+        }
         .effect-rainbow .pay-table tr::after { display:none; }
 
         .pay-table-blackjack { font-size:var(--font-size-table-blackjack) !important; }
