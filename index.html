@@ -413,7 +413,20 @@
         /* ═══════════════════════════════════════════════════════════
            LAYOUT CASINO — retrato, replica letrero físico
         ═══════════════════════════════════════════════════════════ */
-        #layout-casino { flex-direction: column; }
+        #layout-casino { flex-direction: column; position: relative; }
+
+        /* Marca de agua centrada al fondo */
+        .cas-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: clamp(14rem, 70%, 28rem);
+            height: auto;
+            opacity: .10;
+            pointer-events: none;
+            z-index: 0;
+        }
+        #layout-casino > *:not(.cas-watermark) { position: relative; z-index: 1; }
 
         /* Título full-width */
         .cas-title-bar {
@@ -623,6 +636,9 @@
 
     <!-- ── LAYOUT CASINO (Hold'em Texas, Black Jack) ── -->
     <div id="layout-casino" class="w-full h-full flex" style="display:none;">
+
+        <!-- Marca de agua: logo dorado centrado al fondo -->
+        <img src="img/dreams-logo.png" alt="" aria-hidden="true" class="cas-watermark">
 
         <!-- Título del juego -->
         <div class="cas-title-bar">
