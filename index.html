@@ -682,7 +682,6 @@
         <!-- Pie: logo centrado + marca (también abre config) -->
         <div class="cas-footer" id="cas-open-config-btn">
             <img src="img/dreams-logo.png" alt="Dreams">
-            <span class="cas-footer-brand">Carlos P. Nauto</span>
         </div>
 
     </div>
@@ -692,13 +691,16 @@
     <!-- /main-sign -->
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
-    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 overflow-y-auto z-50">
-      <div id="config-panel-inner" class="min-h-full flex items-center justify-center p-4">
-        <div class="bg-gray-800 text-white p-6 rounded-lg shadow-2xl w-full max-w-sm relative my-4">
+    <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end justify-center">
+      <div id="config-panel-inner" class="w-full max-w-sm flex flex-col" style="max-height:92vh;">
+        <div class="bg-gray-800 text-white rounded-t-xl shadow-2xl px-6 pt-5 pb-3 flex-shrink-0 relative">
             <button id="close-config-btn"
                     class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-center text-yellow-300">Configuración</h3>
-            <div class="space-y-4">
+            <h3 class="text-xl font-bold text-center text-yellow-300">Configuración</h3>
+            <p class="text-center text-xs text-gray-500 italic mt-0.5" style="letter-spacing:.06em;">Carlos P. Nauto</p>
+        </div>
+        <div class="bg-gray-800 text-white px-6 overflow-y-auto flex-1 pb-2">
+            <div class="space-y-4 pt-3">
 
                 <!-- JUEGO -->
                 <div>
@@ -870,9 +872,10 @@
                     </button>
                 </div>
             </div>
-
+        </div>
+        <div class="bg-gray-800 text-white rounded-b-xl px-6 pt-3 pb-5 flex-shrink-0 border-t border-gray-700">
             <button id="save-config-btn"
-                    class="mt-5 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
                 Guardar Cambios
             </button>
         </div>
