@@ -475,8 +475,9 @@
         .cas-paytable-section {
             flex-grow: 1; min-height: 0; overflow: hidden;
             padding: .3rem 1.1rem .1rem;
+            display: flex; flex-direction: column;
         }
-        .cas-paytable-section table { width: 100%; height: 100%; border-collapse: collapse; }
+        .cas-paytable-section table { width: 100%; flex: 1; min-height: 0; border-collapse: collapse; }
         #cas-pay-table-body tr { border-top: 1px solid rgba(255,255,255,.22); }
         #cas-pay-table-body tr:first-child { border-top: none; }
         #cas-pay-table-body td {
@@ -641,6 +642,7 @@
 
         <!-- Tabla de pagos -->
         <div class="cas-paytable-section">
+            <div id="cas-paytable-header" class="cas-section-header" style="display:none; padding-bottom:.3rem;">TABLA DE PAGOS</div>
             <table class="w-full">
                 <tbody id="cas-pay-table-body"></tbody>
             </table>
@@ -933,7 +935,7 @@
         const casSbMinEl          = document.getElementById('cas-sb-min-val');
         const casSbMaxEl          = document.getElementById('cas-sb-max-val');
         const casPayBodyEl        = document.getElementById('cas-pay-table-body');
-        const casMarqueeEl        = document.getElementById('cas-marquee-text');
+        const casPayHeaderEl      = document.getElementById('cas-paytable-header');
         const gameTitleEl         = document.getElementById('game-title');
         const minBetEl            = document.getElementById('min-bet');
         const maxBetEl            = document.getElementById('max-bet');
@@ -1189,8 +1191,10 @@
                 casSbMinEl.textContent = fmtCLP(sbMin);
                 casSbMaxEl.textContent = fmtCLP(sbMax);
                 casSidebetColEl.classList.add('visible');
+                casPayHeaderEl.style.display = 'none';
             } else {
                 casSidebetColEl.classList.remove('visible');
+                casPayHeaderEl.style.display = 'block';
             }
             casPayBodyEl.innerHTML = '';
             gd.pays.forEach(item => {
