@@ -155,50 +155,39 @@
         ═══════════════════════════════════════════════════════════ */
         .poker-sign { font-family:'Cinzel',serif; position:relative; transition:background-color .5s, border-color .5s; }
 
-        /* — Pulso base (oro, verde, blanco) — */
-        @keyframes pulse-theme {
-            0%,100% { box-shadow:0 0 25px var(--glow-lo); }
-            50%     { box-shadow:0 0 55px var(--glow-hi); }
-        }
-
-        /* — Azul: doble destello eléctrico — */
-        @keyframes pulse-electric {
-            0%,100% { box-shadow:0 0 20px var(--glow-lo); }
-            28%     { box-shadow:0 0 65px var(--glow-hi), 0 0 100px rgba(99,179,237,.2); }
-            40%     { box-shadow:0 0 14px var(--glow-lo); }
-            55%     { box-shadow:0 0 60px var(--glow-hi), 0 0 90px rgba(99,179,237,.2); }
-        }
-
-        /* — Rojo: estrobo rápido e intenso — */
-        @keyframes pulse-strobe {
-            0%,46%,54%,100% { box-shadow:0 0 15px var(--glow-lo); }
-            50%              { box-shadow:0 0 80px var(--glow-hi), 0 0 120px rgba(252,129,129,.3); }
-        }
-
-        /* — Morado: aurora doble — */
-        @keyframes pulse-aurora {
-            0%,100% { box-shadow:0 0 25px rgba(183,148,244,.5), 0 0 60px rgba(200,80,220,.1); }
-            50%     { box-shadow:0 0 55px rgba(183,148,244,.9), 0 0 100px rgba(200,80,220,.3), 0 0 140px rgba(120,40,200,.15); }
-        }
+        /* ── Glow GPU-composited: anima opacity en ::after, NO box-shadow ── */
+        @keyframes glow-pulse         { 0%,100%{opacity:0} 50%{opacity:1} }
+        @keyframes glow-pulse-electric { 0%,20%,36%,45%,60%,100%{opacity:0} 28%{opacity:1} 40%{opacity:.15} 55%{opacity:1} }
+        @keyframes glow-pulse-strobe   { 0%,46%,54%,100%{opacity:0} 50%{opacity:1} }
 
         .theme-poker {
             background: rgba(15,23,42,.96);
             border: 4px solid var(--border-color);
-            animation: pulse-theme var(--pulse-speed) infinite ease-in-out;
+            box-shadow: 0 0 20px var(--glow-lo);
         }
         .theme-blackjack {
             background: rgba(26,42,69,.96);
             border: 4px solid var(--border-color);
-            animation: pulse-theme var(--pulse-speed) infinite ease-in-out;
+            box-shadow: 0 0 20px var(--glow-lo);
         }
+        /* Capa de glow composited — solo opacity se anima (GPU layer, sin repaint) */
+        .theme-poker::after, .theme-blackjack::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 55px var(--glow-hi);
+            opacity: 0;
+            animation: glow-pulse var(--pulse-speed) infinite ease-in-out;
+            will-change: opacity;
+            pointer-events: none;
+        }
+        #main-sign.color-blue   .theme-poker::after,
+        #main-sign.color-blue   .theme-blackjack::after { animation-name: glow-pulse-electric; }
+        #main-sign.color-red    .theme-poker::after,
+        #main-sign.color-red    .theme-blackjack::after { animation-name: glow-pulse-strobe; }
 
-        /* Override animation-name por tema de color */
-        #main-sign.color-blue .theme-poker,
-        #main-sign.color-blue .theme-blackjack   { animation-name: pulse-electric; }
-        #main-sign.color-red  .theme-poker,
-        #main-sign.color-red  .theme-blackjack   { animation-name: pulse-strobe; }
-        #main-sign.color-purple .theme-poker,
-        #main-sign.color-purple .theme-blackjack { animation-name: pulse-aurora; }
+        /* Cuando el layout casino está activo, #main-sign no necesita animar */
+        #main-sign.casino-active .theme-poker::after,
+        #main-sign.casino-active .theme-blackjack::after { animation: none; }
 
         /* ═══════════════════════════════════════════════════════════
            FONDOS APLICADOS DIRECTAMENTE AL PANEL (resuelve el
@@ -308,15 +297,13 @@
         .effect-pulse .pay-table tr { animation:row-pulse 1.8s infinite ease-in-out; animation-delay:calc(var(--delay) * .2s); }
         .effect-pulse .pay-table tr::after { display:none; }
 
-        /* neon — apunta a td para sobreescribir text-shadow propio */
-        @keyframes neon-glow {
-            0%,100% { text-shadow:0 0 6px var(--glow-lo),0 0 14px var(--glow-lo); color:#fff; }
-            50%      { text-shadow:0 0 18px var(--glow-hi),0 0 40px var(--glow-hi),0 0 70px var(--glow-hi); color:#fff; }
-        }
+        /* neon — solo opacity (composited), glow estático en text-shadow */
+        @keyframes neon-opacity { 0%,100%{opacity:.45} 50%{opacity:1} }
         .effect-neon .pay-table td {
-            animation:neon-glow 2s infinite ease-in-out;
-            animation-delay:calc(var(--delay) * .25s);
-            text-shadow:0 0 6px var(--glow-lo) !important;
+            animation: neon-opacity 2s infinite ease-in-out;
+            animation-delay: calc(var(--delay) * .25s);
+            text-shadow: 0 0 8px var(--glow-hi), 0 0 20px var(--glow-lo) !important;
+            will-change: opacity;
         }
         .effect-neon .pay-table tr::after { display:none; }
 
@@ -351,15 +338,24 @@
         /* ═══════════════════════════════════════════════════════════
            MIN-MAX BOX
         ═══════════════════════════════════════════════════════════ */
-        @keyframes breathing-glow-theme {
-            0%,100% { box-shadow:0 0 5px var(--border-color),0 0 12px var(--border-color),0 0 18px var(--glow-lo); }
-            50%      { box-shadow:0 0 12px var(--border-color),0 0 24px var(--border-color),0 0 36px var(--glow-hi); }
-        }
         #min-max-box {
-            border:2px solid var(--border-color);
-            border-radius:.5rem;
-            animation:breathing-glow-theme calc(var(--pulse-speed) * 0.85) infinite ease-in-out;
+            border: 2px solid var(--border-color);
+            border-radius: .5rem;
+            box-shadow: 0 0 8px var(--border-color), 0 0 16px var(--glow-lo);
+            position: relative;
         }
+        #min-max-box::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 12px var(--border-color), 0 0 28px var(--border-color), 0 0 40px var(--glow-hi);
+            opacity: 0;
+            animation: glow-pulse calc(var(--pulse-speed) * 0.85) infinite ease-in-out;
+            will-change: opacity;
+            pointer-events: none;
+        }
+
+        /* Pausa todas las animaciones cuando la página no es visible */
+        .anim-paused * { animation-play-state: paused !important; }
 
         #config-panel { transition:opacity .3s ease-in-out,transform .3s ease-in-out; }
 
@@ -474,11 +470,12 @@
         .mm-effect-pulse .cas-value { animation: mm-pulse 1.8s infinite ease-in-out; }
         .mm-effect-pulse .cas-value:nth-child(2) { animation-delay: .5s; }
 
-        @keyframes mm-neon-glow {
-            0%,100% { text-shadow: 0 0 6px var(--glow-lo), 0 0 14px var(--glow-lo); color:#fff; }
-            50%      { text-shadow: 0 0 18px var(--glow-hi), 0 0 40px var(--glow-hi), 0 0 70px var(--glow-hi); color:#fff; }
+        @keyframes mm-neon-opacity { 0%,100%{opacity:.45} 50%{opacity:1} }
+        .mm-effect-neon .cas-value {
+            animation: mm-neon-opacity 2s infinite ease-in-out;
+            text-shadow: 0 0 10px var(--glow-hi), 0 0 22px var(--glow-lo);
+            will-change: opacity;
         }
-        .mm-effect-neon .cas-value { animation: mm-neon-glow 2s infinite ease-in-out; }
         .mm-effect-neon .cas-value:nth-child(2) { animation-delay: .6s; }
 
         @keyframes mm-shimmer-fade { 0%,100%{opacity:.55} 50%{opacity:1} }
@@ -1278,10 +1275,12 @@
             if (gd?.useCasino) {
                 layoutStandardEl.style.display = 'none';
                 layoutCasinoEl.style.display   = 'flex';
+                mainSignEl.classList.add('casino-active');
                 renderCasinoLayout(gameName, isNewActive);
             } else {
                 layoutCasinoEl.style.display   = 'none';
                 layoutStandardEl.style.display  = 'flex';
+                mainSignEl.classList.remove('casino-active');
                 const minAmt = isNewActive ? config.newMin : config.baseMin;
                 const maxAmt = isNewActive ? config.newMax : config.baseMax;
                 const longTitle = gameName === "Caribbean Poker Plus";
@@ -1375,6 +1374,11 @@
         checkTime();
         updateMarquee();
         setInterval(checkTime, 10000);
+
+        // Pausa todas las animaciones CSS cuando la pestaña no es visible
+        document.addEventListener('visibilitychange', () => {
+            document.documentElement.classList.toggle('anim-paused', document.hidden);
+        });
     });
     </script>
 </body>
