@@ -515,9 +515,41 @@
             letter-spacing: .07em; text-align: center;
             padding-bottom: .15rem;
         }
-        /* Los min/max del PAR PERFECTO son más pequeños que los de mesa */
-        #cas-sidebet-row .cas-label { font-size: clamp(.85rem, 4.5vw, 3rem); }
-        #cas-sidebet-row .cas-value { font-size: clamp(1rem, 5.5vw, 3.8rem); }
+        /* PAR PERFECTO — layout centrado horizontal */
+        .cas-sb-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            padding: .15rem 0;
+        }
+        .cas-sb-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.1;
+        }
+        .cas-sb-label {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; text-transform: uppercase;
+            color: rgba(255,255,255,.92);
+            font-size: clamp(1.1rem, 5vw, 3.2rem);
+            letter-spacing: .04em;
+        }
+        .cas-sb-value {
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 900; color: #fff;
+            font-size: clamp(1.4rem, 7vw, 4.5rem);
+            letter-spacing: .02em;
+            text-shadow: 1px 1px 5px rgba(0,0,0,.6);
+        }
+        .cas-sb-divider {
+            width: 2px;
+            align-self: stretch;
+            background: rgba(255,255,255,.35);
+            border-radius: 1px;
+            flex-shrink: 0;
+        }
 
         /* Tabla de pagos */
         .cas-paytable-section {
@@ -681,13 +713,16 @@
         <!-- PAR PERFECTO (solo Black Jack) -->
         <div id="cas-sidebet-row">
             <div class="cas-section-header">PAR PERFECTO</div>
-            <div class="cas-minmax-row-item">
-                <span class="cas-label">MÍNIMO</span>
-                <span id="cas-sb-min-val" class="cas-value"></span>
-            </div>
-            <div class="cas-minmax-row-item">
-                <span class="cas-label">MÁXIMO</span>
-                <span id="cas-sb-max-val" class="cas-value"></span>
+            <div class="cas-sb-row">
+                <div class="cas-sb-item">
+                    <span class="cas-sb-label">MÍNIMO</span>
+                    <span id="cas-sb-min-val" class="cas-sb-value"></span>
+                </div>
+                <div class="cas-sb-divider"></div>
+                <div class="cas-sb-item">
+                    <span class="cas-sb-label">MÁXIMO</span>
+                    <span id="cas-sb-max-val" class="cas-sb-value"></span>
+                </div>
             </div>
         </div>
 
