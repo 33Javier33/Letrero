@@ -614,9 +614,37 @@
             letter-spacing: .08em; font-style: italic;
         }
 
+        /* ── Barra de actualización automática ── */
+        #update-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
+            background: rgba(180, 95, 6, .96);
+            color: #fff;
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-size: clamp(.8rem, 2.5vw, 1rem);
+            font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+            padding: .4rem 1rem;
+            text-align: center;
+            transform: translateY(-110%);
+            transition: transform .45s cubic-bezier(.22,1,.36,1);
+            overflow: hidden;
+        }
+        #update-bar.visible { transform: translateY(0); }
+        #update-progress {
+            position: absolute; top: 0; left: 0; height: 3px;
+            background: rgba(255,255,255,.75);
+            width: 0%; transition: none;
+        }
+        #update-bar-msg { position: relative; }
+
     </style>
 </head>
 <body class="bg-logo">
+
+    <!-- Barra de actualización automática -->
+    <div id="update-bar" aria-live="polite">
+        <div id="update-progress"></div>
+        <span id="update-bar-msg">Descargando nueva versión…</span>
+    </div>
 
     <!-- Filtro SVG: alpha = 5 − 5×luminance → blanco puro (lum=1) = 0, gris/plata/dorado = opaco -->
     <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
@@ -930,11 +958,61 @@
     <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .catch(err => console.error('SW error:', err));
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+
+          function showBar(msg) {
+            const bar = document.getElementById('update-bar');
+            const txt = document.getElementById('update-bar-msg');
+            if (!bar) return;
+            if (txt) txt.textContent = msg;
+            bar.classList.add('visible');
+          }
+
+          function startCountdown(secs) {
+            const prog = document.getElementById('update-progress');
+            const txt  = document.getElementById('update-bar-msg');
+            if (prog) {
+              prog.style.transition = `width ${secs}s linear`;
+              prog.style.width = '100%';
+            }
+            let remaining = secs;
+            const t = setInterval(() => {
+              remaining--;
+              if (txt) txt.textContent = `Nueva versión lista — recargando en ${remaining}s`;
+              if (remaining <= 0) { clearInterval(t); location.reload(); }
+            }, 1000);
+          }
+
+          // Cuando el nuevo SW toma el control → cuenta regresiva y recarga
+          let reloading = false;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (reloading) return;
+            reloading = true;
+            showBar('Nueva versión lista — recargando en 3s');
+            startCountdown(3);
+          });
+
+          // Cuando empieza a descargar la actualización
+          reg.addEventListener('updatefound', () => {
+            showBar('Descargando nueva versión…');
+            const prog = document.getElementById('update-progress');
+            if (prog) {
+              setTimeout(() => {
+                prog.style.transition = 'width 10s linear';
+                prog.style.width = '70%';
+              }, 80);
+            }
+          });
+
+          // Chequea actualizaciones cada 30 minutos (sin tener que cerrar)
+          setInterval(() => reg.update(), 30 * 60 * 1000);
+          // Y también una vez al arrancar
+          reg.update();
+
+        }).catch(err => console.error('SW error:', err));
       });
     }
-</script>
+    </script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
