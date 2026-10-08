@@ -498,6 +498,21 @@
             letter-spacing: .07em;
             padding-top: .25rem;
             transition: opacity .5s ease;
+            /* Máximo 2 líneas — protege la tabla de pago */
+            line-height: 1.25;
+            max-height: 2.5em;
+            overflow: hidden;
+        }
+        /* Modo marquee: una línea que desplaza horizontalmente */
+        .cas-solo.cas-marquee-mode {
+            white-space: nowrap;
+            text-align: left;
+            max-height: 1.4em;
+            overflow: hidden;
+        }
+        .cas-solo-scroll {
+            display: inline-block;
+            white-space: nowrap;
         }
 
         /* Sección PAR PERFECTO (solo Black Jack) */
@@ -1138,39 +1153,54 @@
 
         function updateMarquee() {
             const phrases = config.rules || [];
+            const isMarquee = config.carouselStyle !== 'fade';
 
-            // Reinicia carrusel casino (.cas-solo)
+            // Reinicia estado previo
             if (casFadeTimer) { clearInterval(casFadeTimer); casFadeTimer = null; }
+            casSoloCarouselEl.classList.remove('cas-marquee-mode');
+            casSoloCarouselEl.innerHTML = '';
+            casSoloCarouselEl.style.opacity = '1';
+
             if (!phrases.length) {
                 rulesMarqueeTextEl.textContent = '';
                 rulesMarqueeTextEl.style.animation = 'none';
                 rulesFadeTextEl.textContent = '';
                 casSoloCarouselEl.textContent = 'SOLO JUGADORES SENTADOS';
-                casSoloCarouselEl.style.opacity = '1';
                 return;
             }
 
-            // Layout estándar — marquee
+            // Layout estándar — marquee / fade
             const sep = "  ◆  ";
             const oneCopy = phrases.join(sep) + sep;
             rulesMarqueeTextEl.textContent = oneCopy + oneCopy;
             const dur = Math.min(120, Math.max(18, oneCopy.length * 0.24));
             rulesMarqueeTextEl.style.animation = `marquee-loop ${dur}s linear infinite`;
-            if (config.carouselStyle === 'fade') startFadeCarousel();
+            if (!isMarquee) startFadeCarousel();
 
-            // Layout casino — fade rotativo en .cas-solo
-            casFadeIndex = 0;
-            casSoloCarouselEl.style.opacity = '1';
-            casSoloCarouselEl.textContent = phrases[0];
-            if (phrases.length > 1) {
-                casFadeTimer = setInterval(() => {
-                    casSoloCarouselEl.style.opacity = '0';
-                    setTimeout(() => {
-                        casFadeIndex = (casFadeIndex + 1) % phrases.length;
-                        casSoloCarouselEl.textContent = phrases[casFadeIndex];
-                        casSoloCarouselEl.style.opacity = '1';
-                    }, 500);
-                }, 5000);
+            // Layout casino
+            if (isMarquee) {
+                // Marquee: texto desplazándose de derecha a izquierda
+                casSoloCarouselEl.classList.add('cas-marquee-mode');
+                const scrollSpan = document.createElement('span');
+                scrollSpan.className = 'cas-solo-scroll';
+                scrollSpan.textContent = oneCopy + oneCopy;
+                const casDur = Math.min(60, Math.max(12, oneCopy.length * 0.22));
+                scrollSpan.style.animation = `marquee-loop ${casDur}s linear infinite`;
+                casSoloCarouselEl.appendChild(scrollSpan);
+            } else {
+                // Fade: rota frases, máx 2 líneas
+                casFadeIndex = 0;
+                casSoloCarouselEl.textContent = phrases[0];
+                if (phrases.length > 1) {
+                    casFadeTimer = setInterval(() => {
+                        casSoloCarouselEl.style.opacity = '0';
+                        setTimeout(() => {
+                            casFadeIndex = (casFadeIndex + 1) % phrases.length;
+                            casSoloCarouselEl.textContent = phrases[casFadeIndex];
+                            casSoloCarouselEl.style.opacity = '1';
+                        }, 500);
+                    }, 5000);
+                }
             }
         }
 
@@ -1414,6 +1444,35 @@
         document.addEventListener('visibilitychange', () => {
             document.documentElement.classList.toggle('anim-paused', document.hidden);
         });
+
+        // Fix teclado virtual: al enfocar el textarea del carrusel,
+        // ajusta el panel para que el textarea quede visible sobre el teclado
+        const rulesInputEl = document.getElementById('rules-input');
+        const configScrollArea = rulesInputEl && rulesInputEl.closest('.overflow-y-auto');
+
+        if (rulesInputEl && configScrollArea) {
+            rulesInputEl.addEventListener('focus', () => {
+                // Espera que el teclado termine de subir (~350ms) y luego scrollea
+                setTimeout(() => {
+                    rulesInputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 350);
+            });
+        }
+
+        // Ajusta la altura máxima del panel cuando aparece/desaparece el teclado virtual
+        if (window.visualViewport) {
+            const configPanelInner = document.getElementById('config-panel-inner');
+            window.visualViewport.addEventListener('resize', () => {
+                const vvh = window.visualViewport.height;
+                if (configPanelInner) {
+                    configPanelInner.style.maxHeight = Math.floor(vvh * 0.96) + 'px';
+                }
+                // Reescrolear el textarea si está enfocado
+                if (document.activeElement === rulesInputEl) {
+                    setTimeout(() => rulesInputEl.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+                }
+            });
+        }
     });
     </script>
 </body>
