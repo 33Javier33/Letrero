@@ -440,6 +440,23 @@
         #layout-casino { flex-direction: column; position: relative; }
 
         /* Marca de agua centrada al fondo */
+        #fs-sign-btn {
+            position: absolute;
+            top: .45rem; right: .45rem;
+            z-index: 200;
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 7px;
+            padding: .3rem;
+            cursor: pointer;
+            color: rgba(255,255,255,.45);
+            line-height: 0;
+            transition: color .2s, background .2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #fs-sign-btn:active { color: #fff; background: rgba(255,255,255,.18); }
+        @media (hover:hover) { #fs-sign-btn:hover { color:#fff; background:rgba(255,255,255,.15); } }
+
         .cas-watermark {
             position: absolute;
             top: 50%; left: 50%;
@@ -688,6 +705,15 @@
     </svg>
 
     <div id="main-sign" class="poker-sign effect-shimmer text-white w-screen h-screen">
+
+    <!-- Botón pantalla completa (siempre visible en el letrero) -->
+    <button id="fs-sign-btn" aria-label="Pantalla completa">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+        </svg>
+    </button>
 
     <!-- ── LAYOUT ESTÁNDAR (Draw Poker, Caribbean) ── -->
     <div id="layout-standard" class="w-full h-full flex flex-col p-3 sm:p-4 lg:p-6">
@@ -1051,24 +1077,35 @@
         // ── Fullscreen ──
         const fullscreenBtnConfig = document.getElementById('fullscreen-btn-config');
         const fullscreenBtnText   = document.getElementById('fullscreen-btn-text');
+        const fsSignBtn           = document.getElementById('fs-sign-btn');
         const toggleFullScreen = () => !document.fullscreenElement
             ? document.documentElement.requestFullscreen().catch(e=>console.error(e))
             : document.exitFullscreen();
         const updateFSText = () => fullscreenBtnText.textContent = document.fullscreenElement ? 'Salir' : 'Pantalla';
         fullscreenBtnConfig.addEventListener('click', toggleFullScreen);
-        document.addEventListener('fullscreenchange', updateFSText);
+        fsSignBtn.addEventListener('click', toggleFullScreen);
+        document.addEventListener('fullscreenchange', () => {
+            updateFSText();
+            // Re-acquire wake lock — fullscreen exit can release it on Android
+            if (!document.fullscreenElement) setTimeout(acquireWL, 300);
+        });
 
         // ── Wake Lock ──
         let wakeLock = null, wakeLockEnabled = false;
         const wakeLockBtn  = document.getElementById('wake-lock-btn');
         const wakeLockText = document.getElementById('wake-lock-status-text');
         const acquireWL = async () => {
-            if ('wakeLock' in navigator && wakeLockEnabled) {
+            if ('wakeLock' in navigator && wakeLockEnabled && document.visibilityState === 'visible') {
                 try {
                     wakeLock = await navigator.wakeLock.request('screen');
                     wakeLockText.textContent = 'ON';
                     wakeLockBtn.classList.replace('bg-gray-700','bg-green-600');
                     wakeLockBtn.classList.replace('hover:bg-gray-600','hover:bg-green-700');
+                    // Auto-reacquire if the browser releases it (e.g. fullscreen exit, tab switch)
+                    wakeLock.addEventListener('release', () => {
+                        wakeLock = null;
+                        if (wakeLockEnabled) setTimeout(acquireWL, 500);
+                    }, { once: true });
                 } catch(e){}
             }
         };
