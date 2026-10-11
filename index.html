@@ -578,11 +578,22 @@
             flex-direction: column;
             justify-content: center;
             border-bottom: none;
+            overflow: hidden;
             padding: 1.2rem 1.5rem;
-            gap: .6rem;
+            gap: .5rem;
         }
-        #layout-casino.cas-simple-mode .cas-label { font-size: clamp(3.5rem, 15vw, 13rem); }
-        #layout-casino.cas-simple-mode .cas-value  { font-size: clamp(4.5rem, 19vw, 17rem); }
+        #layout-casino.cas-simple-mode .cas-minmax-row-item { overflow: hidden; }
+        #layout-casino.cas-simple-mode .cas-label { font-size: clamp(2rem, 9vw, 8rem); }
+        #layout-casino.cas-simple-mode .cas-value  { font-size: clamp(2.5rem, 12vw, 10rem); }
+        /* Subtítulo "APRENDE A JUGAR" sobre el título del juego */
+        #cas-game-subtitle {
+            display: none;
+            font-family: 'Barlow Condensed','Roboto',sans-serif;
+            font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,.75);
+            font-size: clamp(1rem, 4.5vw, 3.5rem);
+            letter-spacing: .08em; line-height: 1;
+        }
+        #layout-casino.cas-simple-mode #cas-game-subtitle { display: block; }
 
         .cas-section-header {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
@@ -807,6 +818,7 @@
 
         <!-- Título del juego -->
         <div class="cas-title-bar">
+            <div id="cas-game-subtitle"></div>
             <span id="cas-game-name"></span>
         </div>
 
@@ -1172,7 +1184,7 @@
             "Caribbean Poker Plus":    { hasSideBet:false, useCasino:true,  shortName:"CARIBBEAN POKER",  pays:[{hand:"Escalera REAL",payout:"100 A 1"},{hand:"Escalera Color",payout:"50 A 1"},{hand:"Poker",payout:"20 A 1"},{hand:"Full",payout:"7 A 1"},{hand:"Color",payout:"5 A 1"},{hand:"Escalera",payout:"4 A 1"},{hand:"Trío",payout:"3 A 1"},{hand:"Dos Pares",payout:"2 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
             "Hold'em Texas Poker Plus":{ hasSideBet:false, useCasino:true,  shortName:"HOLD'EM POKER", pays:[{hand:"Escalera Real",payout:"100 A 1"},{hand:"Escalera Color",payout:"20 A 1"},{hand:"Poker",payout:"10 A 1"},{hand:"Full",payout:"3 A 1"},{hand:"Color",payout:"2 A 1"},{hand:"Escalera",payout:"1 A 1"},{hand:"Trío",payout:"1 A 1"},{hand:"Dos Pares",payout:"1 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
             "Black Jack Par Perfecto": { hasSideBet:true,  useCasino:true,  shortName:"BLACK JACK",    pays:[{hand:"Par Perfecto",subtitle:"Par de la misma pinta y color",payout:"25 A 1"},{hand:"Par Color",subtitle:"Par del mismo color",payout:"15 A 1"},{hand:"Par Mixto",subtitle:"Par rojo y negro",payout:"5 A 1"}]},
-            "Black Jack Aprendizaje":  { hasSideBet:false, useCasino:true,  simpleMode:true, shortName:"BLACK JACK", pays:[]}
+            "Black Jack Aprendizaje":  { hasSideBet:false, useCasino:true,  simpleMode:true, shortName:"BLACK JACK", subtitle:"APRENDE A JUGAR", pays:[]}
         };
 
         // ── DOM refs ──
@@ -1180,6 +1192,7 @@
         const layoutStandardEl    = document.getElementById('layout-standard');
         const layoutCasinoEl      = document.getElementById('layout-casino');
         const casGameNameEl       = document.getElementById('cas-game-name');
+        const casGameSubtitleEl   = document.getElementById('cas-game-subtitle');
         const casMinValEl         = document.getElementById('cas-min-val');
         const casMaxValEl         = document.getElementById('cas-max-val');
         const casSidebetColEl     = document.getElementById('cas-sidebet-row');
@@ -1476,6 +1489,7 @@
             const gd = payTables[gameName];
             const gs = config.gameSettings[gameName];
             casGameNameEl.textContent = gd.shortName || gameName;
+            casGameSubtitleEl.textContent = gd.subtitle || '';
             const minAmt = isNewActive ? config.newMin : config.baseMin;
             const maxAmt = isNewActive ? config.newMax : config.baseMax;
             casMinValEl.textContent = fmtCLP(minAmt);
