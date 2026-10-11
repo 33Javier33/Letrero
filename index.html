@@ -72,7 +72,7 @@
 
         /* Logo responsivo — rectangular, altura automática según contenido */
         #open-config-btn {
-            width:         clamp(7rem, 20vmin, 13rem);
+            width:         clamp(5rem, 15vmin, 9.5rem);
             height:        auto;
             flex-shrink:   0;
             overflow:      hidden;
@@ -593,13 +593,13 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase;
             color: rgba(255,255,255,.92);
-            font-size: clamp(1.1rem, 5vw, 3.2rem);
+            font-size: clamp(1.4rem, 6.5vw, 4rem);
             letter-spacing: .04em;
         }
         .cas-sb-value {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; color: #fff;
-            font-size: clamp(1.4rem, 7vw, 4.5rem);
+            font-size: clamp(1.8rem, 9vw, 5.8rem);
             letter-spacing: .02em;
             text-shadow: 1px 1px 5px rgba(0,0,0,.6);
         }
@@ -626,13 +626,13 @@
             font-weight: 900; text-transform: uppercase; color: #fff;
             text-shadow: 1px 1px 3px rgba(0,0,0,.7);
             letter-spacing: .03em;
-            font-size: clamp(1.3rem, 5.5vw, 4rem);
+            font-size: clamp(1.5rem, 6.5vw, 4.8rem);
             line-height: 1.1;
             vertical-align: middle;
         }
         #cas-pay-table-body td:last-child { text-align: right; white-space: nowrap; padding-left: .5rem; }
         .cas-row-subtitle {
-            display: block; font-size: clamp(.7rem, 2.5vw, 1.8rem);
+            display: block; font-size: clamp(.85rem, 3vw, 2.2rem);
             font-weight: 700; opacity: .75;
             letter-spacing: .04em; line-height: 1.1; text-transform: uppercase;
         }
@@ -648,7 +648,7 @@
         }
         .cas-footer img {
             height: auto;
-            width: clamp(8rem, 40vw, 18rem);
+            width: clamp(5.5rem, 26vw, 12rem);
             filter: drop-shadow(0 1px 6px rgba(0,0,0,.9));
             opacity: .95;
         }
@@ -867,6 +867,8 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div><label class="block text-xs text-gray-400">Mín Base:</label><input type="text" inputmode="numeric" id="side-bet-base-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                         <div><label class="block text-xs text-gray-400">Máx Base:</label><input type="text" inputmode="numeric" id="side-bet-base-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                    </div>
+                    <div id="side-bet-new-wrap" class="grid grid-cols-2 gap-2 opacity-40 pointer-events-none transition-opacity">
                         <div><label class="block text-xs text-gray-400">Mín Nuevo:</label><input type="text" inputmode="numeric" id="side-bet-new-min" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                         <div><label class="block text-xs text-gray-400">Máx Nuevo:</label><input type="text" inputmode="numeric" id="side-bet-new-max" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                     </div>
@@ -878,6 +880,8 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div><label class="block text-xs text-gray-400">Mín Base:</label><input type="text" inputmode="numeric" id="base-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                         <div><label class="block text-xs text-gray-400">Máx Base:</label><input type="text" inputmode="numeric" id="base-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
+                    </div>
+                    <div id="new-bets-wrap" class="grid grid-cols-2 gap-2 opacity-40 pointer-events-none transition-opacity">
                         <div><label class="block text-xs text-gray-400">Mín Nuevo:</label><input type="text" inputmode="numeric" id="new-min-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                         <div><label class="block text-xs text-gray-400">Máx Nuevo:</label><input type="text" inputmode="numeric" id="new-max-bet" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 text-sm"></div>
                     </div>
@@ -1130,13 +1134,18 @@
         // ── Toggle hora de cambio ──
         const toggleTrack      = document.getElementById('toggle-track');
         const changeTimeFields = document.getElementById('change-time-fields');
+        const newBetsWrap      = document.getElementById('new-bets-wrap');
+        const sideBetNewWrap   = document.getElementById('side-bet-new-wrap');
         let changeTimeEnabled  = false;
 
         function syncToggle(enabled) {
             changeTimeEnabled = enabled;
             toggleTrack.classList.toggle('on', enabled);
-            changeTimeFields.classList.toggle('opacity-40', !enabled);
-            changeTimeFields.classList.toggle('pointer-events-none', !enabled);
+            [changeTimeFields, newBetsWrap, sideBetNewWrap].forEach(el => {
+                if (!el) return;
+                el.classList.toggle('opacity-40', !enabled);
+                el.classList.toggle('pointer-events-none', !enabled);
+            });
         }
         toggleTrack.addEventListener('click', () => syncToggle(!changeTimeEnabled));
         toggleTrack.addEventListener('keydown', e => { if(e.key===' '||e.key==='Enter'){e.preventDefault();syncToggle(!changeTimeEnabled);} });
