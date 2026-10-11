@@ -568,6 +568,22 @@
             border-bottom: 2px solid rgba(255,255,255,.32);
         }
         #cas-sidebet-row.visible { display: block; }
+
+        /* Modo simple: solo MÍNIMO / MÁXIMO, sin tabla ni sidebet */
+        #layout-casino.cas-simple-mode .cas-paytable-section,
+        #layout-casino.cas-simple-mode #cas-sidebet-row { display: none !important; }
+        #layout-casino.cas-simple-mode .cas-minmax-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: none;
+            padding: 1.2rem 1.5rem;
+            gap: .6rem;
+        }
+        #layout-casino.cas-simple-mode .cas-label { font-size: clamp(3.5rem, 15vw, 13rem); }
+        #layout-casino.cas-simple-mode .cas-value  { font-size: clamp(4.5rem, 19vw, 17rem); }
+
         .cas-section-header {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
@@ -1155,7 +1171,8 @@
             "Draw Poker":              { hasSideBet:false, useCasino:true,  shortName:"DRAW POKER",      pays:[{hand:"Escalera REAL",payout:"100 A 1"},{hand:"Escalera Color",payout:"50 A 1"},{hand:"Poker",payout:"20 A 1"},{hand:"Full",payout:"7 A 1"},{hand:"Color",payout:"5 A 1"},{hand:"Escalera",payout:"3 A 1"},{hand:"Trío",payout:"2 A 1"},{hand:"Dos Pares",payout:"1 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
             "Caribbean Poker Plus":    { hasSideBet:false, useCasino:true,  shortName:"CARIBBEAN POKER",  pays:[{hand:"Escalera REAL",payout:"100 A 1"},{hand:"Escalera Color",payout:"50 A 1"},{hand:"Poker",payout:"20 A 1"},{hand:"Full",payout:"7 A 1"},{hand:"Color",payout:"5 A 1"},{hand:"Escalera",payout:"4 A 1"},{hand:"Trío",payout:"3 A 1"},{hand:"Dos Pares",payout:"2 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
             "Hold'em Texas Poker Plus":{ hasSideBet:false, useCasino:true,  shortName:"HOLD'EM POKER", pays:[{hand:"Escalera Real",payout:"100 A 1"},{hand:"Escalera Color",payout:"20 A 1"},{hand:"Poker",payout:"10 A 1"},{hand:"Full",payout:"3 A 1"},{hand:"Color",payout:"2 A 1"},{hand:"Escalera",payout:"1 A 1"},{hand:"Trío",payout:"1 A 1"},{hand:"Dos Pares",payout:"1 A 1"},{hand:"Un Par",payout:"1 A 1"}]},
-            "Black Jack Par Perfecto": { hasSideBet:true,  useCasino:true,  shortName:"BLACK JACK",    pays:[{hand:"Par Perfecto",subtitle:"Par de la misma pinta y color",payout:"25 A 1"},{hand:"Par Color",subtitle:"Par del mismo color",payout:"15 A 1"},{hand:"Par Mixto",subtitle:"Par rojo y negro",payout:"5 A 1"}]}
+            "Black Jack Par Perfecto": { hasSideBet:true,  useCasino:true,  shortName:"BLACK JACK",    pays:[{hand:"Par Perfecto",subtitle:"Par de la misma pinta y color",payout:"25 A 1"},{hand:"Par Color",subtitle:"Par del mismo color",payout:"15 A 1"},{hand:"Par Mixto",subtitle:"Par rojo y negro",payout:"5 A 1"}]},
+            "Black Jack Aprendizaje":  { hasSideBet:false, useCasino:true,  simpleMode:true, shortName:"BLACK JACK", pays:[]}
         };
 
         // ── DOM refs ──
@@ -1463,6 +1480,8 @@
             const maxAmt = isNewActive ? config.newMax : config.baseMax;
             casMinValEl.textContent = fmtCLP(minAmt);
             casMaxValEl.textContent = fmtCLP(maxAmt);
+            // Modo simple: solo min/max, sin sidebet ni tabla
+            layoutCasinoEl.classList.toggle('cas-simple-mode', !!gd.simpleMode);
             if (gd.hasSideBet && gs) {
                 const sbMin = isNewActive ? gs.newMinBet : gs.baseMinBet;
                 const sbMax = isNewActive ? gs.newMaxBet : gs.baseMaxBet;
@@ -1472,7 +1491,7 @@
                 casPayHeaderEl.style.display = 'none';
             } else {
                 casSidebetColEl.classList.remove('visible');
-                casPayHeaderEl.style.display = 'block';
+                casPayHeaderEl.style.display = gd.simpleMode ? 'none' : 'block';
             }
             casPayBodyEl.innerHTML = '';
             gd.pays.forEach((item, i) => {
@@ -1485,7 +1504,7 @@
             const gameName = config.gameName;
             const gd = payTables[gameName];
             // Tema visual (siempre)
-            if (gameName === "Black Jack Par Perfecto") {
+            if (payTables[gameName]?.theme === 'blackjack' || gameName.startsWith('Black Jack')) {
                 mainSignEl.classList.remove('theme-poker');
                 mainSignEl.classList.add('theme-blackjack');
             } else {
