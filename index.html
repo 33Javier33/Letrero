@@ -687,40 +687,6 @@
         }
 
         /* ── Barra de actualización automática ── */
-        /* ── Overlay "toca para activar pantalla completa" ── */
-        #fs-prompt {
-            position: fixed; inset: 0; z-index: 99999;
-            background: #08091a;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 2.5rem; cursor: pointer;
-            opacity: 0; animation: fs-prompt-in .6s .5s ease forwards;
-            -webkit-tap-highlight-color: transparent;
-        }
-        @keyframes fs-prompt-in { to { opacity: 1; } }
-        #fs-prompt.fs-hidden {
-            opacity: 0; transform: scale(1.05);
-            transition: opacity .4s ease, transform .4s ease;
-            pointer-events: none;
-        }
-        #fs-prompt img {
-            width: clamp(9rem, 42vw, 20rem); opacity: .88;
-            filter: drop-shadow(0 0 30px rgba(185,157,107,.25));
-        }
-        #fs-prompt-msg {
-            font-family: 'Barlow Condensed','Roboto',sans-serif;
-            font-size: clamp(1.3rem, 5.5vw, 2.8rem);
-            font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-            color: rgba(255,255,255,.65); text-align: center;
-            line-height: 1.3;
-        }
-        #fs-prompt-hint {
-            font-family: 'Barlow Condensed','Roboto',sans-serif;
-            font-size: clamp(.75rem, 3vw, 1.3rem);
-            letter-spacing: .1em; text-transform: uppercase;
-            color: rgba(255,255,255,.28);
-        }
-
         #update-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
             background: rgba(180, 95, 6, .96);
@@ -752,12 +718,6 @@
         <span id="update-bar-msg">Descargando nueva versión…</span>
     </div>
 
-    <!-- Overlay pantalla completa: se muestra en navegador, se omite en app instalada -->
-    <div id="fs-prompt" role="button" aria-label="Activar pantalla completa">
-        <img src="img/dreams-logo.png" alt="Dreams">
-        <div id="fs-prompt-msg">TOCA PARA ACTIVAR</div>
-        <div id="fs-prompt-hint">CASINO DREAMS · PUERTO VARAS</div>
-    </div>
 
     <!-- Filtro SVG: alpha = 5 − 5×luminance → blanco puro (lum=1) = 0, gris/plata/dorado = opaco -->
     <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
@@ -1147,23 +1107,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // ── Fullscreen + overlay de activación ──
+        // ── Fullscreen ──
         const fullscreenBtnConfig = document.getElementById('fullscreen-btn-config');
         const fullscreenBtnText   = document.getElementById('fullscreen-btn-text');
         const fsSignBtn           = document.getElementById('fs-sign-btn');
-        const fsPrompt            = document.getElementById('fs-prompt');
-
-        const dismissFsPrompt = () => {
-            if (!fsPrompt || !fsPrompt.isConnected) return;
-            fsPrompt.classList.add('fs-hidden');
-            setTimeout(() => { if (fsPrompt.isConnected) fsPrompt.remove(); }, 450);
-        };
-
-        const enterFullscreen = () =>
-            document.documentElement.requestFullscreen().catch(e => console.error(e));
 
         const toggleFullScreen = () => !document.fullscreenElement
-            ? enterFullscreen()
+            ? document.documentElement.requestFullscreen().catch(e => console.error(e))
             : document.exitFullscreen();
 
         const updateFSText = () =>
@@ -1174,43 +1124,8 @@
 
         document.addEventListener('fullscreenchange', () => {
             updateFSText();
-            if (document.fullscreenElement) {
-                dismissFsPrompt();
-            } else {
-                // Re-acquire wake lock — fullscreen exit can release it on Android
-                setTimeout(acquireWL, 300);
-            }
+            if (!document.fullscreenElement) setTimeout(acquireWL, 300);
         });
-
-        // ── Overlay automático de pantalla completa ──
-        (function setupAutoFullscreen() {
-            if (!fsPrompt) return;
-            const isStandalone =
-                window.matchMedia('(display-mode: fullscreen)').matches ||
-                window.matchMedia('(display-mode: standalone)').matches ||
-                navigator.standalone === true;
-
-            if (isStandalone) {
-                // App instalada: ya en fullscreen por el manifest — solo descartamos el overlay
-                enterFullscreen().catch(() => {});
-                dismissFsPrompt();
-                return;
-            }
-
-            // Navegador: mostrar overlay y esperar toque del usuario
-            const wasReload = sessionStorage.getItem('letrero-reload') === '1';
-            sessionStorage.removeItem('letrero-reload');
-            if (wasReload) {
-                const msg = document.getElementById('fs-prompt-msg');
-                if (msg) msg.textContent = 'NUEVA VERSIÓN — TOCA PARA CONTINUAR';
-            }
-
-            const activateFS = () => {
-                enterFullscreen();
-                dismissFsPrompt();
-            };
-            fsPrompt.addEventListener('pointerdown', activateFS, { once: true });
-        })();
 
         // ── Wake Lock ──
         let wakeLock = null, wakeLockEnabled = false;
