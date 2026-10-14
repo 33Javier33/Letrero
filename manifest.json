@@ -4,28 +4,16 @@
   "description": "Letrero interactivo para casino Dreams Puerto Varas",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#08091a",
   "theme_color": "#b99d6b",
   "orientation": "any",
   "icons": [
     {
       "src": "./img/dreams2.png",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "./img/dreams2.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./img/dreams2.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
