@@ -1164,7 +1164,7 @@
         });
 
         // ── Wake Lock ──
-        let wakeLock = null, wakeLockEnabled = false;
+        let wakeLock = null, wakeLockEnabled = true;
         const wakeLockBtn  = document.getElementById('wake-lock-btn');
         const wakeLockText = document.getElementById('wake-lock-status-text');
         const acquireWL = async () => {
@@ -1198,6 +1198,11 @@
         if (!('wakeLock' in navigator)) {
             wakeLockBtn.disabled = true; wakeLockText.textContent = 'N/A';
             wakeLockBtn.classList.add('opacity-50','cursor-not-allowed');
+        } else {
+            // Activar pantalla ON automáticamente al cargar
+            wakeLockBtn.classList.replace('bg-gray-700','bg-green-600');
+            wakeLockBtn.classList.replace('hover:bg-gray-600','hover:bg-green-700');
+            acquireWL();
         }
 
         // ── Toggle hora de cambio ──
