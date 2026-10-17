@@ -1310,10 +1310,23 @@
         const unformat = s => parseInt(s.replace(/\./g,''),10)||0;
 
         // ── Presets rápidos de mesa ──
+        // Sync automático Par Perfecto según mínimo de mesa
+        function syncParPerfecto(mesaMin) {
+            if (sideBetContainer.classList.contains('hidden')) return;
+            sbBaseMin.value = fmtInput(Math.round(mesaMin / 10));
+            sbBaseMax.value = fmtInput(Math.round(mesaMin * 0.8));
+        }
+
+        baseMinInput.addEventListener('input', () => {
+            syncParPerfecto(unformat(baseMinInput.value));
+        });
+
         document.querySelectorAll('.mesa-preset').forEach(btn => {
             btn.addEventListener('click', () => {
-                baseMinInput.value = fmtInput(parseInt(btn.dataset.min, 10));
+                const min = parseInt(btn.dataset.min, 10);
+                baseMinInput.value = fmtInput(min);
                 baseMaxInput.value = fmtInput(parseInt(btn.dataset.max, 10));
+                syncParPerfecto(min);
             });
         });
 
