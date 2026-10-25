@@ -673,15 +673,26 @@
             flex-shrink: 0;
             border-top: 2px solid rgba(255,255,255,.28);
             padding: .45rem .5rem .55rem;
-            display: flex; flex-direction: column;
-            align-items: center; gap: .15rem;
+            display: flex; flex-direction: row;
+            align-items: center; justify-content: center;
+            gap: .6rem;
             cursor: pointer;
+            position: relative;
         }
-        .cas-footer img {
+        .cas-footer img.dreams-logo {
             height: auto;
             width: clamp(5.5rem, 26vw, 12rem);
             filter: drop-shadow(0 1px 6px rgba(0,0,0,.9));
             opacity: .95;
+        }
+        .cas-footer img.no-phone-icon {
+            height: auto;
+            width: clamp(2.2rem, 10vw, 5rem);
+            filter: drop-shadow(0 1px 4px rgba(0,0,0,.7));
+            opacity: .9;
+            position: absolute;
+            right: .6rem;
+            bottom: .4rem;
         }
         .cas-footer-brand {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
@@ -864,9 +875,10 @@
             </table>
         </div>
 
-        <!-- Pie: logo centrado + marca (también abre config) -->
+        <!-- Pie: logo centrado + ícono no-teléfono (también abre config) -->
         <div class="cas-footer" id="cas-open-config-btn">
-            <img src="img/dreams-logo.png" alt="Dreams">
+            <img src="img/dreams-logo.png" alt="Dreams" class="dreams-logo">
+            <img src="img/no-phone.jpg" alt="No teléfono en mesa" class="no-phone-icon">
         </div>
 
     </div>
