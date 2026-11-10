@@ -444,13 +444,14 @@
         }
 
         /* ═══════════════════════════════════════════════════════════
-           ALTURA SEGURA — cascada svh → dvh para máxima compatibilidad
+           PANTALLA COMPLETA — position fixed cubre todo sin importar
+           barras del sistema, Tailwind CDN, o notch del dispositivo
         ═══════════════════════════════════════════════════════════ */
         #main-sign {
-            width: 100vw;
-            height: 100vh;
-            height: 100svh;
-            height: 100dvh;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
         }
 
         /* ═══════════════════════════════════════════════════════════
@@ -762,7 +763,7 @@
         </defs>
     </svg>
 
-    <div id="main-sign" class="poker-sign effect-shimmer text-white w-screen h-screen">
+    <div id="main-sign" class="poker-sign effect-shimmer text-white">
 
     <!-- Botón pantalla completa (siempre visible en el letrero) -->
     <button id="fs-sign-btn" aria-label="Pantalla completa">
@@ -798,7 +799,7 @@
         <div class="px-2 pt-1 sm:pt-2 flex-grow min-h-0 overflow-hidden flex flex-col justify-center">
             <h2 class="text-center font-bold text-yellow-300 mb-1 sm:mb-2"
                 style="font-size:var(--font-size-2xl);">Tabla de Pago</h2>
-            <div class="max-w-4xl mx-auto w-full">
+            <div class="w-full">
                 <div id="side-bet-info" class="text-center text-yellow-200 mb-2 hidden value-display font-bold"
                      style="font-size:var(--font-size-2xl);"></div>
                 <table id="pay-table" class="w-full pay-table" style="font-size:var(--font-size-table);">
@@ -904,7 +905,7 @@
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
     <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end justify-center">
-      <div id="config-panel-inner" class="w-full max-w-sm flex flex-col" style="max-height:92vh;">
+      <div id="config-panel-inner" class="w-full max-w-sm flex flex-col" style="max-height:92dvh;max-height:92svh;max-height:92vh;">
         <div class="bg-gray-800 text-white rounded-t-xl shadow-2xl px-6 pt-5 pb-3 flex-shrink-0 relative">
             <button id="close-config-btn"
                     class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
