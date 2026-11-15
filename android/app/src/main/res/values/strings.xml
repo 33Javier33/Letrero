@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Letrero Dreams</string>
+    <string name="title_activity_main">Letrero Dreams</string>
+    <string name="package_name">com.dreams.letrero</string>
+    <string name="custom_url_scheme">com.dreams.letrero</string>
+</resources>

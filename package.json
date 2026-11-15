@@ -1,0 +1,15 @@
+{
+  "name": "letrero-dreams",
+  "version": "1.0.0",
+  "description": "Letrero interactivo Casino Dreams Puerto Varas",
+  "private": true,
+  "scripts": {
+    "sync": "npm run dist && npx cap sync android",
+    "dist": "mkdir -p dist && cp index.html manifest.json sw.js dist/ && cp -r img dist/"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  }
+}
