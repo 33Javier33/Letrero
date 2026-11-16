@@ -87,6 +87,93 @@
         #main-sign.color-purple { --border-color:#b794f4; --glow-lo:rgba(183,148,244,.50); --glow-hi:rgba(183,148,244,.90); --glow-btn:rgba(183,148,244,.70); --pulse-speed:2.5s; }
         #main-sign.color-white  { --border-color:#e2e8f0; --glow-lo:rgba(226,232,240,.40); --glow-hi:rgba(226,232,240,.75); --glow-btn:rgba(226,232,240,.60); --pulse-speed:7s;   }
 
+        /* ═══════════════════════════════════════════════════════════
+           TEMAS ANIMADOS DE BORDE (luz que recorre el borde)
+           Se anima el ángulo del gradiente, nunca se rota el elemento.
+        ═══════════════════════════════════════════════════════════ */
+        @property --fx-angle { syntax:'<angle>'; inherits:false; initial-value:0deg; }
+        @property --border-color { syntax:'<color>'; inherits:true; initial-value:#b99d6b; }
+        @keyframes fx-spin { to { --fx-angle: 360deg; } }
+        @keyframes fx-hue {
+            0%,100% { --border-color:#ff6b6b; } 17% { --border-color:#ffb347; } 33% { --border-color:#fff176; }
+            50% { --border-color:#69f0ae; } 67% { --border-color:#4fc3f7; } 83% { --border-color:#b388ff; }
+        }
+        @keyframes fx-neon-color { 0%,100% { --border-color:#22e6ff; } 50% { --border-color:#ff3df2; } }
+        @keyframes fx-flicker { 0%,100%{opacity:.9} 8%{opacity:.35} 10%{opacity:.95} 52%{opacity:.8} 54%{opacity:.3} 56%{opacity:1} }
+
+        .fx-layer {
+            display: none; position: absolute; inset: -4px; z-index: 150;
+            pointer-events: none; border-radius: inherit;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+                    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+            animation: fx-spin var(--fx-speed, 4s) linear infinite;
+        }
+        #fx-ring { padding: 5px; }
+        #fx-glow { padding: 16px; filter: blur(9px); opacity: .9; }
+        #main-sign[class*="color-fx-"] .fx-layer { display: block; }
+        #main-sign[class*="color-fx-"] { border-color: rgba(0,0,0,.55) !important; }
+
+        #main-sign.color-fx-rainbow {
+            --glow-lo:rgba(255,255,255,.30); --glow-hi:rgba(255,255,255,.60); --glow-btn:rgba(255,255,255,.45); --pulse-speed:3s;
+            --fx-speed: 5s; animation: fx-hue 6s linear infinite;
+        }
+        #main-sign.color-fx-rainbow .fx-layer {
+            background: conic-gradient(from var(--fx-angle), #ff3b3b, #ff9f1a, #ffe81a, #3bff6e, #1ad1ff, #6a5cff, #ff3bd4, #ff3b3b);
+        }
+
+        #main-sign.color-fx-neon {
+            --glow-lo:rgba(34,230,255,.45); --glow-hi:rgba(255,61,242,.80); --glow-btn:rgba(34,230,255,.70); --pulse-speed:1.6s;
+            --fx-speed: 3s; animation: fx-neon-color 3s ease-in-out infinite;
+        }
+        #main-sign.color-fx-neon .fx-layer {
+            background: conic-gradient(from var(--fx-angle),
+                transparent 0deg, #22e6ff 60deg, #ffffff 80deg, transparent 100deg,
+                transparent 180deg, #ff3df2 240deg, #ffffff 260deg, transparent 280deg);
+        }
+        #main-sign.color-fx-neon #fx-ring { animation: fx-spin 3s linear infinite, fx-flicker 4s steps(1) infinite; }
+
+        #main-sign.color-fx-fire {
+            --border-color:#ff8a3d; --glow-lo:rgba(255,120,40,.50); --glow-hi:rgba(255,70,20,.90); --glow-btn:rgba(255,120,40,.70); --pulse-speed:1.2s;
+            --fx-speed: 2.5s;
+        }
+        #main-sign.color-fx-fire .fx-layer {
+            background: conic-gradient(from var(--fx-angle), #ff2a00, #ff7a00, #ffd200, #ff7a00, #ff2a00, #b30000, #ff2a00);
+        }
+
+        #main-sign.color-fx-aurora {
+            --border-color:#7cf5c8; --glow-lo:rgba(124,245,200,.45); --glow-hi:rgba(120,140,255,.80); --glow-btn:rgba(124,245,200,.65); --pulse-speed:4s;
+            --fx-speed: 8s;
+        }
+        #main-sign.color-fx-aurora .fx-layer {
+            background: conic-gradient(from var(--fx-angle), #00ffa3, #00c8ff, #7a5cff, #ff5cf0, #7a5cff, #00c8ff, #00ffa3);
+        }
+
+        #main-sign.color-fx-goldspin {
+            --fx-speed: 3.5s;
+        }
+        #main-sign.color-fx-goldspin .fx-layer {
+            background: conic-gradient(from var(--fx-angle),
+                #7a5c25 0deg, #b99d6b 70deg, #fff3c4 95deg, #b99d6b 120deg, #7a5c25 180deg,
+                #b99d6b 250deg, #fff3c4 275deg, #b99d6b 300deg, #7a5c25 360deg);
+        }
+
+        #main-sign.color-fx-lights {
+            --border-color:#ffd54a; --glow-lo:rgba(255,213,74,.45); --glow-hi:rgba(255,213,74,.85); --glow-btn:rgba(255,213,74,.65); --pulse-speed:2s;
+            --fx-speed: 10s;
+        }
+        #main-sign.color-fx-lights .fx-layer {
+            background: repeating-conic-gradient(from var(--fx-angle), #fff6c8 0deg 1.6deg, #ffc400 1.6deg 2.6deg, transparent 2.6deg 6deg);
+        }
+        #main-sign.color-fx-lights #fx-ring { padding: 7px; }
+
+        .fx-swatch-rainbow  { background: conic-gradient(#ff3b3b, #ff9f1a, #ffe81a, #3bff6e, #1ad1ff, #6a5cff, #ff3bd4, #ff3b3b); }
+        .fx-swatch-neon     { background: conic-gradient(#22e6ff 0 50%, #ff3df2 0 100%); box-shadow: 0 0 10px #22e6ff; }
+        .fx-swatch-fire     { background: conic-gradient(#ff2a00, #ff7a00, #ffd200, #ff7a00, #ff2a00); }
+        .fx-swatch-aurora   { background: conic-gradient(#00ffa3, #00c8ff, #7a5cff, #ff5cf0, #00ffa3); }
+        .fx-swatch-goldspin { background: conic-gradient(#7a5c25, #fff3c4, #b99d6b, #7a5c25, #fff3c4, #7a5c25); }
+        .fx-swatch-lights   { background: repeating-conic-gradient(#ffd54a 0 15deg, #3a2a00 15deg 30deg); }
+
         /* Logo responsivo — rectangular, altura automática según contenido */
         #open-config-btn {
             width:         clamp(5rem, 15vmin, 9.5rem);
@@ -779,6 +866,9 @@
         </svg>
     </button>
 
+    <div id="fx-glow" class="fx-layer"></div>
+    <div id="fx-ring" class="fx-layer"></div>
+
     <!-- ── LAYOUT ESTÁNDAR (Draw Poker, Caribbean) ── -->
     <div id="layout-standard" class="w-full h-full flex flex-col p-3 sm:p-4 lg:p-6">
 
@@ -1030,6 +1120,33 @@
                         <div class="flex flex-col items-center gap-1">
                             <button class="theme-swatch" data-color="white"  style="background:#e2e8f0" title="Blanco"></button>
                             <span class="text-gray-500 text-xs">Blanco</span>
+                        </div>
+                    </div>
+                    <label class="block text-xs font-medium text-gray-400 mt-4 mb-3">Bordes animados:</label>
+                    <div class="flex items-center justify-between px-2">
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-rainbow"  data-color="fx-rainbow"  title="Arcoíris"></button>
+                            <span class="text-gray-500 text-xs">Arcoíris</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-neon"     data-color="fx-neon"     title="Neón"></button>
+                            <span class="text-gray-500 text-xs">Neón</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-fire"     data-color="fx-fire"     title="Fuego"></button>
+                            <span class="text-gray-500 text-xs">Fuego</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-aurora"   data-color="fx-aurora"   title="Aurora"></button>
+                            <span class="text-gray-500 text-xs">Aurora</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-goldspin" data-color="fx-goldspin" title="Oro"></button>
+                            <span class="text-gray-500 text-xs">Oro</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <button class="theme-swatch fx-swatch-lights"   data-color="fx-lights"   title="Luces"></button>
+                            <span class="text-gray-500 text-xs">Luces</span>
                         </div>
                     </div>
                 </div>
