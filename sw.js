@@ -1,4 +1,4 @@
-const CACHE_NAME = 'letrero-v42';
+const CACHE_NAME = 'letrero-v43';
 
 // Archivos locales que se cachean en la instalación
 const LOCAL_ASSETS = [
@@ -32,6 +32,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   const isLocal = url.origin === self.location.origin;
+  if (isLocal && url.pathname.includes('/instalarapk/')) return;
 
   if (isLocal) {
     // Cache First: archivos propios
