@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -45,9 +48,17 @@ jobs:
           KEY_ALIAS: letrero
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk Letrero-Dreams.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: Letrero-Dreams-v${{ github.run_number }}
-          path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 90
+          tag_name: latest
+          name: Letrero Dreams — última versión
+          body: APK instalable para Android. Descarga e instala directamente en tu tablet o teléfono.
+          files: Letrero-Dreams.apk
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
