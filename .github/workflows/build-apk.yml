@@ -3,10 +3,16 @@ name: Build APK
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'instalarapk/**'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: build-apk
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -21,7 +27,7 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Android SDK
@@ -36,29 +42,52 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > letrero.keystore
+      # La firma debe ser siempre la misma para que las actualizaciones se instalen encima.
+      # Se usa el secreto si existe; si no, una llave generada una vez y guardada en la caché de Actions.
+      - name: Restore signing key
+        uses: actions/cache@v4
+        with:
+          path: ci-signing.keystore
+          key: letrero-signing-key-v1
+
+      - name: Prepare signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > signing.keystore
+            echo "KS_PASS=${{ secrets.KEYSTORE_PASSWORD }}" >> "$GITHUB_ENV"
+          else
+            if [ ! -f ci-signing.keystore ]; then
+              keytool -genkeypair -v -keystore ci-signing.keystore -alias letrero \
+                -keyalg RSA -keysize 2048 -validity 10000 \
+                -storepass letrero-ci -keypass letrero-ci \
+                -dname "CN=Letrero Dreams, O=Dreams, C=CL"
+            fi
+            cp ci-signing.keystore signing.keystore
+            echo "KS_PASS=letrero-ci" >> "$GITHUB_ENV"
+          fi
 
       - name: Build release APK
         working-directory: android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --no-daemon
         env:
-          KEYSTORE_PATH: ${{ github.workspace }}/letrero.keystore
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_PATH: ${{ github.workspace }}/signing.keystore
+          KEYSTORE_PASSWORD: ${{ env.KS_PASS }}
           KEY_ALIAS: letrero
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_PASSWORD: ${{ env.KS_PASS }}
+          VERSION_CODE: ${{ github.run_number }}
 
-      - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk Letrero-Dreams.apk
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Letrero Dreams — última versión
-          body: APK instalable para Android. Descarga e instala directamente en tu tablet o teléfono.
-          files: Letrero-Dreams.apk
-          prerelease: false
-          make_latest: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish APK to repo (instalarapk/)
+        run: |
+          rm -f signing.keystore
+          mkdir -p instalarapk
+          cp android/app/build/outputs/apk/release/app-release.apk instalarapk/Letrero-Dreams.apk
+          date -u +"%Y-%m-%d %H:%M UTC" > instalarapk/version.txt
+          echo "Build #${{ github.run_number }}" >> instalarapk/version.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add instalarapk/Letrero-Dreams.apk instalarapk/version.txt
+          git commit -m "APK build #${{ github.run_number }}"
+          git pull --rebase origin main
+          git push origin HEAD:main
