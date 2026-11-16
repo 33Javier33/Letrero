@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Letrero Interactivo</title>
+    <script>if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) document.documentElement.classList.add('is-apk');</script>
+    <style>
+        html.is-apk #fs-sign-btn, html.is-apk #fullscreen-btn-config { display: none !important; }
+        html.is-apk #wake-lock-btn { grid-column: 1 / -1; }
+    </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#b99d6b">
     <meta name="mobile-web-app-capable" content="yes">
