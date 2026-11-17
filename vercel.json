@@ -1,6 +1,12 @@
 {
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
       "source": "/instalarapk/(.*)\\.apk",
       "headers": [
         { "key": "Content-Type", "value": "application/vnd.android.package-archive" },
