@@ -5,11 +5,15 @@
   "private": true,
   "scripts": {
     "sync": "npm run dist && npx cap sync android",
-    "dist": "mkdir -p dist && cp index.html manifest.json sw.js dist/ && cp -r img dist/"
+    "dist": "mkdir -p dist && cp index.html manifest.json sw.js dist/ && cp -r img css fonts dist/",
+    "css": "tailwindcss -c tailwind.config.js -i css/tailwind.src.css -o css/tailwind.css --minify"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",
     "@capacitor/cli": "^8.6.2",
     "@capacitor/core": "^8.6.2"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
   }
 }

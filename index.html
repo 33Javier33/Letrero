@@ -17,10 +17,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Letrero">
     <link rel="apple-touch-icon" href="img/dreams2.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Cinzel:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fonts.css">
     <style>
         /* ═══════════════════════════════════════════════════════════
            TIPOGRAFÍA FLUIDA — vmin escala con la dimensión menor
@@ -62,6 +59,7 @@
         ═══════════════════════════════════════════════════════════ */
         body.bg-logo     { background-color:#1a202c; background-image:url('img/dreams1.png'); background-size:100px; }
         body.bg-casino   { background-color:#0d1520; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
+        body.bg-navidad  { background-color:#101214; background-image:url('img/navidad.jpg'); background-size:cover; background-position:center; }
         body.bg-cards    { background-color:#0f172a; }
         body.bg-felt     { background-color:#051a0d; }
         body.bg-dark     { background-color:#020202; }
@@ -306,6 +304,10 @@
         body.bg-casino .theme-poker     { background:rgba(12,20,40,.87); }
         body.bg-casino .theme-blackjack { background:rgba(18,32,60,.87); }
 
+        /* Navidad: árbol visible detrás del panel */
+        body.bg-navidad .theme-poker,
+        body.bg-navidad .theme-blackjack { background:rgba(12,14,18,.62); }
+
         /* Naipes: gradiente oscuro sobre imagen en mosaico */
         body.bg-cards .theme-poker,
         body.bg-cards .theme-blackjack {
@@ -521,6 +523,7 @@
         .bg-btn span   { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:700; letter-spacing:.01em; text-shadow:0 1px 4px rgba(0,0,0,.95); color:#fff; background:rgba(0,0,0,.22); }
 
         .bg-preview-logo     { background:#1a202c url('img/dreams1.png') center/40px; }
+        .bg-preview-navidad  { background-color:#101214; background-image:url('img/navidad.jpg'); background-size:cover; background-position:center 30%; }
         .bg-preview-casino   { background-color:#1a202c; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
         .bg-preview-cards    { background-color:#0f172a; background-image:url('img/cards.jpg'); background-size:70px auto; }
         .bg-preview-felt     { background:radial-gradient(ellipse at 50% 30%,#1a5c38 0%,#0a2e1a 100%); }
@@ -795,6 +798,9 @@
             filter: drop-shadow(0 1px 6px rgba(0,0,0,.9));
             opacity: .95;
         }
+        .cas-footer img.dreams-santa { display: none; height: auto; width: clamp(6rem, 27vw, 13.5rem); filter: drop-shadow(0 1px 6px rgba(0,0,0,.9)); }
+        body.bg-navidad .cas-footer img.dreams-logo { display: none; }
+        body.bg-navidad .cas-footer img.dreams-santa { display: block; }
         .cas-footer img.no-phone-icon {
             height: auto;
             width: clamp(2.2rem, 10vw, 5rem);
@@ -834,6 +840,7 @@
         #update-bar-msg { position: relative; }
 
     </style>
+    <link rel="stylesheet" href="css/tailwind.css">
 </head>
 <body class="bg-logo">
 
@@ -991,6 +998,7 @@
         <!-- Pie: logo centrado + ícono no-teléfono (también abre config) -->
         <div class="cas-footer" id="cas-open-config-btn">
             <img src="img/dreams-logo.png" alt="Dreams" class="dreams-logo">
+            <img src="img/dreams-santa.png" alt="Dreams Navidad" class="dreams-santa">
             <img src="img/no-phone.png" alt="No teléfono en mesa" class="no-phone-icon">
         </div>
 
@@ -1194,6 +1202,7 @@
                         <button class="bg-btn bg-preview-blue"     data-bg="blue">   <span>Azul</span></button>
                         <button class="bg-btn bg-preview-navy"     data-bg="navy">   <span>Marino</span></button>
                         <button class="bg-btn bg-preview-grass"    data-bg="grass">  <span>Pasto</span></button>
+                        <button class="bg-btn bg-preview-navidad"  data-bg="navidad"><span>Navidad</span></button>
                     </div>
                 </div>
 

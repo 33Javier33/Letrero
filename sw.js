@@ -1,4 +1,4 @@
-const CACHE_NAME = 'letrero-v44';
+const CACHE_NAME = 'letrero-v45';
 
 // Archivos locales que se cachean en la instalación
 const LOCAL_ASSETS = [
@@ -10,7 +10,16 @@ const LOCAL_ASSETS = [
   './img/dreams-logo.png',
   './img/casino.jpg',
   './img/cards.jpg',
-  './img/no-phone.png'
+  './img/no-phone.png',
+  './img/navidad.jpg',
+  './img/dreams-santa.png',
+  './css/tailwind.css',
+  './css/fonts.css',
+  './fonts/barlow-condensed-latin-700-normal.woff2',
+  './fonts/barlow-condensed-latin-900-normal.woff2',
+  './fonts/cinzel-latin-700-normal.woff2',
+  './fonts/roboto-latin-400-normal.woff2',
+  './fonts/roboto-latin-500-normal.woff2'
 ];
 
 // Dentro del APK la app se sirve desde https://localhost con los archivos incluidos.

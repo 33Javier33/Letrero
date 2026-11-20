@@ -40,7 +40,7 @@ jobs:
         run: npm ci
 
       - name: Prepare web assets
-        run: npm run dist
+        run: npm run css && npm run dist
 
       - name: Sync Capacitor
         run: npx cap sync android
