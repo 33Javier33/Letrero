@@ -597,8 +597,9 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
             text-shadow: 2px 2px 8px rgba(0,0,0,.6);
-            font-size: clamp(3rem, 15vw, 10rem);
+            font-size: calc(clamp(3rem, 15vw, 10rem) * var(--cas-title-k, 1));
             line-height: 1; letter-spacing: .03em;
+            white-space: nowrap; display: inline-block;
         }
 
         /* Sección mínimo/máximo */
@@ -617,13 +618,13 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase;
             color: rgba(255,255,255,.92);
-            font-size: clamp(2rem, 10vw, 7rem);
+            font-size: calc(clamp(2rem, 10vw, 7rem) * var(--cas-head-k, 1));
             letter-spacing: .04em;
         }
         .cas-value {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; color: #fff;
-            font-size: clamp(2.5rem, 13vw, 9rem);
+            font-size: calc(clamp(2.5rem, 13vw, 9rem) * var(--cas-head-k, 1));
             text-shadow: 1px 1px 5px rgba(0,0,0,.6);
             letter-spacing: .02em;
         }
@@ -656,7 +657,7 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 700; text-transform: uppercase;
             color: rgba(255,255,255,.82);
-            font-size: clamp(1.5rem, 6.5vw, 3.8rem);
+            font-size: calc(clamp(1.5rem, 6.5vw, 3.8rem) * var(--cas-head-k, 1));
             letter-spacing: .07em;
             padding-top: .25rem;
             transition: opacity .5s ease;
@@ -715,7 +716,7 @@
         .cas-section-header {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase; color: #fff;
-            font-size: clamp(1rem, 4vw, 2.8rem);
+            font-size: calc(clamp(1rem, 4vw, 2.8rem) * var(--cas-head-k, 1));
             letter-spacing: .07em; text-align: center;
             padding-bottom: .15rem;
         }
@@ -737,13 +738,13 @@
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; text-transform: uppercase;
             color: rgba(255,255,255,.92);
-            font-size: clamp(1.4rem, 6.5vw, 4rem);
+            font-size: calc(clamp(1.4rem, 6.5vw, 4rem) * var(--cas-head-k, 1));
             letter-spacing: .04em;
         }
         .cas-sb-value {
             font-family: 'Barlow Condensed','Roboto',sans-serif;
             font-weight: 900; color: #fff;
-            font-size: clamp(1.8rem, 9vw, 5.8rem);
+            font-size: calc(clamp(1.8rem, 9vw, 5.8rem) * var(--cas-head-k, 1));
             letter-spacing: .02em;
             text-shadow: 1px 1px 5px rgba(0,0,0,.6);
         }
@@ -770,13 +771,13 @@
             font-weight: 900; text-transform: uppercase; color: #fff;
             text-shadow: 1px 1px 3px rgba(0,0,0,.7);
             letter-spacing: .03em;
-            font-size: clamp(1.5rem, 6.5vw, 4.8rem);
+            font-size: calc(clamp(1.5rem, 6.5vw, 4.8rem) * var(--cas-table-k, 1));
             line-height: 1.1;
             vertical-align: middle;
         }
         #cas-pay-table-body td:last-child { text-align: right; white-space: nowrap; padding-left: .5rem; }
         .cas-row-subtitle {
-            display: block; font-size: clamp(.85rem, 3vw, 2.2rem);
+            display: block; font-size: calc(clamp(.85rem, 3vw, 2.2rem) * var(--cas-table-k, 1));
             font-weight: 700; opacity: .75;
             letter-spacing: .04em; line-height: 1.1; text-transform: uppercase;
         }
@@ -793,17 +794,17 @@
             position: relative;
         }
         .cas-footer img.dreams-logo {
-            height: auto;
-            width: clamp(5.5rem, 26vw, 12rem);
+            width: auto;
+            height: clamp(2.6rem, min(14vw, 10vh), 6.5rem);
             filter: drop-shadow(0 1px 6px rgba(0,0,0,.9));
             opacity: .95;
         }
-        .cas-footer img.dreams-santa { display: none; height: auto; width: clamp(6rem, 27vw, 13.5rem); filter: drop-shadow(0 1px 6px rgba(0,0,0,.9)); }
+        .cas-footer img.dreams-santa { display: none; width: auto; height: clamp(3.6rem, min(23vw, 16vh), 11rem); filter: drop-shadow(0 1px 6px rgba(0,0,0,.9)); }
         body.bg-navidad .cas-footer img.dreams-logo { display: none; }
         body.bg-navidad .cas-footer img.dreams-santa { display: block; }
         .cas-footer img.no-phone-icon {
-            height: auto;
-            width: clamp(2.2rem, 10vw, 5rem);
+            width: auto;
+            height: clamp(2.2rem, min(10vw, 8vh), 5rem);
             opacity: .9;
             position: absolute;
             right: .6rem;
@@ -1764,7 +1765,39 @@
                 const sub = item.subtitle ? `<span class="cas-row-subtitle">${item.subtitle}</span>` : '';
                 casPayBodyEl.innerHTML += `<tr style="--delay:${i*.2};"><td>${item.hand}${sub}</td><td>${item.payout}</td></tr>`;
             });
+            fitCasino();
         }
+
+        // Ajusta tamaños para que el nombre quepa en una línea y la tabla de pagos se vea completa:
+        // primero se achica el encabezado (nombre, mínimo/máximo, frases) y solo después la tabla.
+        const casPaySectionEl = layoutCasinoEl.querySelector('.cas-paytable-section');
+        function fitCasino() {
+            if (layoutCasinoEl.style.display === 'none') return;
+            const st = layoutCasinoEl.style;
+            let tk = 1, hk = 1, bk = 1;
+            const apply = () => {
+                st.setProperty('--cas-title-k', (tk * Math.min(1, hk + .15)).toFixed(3));
+                st.setProperty('--cas-head-k', hk.toFixed(3));
+                st.setProperty('--cas-table-k', bk.toFixed(3));
+            };
+            apply();
+            const bar = casGameNameEl.parentElement;
+            const barW = () => { const cs = getComputedStyle(bar); return bar.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); };
+            while (casGameNameEl.getBoundingClientRect().width > barW() && tk > .3) { tk -= .03; apply(); }
+            if (layoutCasinoEl.classList.contains('cas-simple-mode')) return;
+            const fits = () => {
+                const rows = casPayBodyEl.rows;
+                if (!rows.length) return true;
+                const pb = parseFloat(getComputedStyle(casPaySectionEl).paddingBottom) || 0;
+                return rows[rows.length - 1].getBoundingClientRect().bottom <= casPaySectionEl.getBoundingClientRect().bottom - pb + 1;
+            };
+            while (!fits() && hk > .6) { hk -= .03; apply(); }
+            let f = 1;
+            while (!fits() && f > .3) { f -= .03; bk = f; hk = .6 * f; apply(); }
+        }
+        let fitTimer;
+        window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCasino, 120); });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCasino);
 
         function updateDisplay(isNewActive) {
             const gameName = config.gameName;
