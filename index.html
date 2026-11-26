@@ -818,6 +818,65 @@
             letter-spacing: .08em; font-style: italic;
         }
 
+        /* ═══════════════════════════════════════════════════════════
+           PANTALLA AÑO NUEVO (programada)
+        ═══════════════════════════════════════════════════════════ */
+        #ny-screen {
+            position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 9000;
+            background: radial-gradient(ellipse at 50% 85%, #1c1530 0%, #07060d 60%, #000 100%);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; cursor: pointer;
+            opacity: 0; transition: opacity 1.2s ease;
+        }
+        #ny-screen.visible { display: flex; }
+        #ny-screen.shown { opacity: 1; }
+        #ny-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .ny-sign {
+            position: relative; z-index: 1;
+            width: min(88vw, 80vh); padding: 1.2em 1em 1em;
+            font-size: clamp(1rem, min(4.2vw, 3.6vh), 3rem);
+            border: .28em solid #d9b45a; border-radius: 1.6em 1.6em .7em .7em;
+            background: radial-gradient(ellipse at 50% 30%, rgba(60,40,10,.92), rgba(18,10,4,.94));
+            box-shadow: 0 0 1.4em rgba(255,196,90,.55), inset 0 0 1.2em rgba(255,196,90,.35);
+            text-align: center;
+            animation: ny-sign-in 1.4s cubic-bezier(.2,.9,.3,1.2) both;
+        }
+        .ny-sign::before {
+            content: ''; position: absolute; top: .35em; right: .35em; bottom: .35em; left: .35em;
+            border-radius: 1.35em 1.35em .5em .5em; pointer-events: none;
+            border: .2em dotted #fff1bd;
+            box-shadow: 0 0 .5em rgba(255,220,140,.6);
+            animation: ny-bulbs .9s steps(2) infinite;
+        }
+        .ny-title {
+            font-family: 'Cinzel', serif; font-weight: 700;
+            font-size: 2.1em; line-height: 1.15; letter-spacing: .02em;
+            background: linear-gradient(180deg, #fff6d5 0%, #f3d27a 45%, #b8862d 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 .06em .1em rgba(0,0,0,.8));
+        }
+        .ny-year {
+            font-family: 'Cinzel', serif; font-weight: 700;
+            font-size: 5.2em; line-height: 1; margin-top: .05em;
+            background: linear-gradient(180deg, #fffbe8 0%, #f5d983 40%, #c08f33 75%, #ffe9a8 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 .25em rgba(255,200,90,.8));
+            animation: ny-year-glow 2.4s ease-in-out infinite;
+        }
+        .ny-message {
+            position: relative; z-index: 1;
+            width: min(92vw, 90vh); margin-top: 1.4em; min-height: 4.2em;
+            font-family: 'Barlow Condensed', 'Roboto', sans-serif; font-weight: 700;
+            font-size: clamp(1.3rem, min(6vw, 4.6vh), 3.6rem); line-height: 1.25;
+            letter-spacing: .06em; text-transform: uppercase; text-align: center;
+            color: #fff3cf; text-shadow: 0 0 .4em rgba(255,190,80,.85), 0 .08em .2em rgba(0,0,0,.9);
+        }
+        .ny-message .ny-cursor { display: inline-block; width: .08em; height: 1em; margin-left: .06em; vertical-align: -.1em; background: #ffd77a; animation: ny-blink .8s steps(1) infinite; }
+        @keyframes ny-sign-in { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
+        @keyframes ny-year-glow { 0%,100% { filter: drop-shadow(0 0 .2em rgba(255,200,90,.6)); } 50% { filter: drop-shadow(0 0 .6em rgba(255,215,120,1)); } }
+        @keyframes ny-bulbs { 0% { opacity: 1; } 50% { opacity: .35; } }
+        @keyframes ny-blink { 50% { opacity: 0; } }
+
         /* ── Barra de actualización automática ── */
         #update-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
@@ -1010,6 +1069,16 @@
     <!-- /main-sign -->
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
+    <!-- ── PANTALLA AÑO NUEVO (se muestra sola según programación) ── -->
+    <div id="ny-screen" aria-hidden="true">
+        <canvas id="ny-canvas"></canvas>
+        <div class="ny-sign">
+            <div class="ny-title">¡Feliz Año Nuevo!</div>
+            <div class="ny-year" id="ny-year">2027</div>
+        </div>
+        <div class="ny-message" id="ny-message"></div>
+    </div>
+
     <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end justify-center">
       <div id="config-panel-inner" class="w-full max-w-sm flex flex-col" style="max-height:92dvh;max-height:92svh;max-height:92vh;">
         <div class="bg-gray-800 text-white rounded-t-xl shadow-2xl px-6 pt-5 pb-3 flex-shrink-0 relative">
@@ -1217,6 +1286,25 @@
                         <button class="carousel-style-btn active" data-cstyle="marquee">↔ Marquee</button>
                         <button class="carousel-style-btn" data-cstyle="fade">✦ Fade</button>
                     </div>
+                </div>
+
+                <!-- AÑO NUEVO -->
+                <div class="border border-gray-700 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="ny-enabled" class="text-sm font-medium text-gray-300">🎆 Pantalla Año Nuevo</label>
+                        <input type="checkbox" id="ny-enabled" class="h-5 w-5 accent-yellow-500">
+                    </div>
+                    <p class="text-xs text-gray-500">Se muestra sola el 1 de enero, desde las 00:00 y luego al inicio de cada hora, solo ese día. Toca la pantalla para cerrarla antes.</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs text-gray-400">Año:</label><input type="number" inputmode="numeric" id="ny-year-input" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Duración en pantalla:</label>
+                            <select id="ny-minutes" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm">
+                                <option value="1">1 minuto</option><option value="2">2 minutos</option><option value="3">3 minutos</option><option value="5">5 minutos</option>
+                            </select></div>
+                    </div>
+                    <div><label for="ny-message-input" class="block text-xs text-gray-400">Mensaje (aparece letra a letra):</label>
+                        <textarea id="ny-message-input" rows="2" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm"></textarea></div>
+                    <button type="button" id="ny-test-btn" class="w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 px-3 rounded-lg text-sm">▶ Probar ahora (30 segundos)</button>
                 </div>
 
                 <!-- PANTALLA / WAKE LOCK -->
@@ -1473,6 +1561,7 @@
             baseMax: 100000, newMax: 100000,
             colorTheme: 'gold', tableEffect: 'shimmer', minmaxEffect: 'none', background: 'logo', carouselStyle: 'marquee',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
+            newYear: { enabled: true, year: 2027, minutes: 1, message: 'FELIZ AÑO NUEVO LES DESEAN LOS CROUPIERES DE SALA DE JUEGOS' },
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
             }
@@ -1680,6 +1769,119 @@
             ['00','15','30','45'].forEach(m=>{const o=document.createElement('option'); o.value=m; o.textContent=m; changeMinuteSelect.appendChild(o);});
         }
 
+        // ── Pantalla Año Nuevo ──
+        const nyScreenEl     = document.getElementById('ny-screen');
+        const nyCanvas       = document.getElementById('ny-canvas');
+        const nyYearEl       = document.getElementById('ny-year');
+        const nyMessageEl    = document.getElementById('ny-message');
+        const nyEnabledEl    = document.getElementById('ny-enabled');
+        const nyYearInput    = document.getElementById('ny-year-input');
+        const nyMinutesEl    = document.getElementById('ny-minutes');
+        const nyMessageInput = document.getElementById('ny-message-input');
+        let nyActive = false, nyTestUntil = 0, nyDismissedKey = '', nyTypeTimer = null, nyRaf = null;
+
+        const nyHourKey = d => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getHours()}`;
+        function nyScheduled(d) {
+            const ny = config.newYear;
+            return !!ny && ny.enabled && d.getMonth() === 0 && d.getDate() === 1 && d.getMinutes() < (ny.minutes || 1);
+        }
+
+        function nyTypeMessage(text) {
+            clearTimeout(nyTypeTimer);
+            nyMessageEl.textContent = '';
+            const typed = document.createElement('span');
+            const cursor = document.createElement('span'); cursor.className = 'ny-cursor';
+            nyMessageEl.append(typed, cursor);
+            let i = 0;
+            const step = () => {
+                if (!nyActive) return;
+                typed.textContent = text.slice(0, ++i);
+                if (i < text.length) nyTypeTimer = setTimeout(step, text[i - 1] === ' ' ? 60 : 110);
+            };
+            nyTypeTimer = setTimeout(step, 1500);
+        }
+
+        function nyFireworks() {
+            const ctx = nyCanvas.getContext('2d');
+            const colors = ['#ffd36b', '#fff1c1', '#ff9ad5', '#ffb347', '#ffffff', '#f7c6ff'];
+            const parts = [], rockets = [];
+            let w, h, last = 0, nextLaunch = 0;
+            const size = () => {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                w = nyCanvas.clientWidth; h = nyCanvas.clientHeight;
+                nyCanvas.width = w * dpr; nyCanvas.height = h * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            };
+            size();
+            const burst = (x, y) => {
+                const c = colors[Math.floor(Math.random() * colors.length)];
+                const n = 90 + Math.floor(Math.random() * 50), sp = 2 + Math.random() * 2.6;
+                for (let k = 0; k < n; k++) {
+                    const a = (Math.PI * 2 * k) / n, v = sp * (0.6 + Math.random() * 0.5);
+                    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, decay: 0.008 + Math.random() * 0.008, c });
+                }
+            };
+            const frame = t => {
+                if (!nyActive) { ctx.clearRect(0, 0, w, h); return; }
+                if (nyCanvas.clientWidth !== w || nyCanvas.clientHeight !== h) size();
+                const dt = Math.min(3, (t - last) / 16.7 || 1); last = t;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(0, 0, w, h);
+                ctx.globalCompositeOperation = 'lighter';
+                if (t > nextLaunch) {
+                    rockets.push({ x: w * (0.12 + Math.random() * 0.76), y: h, vy: -(h / 95) * (0.8 + Math.random() * 0.35), ty: h * (0.1 + Math.random() * 0.38) });
+                    nextLaunch = t + 220 + Math.random() * 420;
+                }
+                for (let i = rockets.length - 1; i >= 0; i--) {
+                    const r = rockets[i]; r.y += r.vy * dt;
+                    ctx.fillStyle = '#ffe2a0'; ctx.fillRect(r.x - 1, r.y, 2, 7);
+                    if (r.y <= r.ty) { burst(r.x, r.y); rockets.splice(i, 1); }
+                }
+                for (let i = parts.length - 1; i >= 0; i--) {
+                    const p = parts[i];
+                    p.vy += 0.03 * dt; p.vx *= 0.985; p.vy *= 0.985;
+                    p.x += p.vx * dt; p.y += p.vy * dt; p.life -= p.decay * dt;
+                    if (p.life <= 0) { parts.splice(i, 1); continue; }
+                    ctx.globalAlpha = p.life; ctx.fillStyle = p.c;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+                nyRaf = requestAnimationFrame(frame);
+            };
+            cancelAnimationFrame(nyRaf);
+            nyRaf = requestAnimationFrame(frame);
+        }
+
+        function nyShow() {
+            if (nyActive) return;
+            nyActive = true;
+            nyYearEl.textContent = config.newYear.year;
+            nyScreenEl.classList.add('visible');
+            requestAnimationFrame(() => nyScreenEl.classList.add('shown'));
+            nyFireworks();
+            nyTypeMessage(config.newYear.message);
+        }
+        function nyHide() {
+            if (!nyActive) return;
+            nyActive = false;
+            clearTimeout(nyTypeTimer); cancelAnimationFrame(nyRaf);
+            nyScreenEl.classList.remove('shown');
+            setTimeout(() => { if (!nyActive) nyScreenEl.classList.remove('visible'); }, 1200);
+        }
+        function nyTick() {
+            const now = new Date();
+            const want = Date.now() < nyTestUntil || (nyScheduled(now) && nyDismissedKey !== nyHourKey(now));
+            want ? nyShow() : nyHide();
+        }
+        nyScreenEl.addEventListener('click', () => { nyTestUntil = 0; nyDismissedKey = nyHourKey(new Date()); nyHide(); });
+        document.getElementById('ny-test-btn').addEventListener('click', () => {
+            config.newYear = { ...config.newYear, year: parseInt(nyYearInput.value, 10) || config.newYear.year, message: nyMessageInput.value.trim() || config.newYear.message };
+            closePanel();
+            nyTestUntil = Date.now() + 30000; nyDismissedKey = '';
+            nyHide(); setTimeout(nyTick, 50);
+        });
+        setInterval(nyTick, 5000);
+
         function loadConfig() {
             const saved = localStorage.getItem('pokerConfigV44');
             config = saved ? {...defaultConfig,...JSON.parse(saved)} : {...defaultConfig};
@@ -1702,6 +1904,11 @@
             applyTableEffect(config.tableEffect||'shimmer');
             applyCarouselStyle(config.carouselStyle||'marquee');
             applyMinmaxEffect(config.minmaxEffect||'none');
+            config.newYear = {...defaultConfig.newYear, ...(config.newYear||{})};
+            nyEnabledEl.checked = !!config.newYear.enabled;
+            nyYearInput.value   = config.newYear.year;
+            nyMinutesEl.value   = String(config.newYear.minutes);
+            nyMessageInput.value = config.newYear.message;
         }
 
         function saveConfig() {
@@ -1721,8 +1928,14 @@
                     newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
+            config.newYear = {
+                enabled: nyEnabledEl.checked,
+                year: parseInt(nyYearInput.value, 10) || defaultConfig.newYear.year,
+                minutes: parseInt(nyMinutesEl.value, 10) || 1,
+                message: nyMessageInput.value.trim() || defaultConfig.newYear.message,
+            };
             localStorage.setItem('pokerConfigV44', JSON.stringify(config));
-            closePanel(); checkTime(); updateMarquee();
+            closePanel(); checkTime(); updateMarquee(); nyTick();
         }
 
         function openPanel()  { configPanel.classList.remove('hidden'); }
@@ -1912,6 +2125,7 @@
         checkTime();
         updateMarquee();
         setInterval(checkTime, 10000);
+        nyTick();
 
         // Pausa todas las animaciones CSS cuando la pestaña no es visible
         document.addEventListener('visibilitychange', () => {
