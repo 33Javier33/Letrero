@@ -60,6 +60,8 @@
         body.bg-logo     { background-color:#1a202c; background-image:url('img/dreams1.png'); background-size:100px; }
         body.bg-casino   { background-color:#0d1520; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
         body.bg-navidad  { background-color:#101214; background-image:url('img/navidad.jpg'); background-size:cover; background-position:center; }
+        body.bg-navidad2 { background-color:#0b1430; background-image:url('img/navidad2.jpg'); background-size:cover; background-position:center; }
+        body.bg-anonuevo { background-color:#080604; background-image:url('img/anonuevo.jpg'); background-size:cover; background-position:center; }
         body.bg-cards    { background-color:#0f172a; }
         body.bg-felt     { background-color:#051a0d; }
         body.bg-dark     { background-color:#020202; }
@@ -306,7 +308,11 @@
 
         /* Navidad: árbol visible detrás del panel */
         body.bg-navidad .theme-poker,
-        body.bg-navidad .theme-blackjack { background:rgba(12,14,18,.62); }
+        body.bg-navidad .theme-blackjack,
+        body.bg-navidad2 .theme-poker,
+        body.bg-navidad2 .theme-blackjack,
+        body.bg-anonuevo .theme-poker,
+        body.bg-anonuevo .theme-blackjack { background:rgba(12,14,18,.62); }
 
         /* Naipes: gradiente oscuro sobre imagen en mosaico */
         body.bg-cards .theme-poker,
@@ -524,6 +530,8 @@
 
         .bg-preview-logo     { background:#1a202c url('img/dreams1.png') center/40px; }
         .bg-preview-navidad  { background-color:#101214; background-image:url('img/navidad.jpg'); background-size:cover; background-position:center 30%; }
+        .bg-preview-navidad2 { background-color:#0b1430; background-image:url('img/navidad2.jpg'); background-size:cover; background-position:center 40%; }
+        .bg-preview-anonuevo { background-color:#080604; background-image:url('img/anonuevo.jpg'); background-size:cover; background-position:center 30%; }
         .bg-preview-casino   { background-color:#1a202c; background-image:url('img/casino.jpg'); background-size:cover; background-position:center; }
         .bg-preview-cards    { background-color:#0f172a; background-image:url('img/cards.jpg'); background-size:70px auto; }
         .bg-preview-felt     { background:radial-gradient(ellipse at 50% 30%,#1a5c38 0%,#0a2e1a 100%); }
@@ -800,8 +808,13 @@
             opacity: .95;
         }
         .cas-footer img.dreams-santa { display: none; width: auto; height: clamp(3.6rem, min(23vw, 16vh), 11rem); filter: drop-shadow(0 1px 6px rgba(0,0,0,.9)); }
-        body.bg-navidad .cas-footer img.dreams-logo { display: none; }
-        body.bg-navidad .cas-footer img.dreams-santa { display: block; }
+        .cas-footer img.dreams-anonuevo { display: none; width: auto; height: clamp(3rem, min(19vw, 12vh), 8rem); filter: drop-shadow(0 1px 6px rgba(0,0,0,.9)); }
+        body.bg-navidad .cas-footer img.dreams-logo,
+        body.bg-navidad2 .cas-footer img.dreams-logo,
+        body.bg-anonuevo .cas-footer img.dreams-logo { display: none; }
+        body.bg-navidad .cas-footer img.dreams-santa,
+        body.bg-navidad2 .cas-footer img.dreams-santa,
+        body.bg-anonuevo .cas-footer img.dreams-anonuevo { display: block; }
         .cas-footer img.no-phone-icon {
             width: auto;
             height: clamp(2.2rem, min(10vw, 8vh), 5rem);
@@ -1059,6 +1072,7 @@
         <div class="cas-footer" id="cas-open-config-btn">
             <img src="img/dreams-logo.png" alt="Dreams" class="dreams-logo">
             <img src="img/dreams-santa.png" alt="Dreams Navidad" class="dreams-santa">
+            <img src="img/dreams-anonuevo.png" alt="Dreams Año Nuevo" class="dreams-anonuevo">
             <img src="img/no-phone.png" alt="No teléfono en mesa" class="no-phone-icon">
         </div>
 
@@ -1273,6 +1287,8 @@
                         <button class="bg-btn bg-preview-navy"     data-bg="navy">   <span>Marino</span></button>
                         <button class="bg-btn bg-preview-grass"    data-bg="grass">  <span>Pasto</span></button>
                         <button class="bg-btn bg-preview-navidad"  data-bg="navidad"><span>Navidad</span></button>
+                        <button class="bg-btn bg-preview-navidad2" data-bg="navidad2"><span>Navidad 2</span></button>
+                        <button class="bg-btn bg-preview-anonuevo" data-bg="anonuevo"><span>Año Nuevo</span></button>
                     </div>
                 </div>
 
@@ -1606,6 +1622,7 @@
             document.body.className = document.body.className.replace(/\bbg-\S+/g,'').trim();
             document.body.classList.add('bg-'+bg);
             document.querySelectorAll('.bg-btn').forEach(b => b.classList.toggle('active', b.dataset.bg===bg));
+            setTimeout(() => fitCasino(), 0);
         }
 
         function applyColorTheme(color) {
@@ -2008,6 +2025,7 @@
             let f = 1;
             while (!fits() && f > .3) { f -= .03; bk = f; hk = .6 * f; apply(); }
         }
+        document.querySelectorAll('.cas-footer img').forEach(img => img.addEventListener('load', () => fitCasino()));
         let fitTimer;
         window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCasino, 120); });
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCasino);
