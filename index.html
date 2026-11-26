@@ -834,16 +834,16 @@
         /* ═══════════════════════════════════════════════════════════
            PANTALLA AÑO NUEVO (programada)
         ═══════════════════════════════════════════════════════════ */
-        #ny-screen {
+        .event-screen {
             position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 9000;
-            background: radial-gradient(ellipse at 50% 85%, #1c1530 0%, #07060d 60%, #000 100%);
             display: none; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden; cursor: pointer;
             opacity: 0; transition: opacity 1.2s ease;
         }
-        #ny-screen.visible { display: flex; }
-        #ny-screen.shown { opacity: 1; }
-        #ny-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .event-screen.visible { display: flex; }
+        .event-screen.shown { opacity: 1; }
+        #ny-screen { background: radial-gradient(ellipse at 50% 85%, #1c1530 0%, #07060d 60%, #000 100%); }
+        .event-screen canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .ny-sign {
             position: relative; z-index: 1;
             width: min(88vw, 80vh); padding: 1.2em 1em 1em;
@@ -876,7 +876,7 @@
             filter: drop-shadow(0 0 .25em rgba(255,200,90,.8));
             animation: ny-year-glow 2.4s ease-in-out infinite;
         }
-        .ny-message {
+        .ny-message, .xm-message {
             position: relative; z-index: 1;
             width: min(92vw, 90vh); margin-top: 1.4em; min-height: 4.2em;
             font-family: 'Barlow Condensed', 'Roboto', sans-serif; font-weight: 700;
@@ -884,7 +884,54 @@
             letter-spacing: .06em; text-transform: uppercase; text-align: center;
             color: #fff3cf; text-shadow: 0 0 .4em rgba(255,190,80,.85), 0 .08em .2em rgba(0,0,0,.9);
         }
-        .ny-message .ny-cursor { display: inline-block; width: .08em; height: 1em; margin-left: .06em; vertical-align: -.1em; background: #ffd77a; animation: ny-blink .8s steps(1) infinite; }
+        .event-screen .ny-cursor { display: inline-block; width: .08em; height: 1em; margin-left: .06em; vertical-align: -.1em; background: #ffd77a; animation: ny-blink .8s steps(1) infinite; }
+
+        /* Navidad */
+        #xmas-screen { background: radial-gradient(ellipse at 50% 90%, #10233a 0%, #060b16 55%, #020409 100%); }
+        .xm-sign {
+            position: relative; z-index: 1;
+            width: min(86vw, 78vh); padding: 1.5em 1em 1.5em;
+            font-size: clamp(1rem, min(4.2vw, 3.6vh), 3rem);
+            border: .26em solid #e3c06a; border-radius: .9em;
+            background: radial-gradient(ellipse at 50% 35%, rgba(40,14,10,.92), rgba(10,6,6,.95));
+            box-shadow: 0 0 1.3em rgba(255,206,110,.55), inset 0 0 1.1em rgba(255,206,110,.3);
+            text-align: center;
+            animation: ny-sign-in 1.4s cubic-bezier(.2,.9,.3,1.2) both;
+        }
+        .xm-sign::before {
+            content: ''; position: absolute; top: .4em; right: .4em; bottom: .4em; left: .4em;
+            border-radius: .6em; pointer-events: none;
+            border: .18em dotted #ffe9b0; box-shadow: 0 0 .5em rgba(255,220,140,.55);
+            animation: ny-bulbs .9s steps(2) infinite;
+        }
+        .xm-garland {
+            position: absolute; left: 6%; right: 6%; height: 1.1em;
+            border-radius: 1em;
+            background:
+                radial-gradient(circle at 50% 50%, #d6263b 0 .2em, transparent .22em) 0 50% / 2.2em 100% repeat-x,
+                radial-gradient(circle at 50% 50%, #ffd76a 0 .12em, transparent .14em) 1.1em 50% / 2.2em 100% repeat-x,
+                linear-gradient(180deg, #1f5a2c, #0f3a1a);
+            box-shadow: 0 .15em .4em rgba(0,0,0,.6);
+        }
+        .xm-garland.top { top: -.55em; } .xm-garland.bottom { bottom: -.55em; }
+        .xm-bow {
+            position: absolute; left: 50%; top: -1.05em; margin-left: -1em;
+            width: 2em; height: 1.4em; z-index: 2;
+            background:
+                radial-gradient(circle at 50% 55%, #b5122a 0 .28em, transparent .3em),
+                radial-gradient(ellipse at 25% 50%, #e02a42 0 .55em, transparent .58em),
+                radial-gradient(ellipse at 75% 50%, #e02a42 0 .55em, transparent .58em);
+            filter: drop-shadow(0 .1em .15em rgba(0,0,0,.6));
+        }
+        .xm-title {
+            font-family: 'Cinzel', serif; font-weight: 700;
+            font-size: 3.4em; line-height: 1.12; letter-spacing: .01em;
+            background: linear-gradient(180deg, #fff8dc 0%, #f4d684 45%, #c3923a 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 .2em rgba(255,210,120,.7));
+            animation: ny-year-glow 2.6s ease-in-out infinite;
+        }
+        .xm-sub { font-family: 'Barlow Condensed','Roboto',sans-serif; font-weight: 700; font-size: 1.3em; letter-spacing: .3em; color: #ffd9d9; margin-top: .3em; text-transform: uppercase; }
         @keyframes ny-sign-in { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
         @keyframes ny-year-glow { 0%,100% { filter: drop-shadow(0 0 .2em rgba(255,200,90,.6)); } 50% { filter: drop-shadow(0 0 .6em rgba(255,215,120,1)); } }
         @keyframes ny-bulbs { 0% { opacity: 1; } 50% { opacity: .35; } }
@@ -1083,14 +1130,23 @@
     <!-- /main-sign -->
 
     <!-- ═══════════════════════ PANEL DE CONFIGURACIÓN ═══════════════════════ -->
-    <!-- ── PANTALLA AÑO NUEVO (se muestra sola según programación) ── -->
-    <div id="ny-screen" aria-hidden="true">
-        <canvas id="ny-canvas"></canvas>
+    <!-- ── PANTALLAS PROGRAMADAS (Año Nuevo / Navidad) ── -->
+    <div id="ny-screen" class="event-screen" aria-hidden="true">
+        <canvas></canvas>
         <div class="ny-sign">
             <div class="ny-title">¡Feliz Año Nuevo!</div>
             <div class="ny-year" id="ny-year">2027</div>
         </div>
-        <div class="ny-message" id="ny-message"></div>
+        <div class="ny-message event-message"></div>
+    </div>
+    <div id="xmas-screen" class="event-screen" aria-hidden="true">
+        <canvas></canvas>
+        <div class="xm-sign">
+            <div class="xm-garland top"></div><div class="xm-bow"></div>
+            <div class="xm-title">¡Feliz<br>Navidad!</div>
+            <div class="xm-garland bottom"></div>
+        </div>
+        <div class="xm-message event-message"></div>
     </div>
 
     <div id="config-panel" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end justify-center">
@@ -1312,7 +1368,7 @@
                     </div>
                     <p class="text-xs text-gray-500">Se muestra sola el 1 de enero, desde las 00:00 y luego al inicio de cada hora, solo ese día. Toca la pantalla para cerrarla antes.</p>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><label class="block text-xs text-gray-400">Año:</label><input type="number" inputmode="numeric" id="ny-year-input" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm"></div>
+                        <div><label class="block text-xs text-gray-400">Año:</label><input type="text" inputmode="numeric" maxlength="4" data-plain id="ny-year-input" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm"></div>
                         <div><label class="block text-xs text-gray-400">Duración en pantalla:</label>
                             <select id="ny-minutes" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm">
                                 <option value="1">1 minuto</option><option value="2">2 minutos</option><option value="3">3 minutos</option><option value="5">5 minutos</option>
@@ -1321,6 +1377,28 @@
                     <div><label for="ny-message-input" class="block text-xs text-gray-400">Mensaje (aparece letra a letra):</label>
                         <textarea id="ny-message-input" rows="2" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm"></textarea></div>
                     <button type="button" id="ny-test-btn" class="w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 px-3 rounded-lg text-sm">▶ Probar ahora (30 segundos)</button>
+                </div>
+
+                <!-- NAVIDAD -->
+                <div class="border border-gray-700 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="xm-enabled" class="text-sm font-medium text-gray-300">🎄 Pantalla Navidad</label>
+                        <input type="checkbox" id="xm-enabled" class="h-5 w-5 accent-yellow-500">
+                    </div>
+                    <p class="text-xs text-gray-500">Se muestra sola el día elegido, desde las 00:00 y luego al inicio de cada hora, solo ese día. Toca la pantalla para cerrarla antes.</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs text-gray-400">Día:</label>
+                            <select id="xm-day" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm">
+                                <option value="24">24 de diciembre</option><option value="25">25 de diciembre</option>
+                            </select></div>
+                        <div><label class="block text-xs text-gray-400">Duración en pantalla:</label>
+                            <select id="xm-minutes" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-sm">
+                                <option value="1">1 minuto</option><option value="2">2 minutos</option><option value="3">3 minutos</option><option value="5">5 minutos</option>
+                            </select></div>
+                    </div>
+                    <div><label for="xm-message-input" class="block text-xs text-gray-400">Mensaje (aparece letra a letra):</label>
+                        <textarea id="xm-message-input" rows="2" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm"></textarea></div>
+                    <button type="button" id="xm-test-btn" class="w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 px-3 rounded-lg text-sm">▶ Probar ahora (30 segundos)</button>
                 </div>
 
                 <!-- PANTALLA / WAKE LOCK -->
@@ -1578,6 +1656,7 @@
             colorTheme: 'gold', tableEffect: 'shimmer', minmaxEffect: 'none', background: 'logo', carouselStyle: 'marquee',
             rules: ["NO OCUPAR EL TELÉFONO EN LA MESA","EL JUEGO ES PERSONAL","SOLO JUGADORES SENTADOS"],
             newYear: { enabled: true, year: 2027, minutes: 1, message: 'FELIZ AÑO NUEVO LES DESEAN LOS CROUPIERES DE SALA DE JUEGOS' },
+            christmas: { enabled: true, day: 25, minutes: 1, message: 'FELIZ NAVIDAD LES DESEAN LOS CROUPIERES DE SALA DE JUEGOS' },
             gameSettings: {
                 "Black Jack Par Perfecto": { baseMinBet:500, baseMaxBet:2000, newMinBet:500, newMaxBet:4000 }
             }
@@ -1786,50 +1865,12 @@
             ['00','15','30','45'].forEach(m=>{const o=document.createElement('option'); o.value=m; o.textContent=m; changeMinuteSelect.appendChild(o);});
         }
 
-        // ── Pantalla Año Nuevo ──
-        const nyScreenEl     = document.getElementById('ny-screen');
-        const nyCanvas       = document.getElementById('ny-canvas');
-        const nyYearEl       = document.getElementById('ny-year');
-        const nyMessageEl    = document.getElementById('ny-message');
-        const nyEnabledEl    = document.getElementById('ny-enabled');
-        const nyYearInput    = document.getElementById('ny-year-input');
-        const nyMinutesEl    = document.getElementById('ny-minutes');
-        const nyMessageInput = document.getElementById('ny-message-input');
-        let nyActive = false, nyTestUntil = 0, nyDismissedKey = '', nyTypeTimer = null, nyRaf = null;
-
-        const nyHourKey = d => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getHours()}`;
-        function nyScheduled(d) {
-            const ny = config.newYear;
-            return !!ny && ny.enabled && d.getMonth() === 0 && d.getDate() === 1 && d.getMinutes() < (ny.minutes || 1);
-        }
-
-        function nyTypeMessage(text) {
-            clearTimeout(nyTypeTimer);
-            nyMessageEl.textContent = '';
-            const typed = document.createElement('span');
-            const cursor = document.createElement('span'); cursor.className = 'ny-cursor';
-            nyMessageEl.append(typed, cursor);
-            let i = 0;
-            const step = () => {
-                if (!nyActive) return;
-                typed.textContent = text.slice(0, ++i);
-                if (i < text.length) nyTypeTimer = setTimeout(step, text[i - 1] === ' ' ? 60 : 110);
-            };
-            nyTypeTimer = setTimeout(step, 1500);
-        }
-
-        function nyFireworks() {
-            const ctx = nyCanvas.getContext('2d');
+        // ── Pantallas programadas (Año Nuevo / Navidad) ──
+        function fireworksEffect(canvas) {
+            const ctx = canvas.getContext('2d');
             const colors = ['#ffd36b', '#fff1c1', '#ff9ad5', '#ffb347', '#ffffff', '#f7c6ff'];
             const parts = [], rockets = [];
-            let w, h, last = 0, nextLaunch = 0;
-            const size = () => {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                w = nyCanvas.clientWidth; h = nyCanvas.clientHeight;
-                nyCanvas.width = w * dpr; nyCanvas.height = h * dpr;
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            };
-            size();
+            let nextLaunch = 0;
             const burst = (x, y) => {
                 const c = colors[Math.floor(Math.random() * colors.length)];
                 const n = 90 + Math.floor(Math.random() * 50), sp = 2 + Math.random() * 2.6;
@@ -1838,10 +1879,7 @@
                     parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, decay: 0.008 + Math.random() * 0.008, c });
                 }
             };
-            const frame = t => {
-                if (!nyActive) { ctx.clearRect(0, 0, w, h); return; }
-                if (nyCanvas.clientWidth !== w || nyCanvas.clientHeight !== h) size();
-                const dt = Math.min(3, (t - last) / 16.7 || 1); last = t;
+            return (t, dt, w, h) => {
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(0, 0, w, h);
                 ctx.globalCompositeOperation = 'lighter';
@@ -1863,41 +1901,146 @@
                     ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
                 }
                 ctx.globalAlpha = 1;
-                nyRaf = requestAnimationFrame(frame);
             };
-            cancelAnimationFrame(nyRaf);
-            nyRaf = requestAnimationFrame(frame);
         }
 
-        function nyShow() {
-            if (nyActive) return;
-            nyActive = true;
-            nyYearEl.textContent = config.newYear.year;
-            nyScreenEl.classList.add('visible');
-            requestAnimationFrame(() => nyScreenEl.classList.add('shown'));
-            nyFireworks();
-            nyTypeMessage(config.newYear.message);
+        function snowEffect(canvas) {
+            const ctx = canvas.getContext('2d');
+            let flakes = [];
+            return (t, dt, w, h) => {
+                const target = Math.round(w * h / 5000);
+                while (flakes.length < target) flakes.push({ x: Math.random() * w, y: flakes.length ? -10 : Math.random() * h, r: 1 + Math.random() * 3.2, s: 0.4 + Math.random() * 1.2, ph: Math.random() * 6.28 });
+                if (flakes.length > target) flakes = flakes.slice(0, target);
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = '#ffffff';
+                for (const f of flakes) {
+                    f.y += f.s * dt * (0.6 + f.r / 4); f.ph += 0.02 * dt;
+                    f.x += Math.sin(f.ph) * 0.4 * dt;
+                    if (f.y > h + 5) { f.y = -5; f.x = Math.random() * w; }
+                    ctx.globalAlpha = 0.45 + f.r / 7;
+                    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+            };
         }
-        function nyHide() {
-            if (!nyActive) return;
-            nyActive = false;
-            clearTimeout(nyTypeTimer); cancelAnimationFrame(nyRaf);
-            nyScreenEl.classList.remove('shown');
-            setTimeout(() => { if (!nyActive) nyScreenEl.classList.remove('visible'); }, 1200);
-        }
-        function nyTick() {
-            const now = new Date();
-            const want = Date.now() < nyTestUntil || (nyScheduled(now) && nyDismissedKey !== nyHourKey(now));
-            want ? nyShow() : nyHide();
-        }
-        nyScreenEl.addEventListener('click', () => { nyTestUntil = 0; nyDismissedKey = nyHourKey(new Date()); nyHide(); });
-        document.getElementById('ny-test-btn').addEventListener('click', () => {
-            config.newYear = { ...config.newYear, year: parseInt(nyYearInput.value, 10) || config.newYear.year, message: nyMessageInput.value.trim() || config.newYear.message };
-            closePanel();
-            nyTestUntil = Date.now() + 30000; nyDismissedKey = '';
-            nyHide(); setTimeout(nyTick, 50);
+
+        const eventScreens = [
+            { key: 'newYear',   screen: document.getElementById('ny-screen'),   month: 0,  day: () => 1, effect: fireworksEffect, prefix: 'ny',
+              before: () => { document.getElementById('ny-year').textContent = config.newYear.year; } },
+            { key: 'christmas', screen: document.getElementById('xmas-screen'), month: 11, day: () => parseInt(config.christmas.day, 10) || 25, effect: snowEffect, prefix: 'xm' },
+        ];
+        eventScreens.forEach(ev => {
+            ev.canvas = ev.screen.querySelector('canvas');
+            ev.msgEl = ev.screen.querySelector('.event-message');
+            ev.active = false; ev.testUntil = 0; ev.dismissed = ''; ev.typeTimer = null; ev.raf = null;
+            ev.ui = {
+                enabled: document.getElementById(ev.prefix + '-enabled'),
+                minutes: document.getElementById(ev.prefix + '-minutes'),
+                message: document.getElementById(ev.prefix + '-message-input'),
+                year:    document.getElementById(ev.prefix + '-year-input'),
+                day:     document.getElementById(ev.prefix + '-day'),
+            };
         });
-        setInterval(nyTick, 5000);
+
+        const evHourKey = d => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getHours()}`;
+        function evScheduled(ev, d) {
+            const c = config[ev.key];
+            return !!c && c.enabled && d.getMonth() === ev.month && d.getDate() === ev.day() && d.getMinutes() < (c.minutes || 1);
+        }
+
+        function evType(ev, text) {
+            clearTimeout(ev.typeTimer);
+            ev.msgEl.textContent = '';
+            const typed = document.createElement('span');
+            const cursor = document.createElement('span'); cursor.className = 'ny-cursor';
+            ev.msgEl.append(typed, cursor);
+            let i = 0;
+            const step = () => {
+                if (!ev.active) return;
+                typed.textContent = text.slice(0, ++i);
+                if (i < text.length) ev.typeTimer = setTimeout(step, text[i - 1] === ' ' ? 60 : 110);
+            };
+            ev.typeTimer = setTimeout(step, 1500);
+        }
+
+        function evAnimate(ev) {
+            const canvas = ev.canvas, ctx = canvas.getContext('2d');
+            const draw = ev.effect(canvas);
+            let w = 0, h = 0, last = 0;
+            const size = () => {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                w = canvas.clientWidth; h = canvas.clientHeight;
+                canvas.width = w * dpr; canvas.height = h * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            };
+            size();
+            const frame = t => {
+                if (!ev.active) { ctx.clearRect(0, 0, w, h); return; }
+                if (canvas.clientWidth !== w || canvas.clientHeight !== h) size();
+                const dt = Math.min(3, (t - last) / 16.7 || 1); last = t;
+                draw(t, dt, w, h);
+                ev.raf = requestAnimationFrame(frame);
+            };
+            cancelAnimationFrame(ev.raf);
+            ev.raf = requestAnimationFrame(frame);
+        }
+
+        function evShow(ev) {
+            if (ev.active) return;
+            eventScreens.forEach(o => { if (o !== ev) evHide(o); });
+            ev.active = true;
+            if (ev.before) ev.before();
+            ev.screen.classList.add('visible');
+            requestAnimationFrame(() => ev.screen.classList.add('shown'));
+            evAnimate(ev);
+            evType(ev, config[ev.key].message);
+        }
+        function evHide(ev) {
+            if (!ev.active) return;
+            ev.active = false;
+            clearTimeout(ev.typeTimer); cancelAnimationFrame(ev.raf);
+            ev.screen.classList.remove('shown');
+            setTimeout(() => { if (!ev.active) ev.screen.classList.remove('visible'); }, 1200);
+        }
+        function eventsTick() {
+            const now = new Date();
+            let shown = false;
+            eventScreens.forEach(ev => {
+                const want = !shown && (Date.now() < ev.testUntil || (evScheduled(ev, now) && ev.dismissed !== evHourKey(now)));
+                if (want) { shown = true; evShow(ev); } else evHide(ev);
+            });
+        }
+        function readEventUI(ev) {
+            const u = ev.ui, d = defaultConfig[ev.key];
+            const c = {
+                enabled: u.enabled.checked,
+                minutes: parseInt(u.minutes.value, 10) || 1,
+                message: u.message.value.trim() || d.message,
+            };
+            if (u.year) c.year = parseInt(String(u.year.value).replace(/\D/g, ''), 10) || d.year;
+            if (u.day)  c.day = parseInt(u.day.value, 10) || d.day;
+            return c;
+        }
+        function fillEventUI(ev) {
+            const u = ev.ui, c = config[ev.key];
+            u.enabled.checked = !!c.enabled;
+            u.minutes.value = String(c.minutes);
+            u.message.value = c.message;
+            if (u.year) u.year.value = c.year;
+            if (u.day)  u.day.value = String(c.day);
+        }
+        eventScreens.forEach(ev => {
+            ev.screen.addEventListener('click', () => { ev.testUntil = 0; ev.dismissed = evHourKey(new Date()); evHide(ev); });
+            document.getElementById(ev.prefix + '-test-btn').addEventListener('click', () => {
+                config[ev.key] = readEventUI(ev);
+                closePanel();
+                eventScreens.forEach(o => { o.testUntil = 0; });
+                ev.testUntil = Date.now() + 30000; ev.dismissed = '';
+                evHide(ev); setTimeout(eventsTick, 50);
+            });
+            if (ev.ui.year) ev.ui.year.addEventListener('input', () => { ev.ui.year.value = ev.ui.year.value.replace(/\D/g, '').slice(0, 4); });
+        });
+        setInterval(eventsTick, 5000);
 
         function loadConfig() {
             const saved = localStorage.getItem('pokerConfigV44');
@@ -1921,11 +2064,9 @@
             applyTableEffect(config.tableEffect||'shimmer');
             applyCarouselStyle(config.carouselStyle||'marquee');
             applyMinmaxEffect(config.minmaxEffect||'none');
-            config.newYear = {...defaultConfig.newYear, ...(config.newYear||{})};
-            nyEnabledEl.checked = !!config.newYear.enabled;
-            nyYearInput.value   = config.newYear.year;
-            nyMinutesEl.value   = String(config.newYear.minutes);
-            nyMessageInput.value = config.newYear.message;
+            ['newYear', 'christmas'].forEach(k => { config[k] = { ...defaultConfig[k], ...(config[k] || {}) }; });
+            config.newYear.year = parseInt(String(config.newYear.year).replace(/\D/g, ''), 10) || defaultConfig.newYear.year;
+            eventScreens.forEach(fillEventUI);
         }
 
         function saveConfig() {
@@ -1945,14 +2086,9 @@
                     newMinBet: unformat(sbNewMin.value),  newMaxBet: unformat(sbNewMax.value),
                 };
             }
-            config.newYear = {
-                enabled: nyEnabledEl.checked,
-                year: parseInt(nyYearInput.value, 10) || defaultConfig.newYear.year,
-                minutes: parseInt(nyMinutesEl.value, 10) || 1,
-                message: nyMessageInput.value.trim() || defaultConfig.newYear.message,
-            };
+            eventScreens.forEach(ev => { config[ev.key] = readEventUI(ev); });
             localStorage.setItem('pokerConfigV44', JSON.stringify(config));
-            closePanel(); checkTime(); updateMarquee(); nyTick();
+            closePanel(); checkTime(); updateMarquee(); eventsTick();
         }
 
         function openPanel()  { configPanel.classList.remove('hidden'); }
@@ -2105,7 +2241,7 @@
         }
 
         // ── Eventos ──
-        document.querySelectorAll('#config-panel input[inputmode="numeric"]').forEach(i=>i.addEventListener('input',handleNumberInput));
+        document.querySelectorAll('#config-panel input[inputmode="numeric"]:not([data-plain])').forEach(i=>i.addEventListener('input',handleNumberInput));
         openConfigBtn.addEventListener('click', openPanel);
         document.getElementById('cas-open-config-btn').addEventListener('click', openPanel);
         closeConfigBtn.addEventListener('click', closePanel);
@@ -2143,7 +2279,7 @@
         checkTime();
         updateMarquee();
         setInterval(checkTime, 10000);
-        nyTick();
+        eventsTick();
 
         // Pausa todas las animaciones CSS cuando la pestaña no es visible
         document.addEventListener('visibilitychange', () => {
