@@ -888,50 +888,14 @@
 
         /* Navidad */
         #xmas-screen { background: radial-gradient(ellipse at 50% 90%, #10233a 0%, #060b16 55%, #020409 100%); }
-        .xm-sign {
-            position: relative; z-index: 1;
-            width: min(86vw, 78vh); padding: 1.5em 1em 1.5em;
-            font-size: clamp(1rem, min(4.2vw, 3.6vh), 3rem);
-            border: .26em solid #e3c06a; border-radius: .9em;
-            background: radial-gradient(ellipse at 50% 35%, rgba(40,14,10,.92), rgba(10,6,6,.95));
-            box-shadow: 0 0 1.3em rgba(255,206,110,.55), inset 0 0 1.1em rgba(255,206,110,.3);
-            text-align: center;
-            animation: ny-sign-in 1.4s cubic-bezier(.2,.9,.3,1.2) both;
+        .xm-gif-blur { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; object-fit: cover; filter: blur(22px) brightness(.55); }
+        .xm-gif { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+        #xmas-screen .xm-message {
+            position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+            width: auto; margin: 0; min-height: 0;
+            padding: 1.6em max(4vw, 1rem) max(4vh, 1rem);
+            background: linear-gradient(180deg, rgba(2,6,16,0) 0%, rgba(2,6,16,.75) 40%, rgba(2,6,16,.88) 100%);
         }
-        .xm-sign::before {
-            content: ''; position: absolute; top: .4em; right: .4em; bottom: .4em; left: .4em;
-            border-radius: .6em; pointer-events: none;
-            border: .18em dotted #ffe9b0; box-shadow: 0 0 .5em rgba(255,220,140,.55);
-            animation: ny-bulbs .9s steps(2) infinite;
-        }
-        .xm-garland {
-            position: absolute; left: 6%; right: 6%; height: 1.1em;
-            border-radius: 1em;
-            background:
-                radial-gradient(circle at 50% 50%, #d6263b 0 .2em, transparent .22em) 0 50% / 2.2em 100% repeat-x,
-                radial-gradient(circle at 50% 50%, #ffd76a 0 .12em, transparent .14em) 1.1em 50% / 2.2em 100% repeat-x,
-                linear-gradient(180deg, #1f5a2c, #0f3a1a);
-            box-shadow: 0 .15em .4em rgba(0,0,0,.6);
-        }
-        .xm-garland.top { top: -.55em; } .xm-garland.bottom { bottom: -.55em; }
-        .xm-bow {
-            position: absolute; left: 50%; top: -1.05em; margin-left: -1em;
-            width: 2em; height: 1.4em; z-index: 2;
-            background:
-                radial-gradient(circle at 50% 55%, #b5122a 0 .28em, transparent .3em),
-                radial-gradient(ellipse at 25% 50%, #e02a42 0 .55em, transparent .58em),
-                radial-gradient(ellipse at 75% 50%, #e02a42 0 .55em, transparent .58em);
-            filter: drop-shadow(0 .1em .15em rgba(0,0,0,.6));
-        }
-        .xm-title {
-            font-family: 'Cinzel', serif; font-weight: 700;
-            font-size: 3.4em; line-height: 1.12; letter-spacing: .01em;
-            background: linear-gradient(180deg, #fff8dc 0%, #f4d684 45%, #c3923a 100%);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            filter: drop-shadow(0 0 .2em rgba(255,210,120,.7));
-            animation: ny-year-glow 2.6s ease-in-out infinite;
-        }
-        .xm-sub { font-family: 'Barlow Condensed','Roboto',sans-serif; font-weight: 700; font-size: 1.3em; letter-spacing: .3em; color: #ffd9d9; margin-top: .3em; text-transform: uppercase; }
         @keyframes ny-sign-in { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
         @keyframes ny-year-glow { 0%,100% { filter: drop-shadow(0 0 .2em rgba(255,200,90,.6)); } 50% { filter: drop-shadow(0 0 .6em rgba(255,215,120,1)); } }
         @keyframes ny-bulbs { 0% { opacity: 1; } 50% { opacity: .35; } }
@@ -1140,12 +1104,8 @@
         <div class="ny-message event-message"></div>
     </div>
     <div id="xmas-screen" class="event-screen" aria-hidden="true">
-        <canvas></canvas>
-        <div class="xm-sign">
-            <div class="xm-garland top"></div><div class="xm-bow"></div>
-            <div class="xm-title">¡Feliz<br>Navidad!</div>
-            <div class="xm-garland bottom"></div>
-        </div>
+        <img class="xm-gif-blur" src="img/navidad-anim.gif" alt="" aria-hidden="true">
+        <img class="xm-gif" src="img/navidad-anim.gif" alt="Feliz Navidad">
         <div class="xm-message event-message"></div>
     </div>
 
@@ -1904,33 +1864,14 @@
             };
         }
 
-        function snowEffect(canvas) {
-            const ctx = canvas.getContext('2d');
-            let flakes = [];
-            return (t, dt, w, h) => {
-                const target = Math.round(w * h / 5000);
-                while (flakes.length < target) flakes.push({ x: Math.random() * w, y: flakes.length ? -10 : Math.random() * h, r: 1 + Math.random() * 3.2, s: 0.4 + Math.random() * 1.2, ph: Math.random() * 6.28 });
-                if (flakes.length > target) flakes = flakes.slice(0, target);
-                ctx.clearRect(0, 0, w, h);
-                ctx.fillStyle = '#ffffff';
-                for (const f of flakes) {
-                    f.y += f.s * dt * (0.6 + f.r / 4); f.ph += 0.02 * dt;
-                    f.x += Math.sin(f.ph) * 0.4 * dt;
-                    if (f.y > h + 5) { f.y = -5; f.x = Math.random() * w; }
-                    ctx.globalAlpha = 0.45 + f.r / 7;
-                    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
-                }
-                ctx.globalAlpha = 1;
-            };
-        }
-
         const eventScreens = [
             { key: 'newYear',   screen: document.getElementById('ny-screen'),   month: 0,  day: () => 1, effect: fireworksEffect, prefix: 'ny',
               before: () => { document.getElementById('ny-year').textContent = config.newYear.year; } },
-            { key: 'christmas', screen: document.getElementById('xmas-screen'), month: 11, day: () => parseInt(config.christmas.day, 10) || 25, effect: snowEffect, prefix: 'xm' },
+            { key: 'christmas', screen: document.getElementById('xmas-screen'), month: 11, day: () => parseInt(config.christmas.day, 10) || 25, effect: null, prefix: 'xm' },
         ];
         eventScreens.forEach(ev => {
             ev.canvas = ev.screen.querySelector('canvas');
+            ev.gifs = [...ev.screen.querySelectorAll('img')];
             ev.msgEl = ev.screen.querySelector('.event-message');
             ev.active = false; ev.testUntil = 0; ev.dismissed = ''; ev.typeTimer = null; ev.raf = null;
             ev.ui = {
@@ -1992,7 +1933,8 @@
             if (ev.before) ev.before();
             ev.screen.classList.add('visible');
             requestAnimationFrame(() => ev.screen.classList.add('shown'));
-            evAnimate(ev);
+            if (ev.effect) evAnimate(ev);
+            ev.gifs.forEach(img => { const src = img.getAttribute('src'); img.src = ''; img.src = src; });
             evType(ev, config[ev.key].message);
         }
         function evHide(ev) {

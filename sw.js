@@ -1,4 +1,4 @@
-const CACHE_NAME = 'letrero-v49';
+const CACHE_NAME = 'letrero-v50';
 
 // Archivos locales que se cachean en la instalación
 const LOCAL_ASSETS = [
@@ -16,6 +16,7 @@ const LOCAL_ASSETS = [
   './img/navidad2.jpg',
   './img/anonuevo.jpg',
   './img/dreams-anonuevo.png',
+  './img/navidad-anim.gif',
   './css/tailwind.css',
   './css/fonts.css',
   './fonts/barlow-condensed-latin-700-normal.woff2',
